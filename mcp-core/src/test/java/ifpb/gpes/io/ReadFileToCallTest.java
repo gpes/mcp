@@ -26,6 +26,11 @@ public class ReadFileToCallTest {
     private static final Logger logger = Logger.getLogger(ReadFileToCallTest.class.getName());
 
     @Test
+    public void caputreException(){
+        
+    }
+    
+    @Test
     public void testM1() {
         List<Call> expected = ofAllCall();
 

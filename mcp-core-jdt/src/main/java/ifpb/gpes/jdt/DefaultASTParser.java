@@ -17,32 +17,31 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
  * @mail ricardo.job@ifpb.edu.br
  * @since 02/06/2017, 14:49:57
  */
-//TODO: alterar nome da classe
-public class SmartASTParser {
+public class DefaultASTParser {
 
     private final ASTParser parser = ASTParser.newParser(AST.JLS8);
     private final String[] sources;
     private final String[] classpath = {System.getProperty("java.home") + "/lib/rt.jar"};
 
-    public static SmartASTParser createParse(String[] sources) {
+    public static DefaultASTParser createParse(String[] sources) {
 
         if (sources == null) {
             throw new IllegalArgumentException("sources is null");
         }
 
-        return new SmartASTParser(sources);
+        return new DefaultASTParser(sources);
     }
 
-    public static SmartASTParser from(String... sources) {
+    public static DefaultASTParser from(String... sources) {
 
         if (sources == null) {
             throw new IllegalArgumentException("path is null");
         }
 
-        return new SmartASTParser(sources);
+        return new DefaultASTParser(sources);
     }
 
-    private SmartASTParser(String[] sources) {
+    private DefaultASTParser(String[] sources) {
         this.sources = sources;
         this.parser.setKind(ASTParser.K_COMPILATION_UNIT);
         Hashtable options = JavaCore.getOptions();
@@ -63,14 +62,14 @@ public class SmartASTParser {
             this.parser.setEnvironment(classpath, sources, new String[]{"UTF-8"}, true);
             this.parser.setSource(str.toCharArray());
         } catch (IOException ex) {
-            Logger.getLogger(SmartASTParser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DefaultASTParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void acceptVisitor(ASTVisitor visitor) {
         ASTNode createAST = parser.createAST(null);
         if (createAST.getAST().hasBindingsRecovery()) {
-            Logger.getLogger(SmartASTParser.class.getName()).log(Level.INFO, "Binding activated.");
+            Logger.getLogger(DefaultASTParser.class.getName()).log(Level.INFO, "Binding activated.");
         }
         createAST.accept(visitor);
     }

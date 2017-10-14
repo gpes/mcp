@@ -2,8 +2,8 @@ package ifpb.gpes.main;
 //package br.edu.ifpb.scm.api.git
 
 import ifpb.gpes.io.SmartFile;
-import ifpb.gpes.jdt.SmartASTParser;
-import ifpb.gpes.jdt.SmartAllVisitor;
+import ifpb.gpes.jdt.DefaultASTParser;
+import ifpb.gpes.jdt.DefaultVisitor;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class Start {
 
 //    static SmartRecursiveVisitor visitor = new SmartRecursiveVisitor();
-    static SmartAllVisitor visitor = new SmartAllVisitor();
+    static DefaultVisitor visitor = new DefaultVisitor();
 //    static PrintASTVisitor visitor = new PrintASTVisitor();
 
     public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class Start {
 //        String path = "/Users/job/Documents/dev/gpes/parse-review/parse-jdt/src/test/java/ifpb/gpes/jdt/samples/ClasseAnonima.java";
 //        String[] sources = {"/Users/job/Documents/dev/gpes/parse-review/parse-jdt/src/test/java/"};
         SmartFile smart = SmartFile.from(Paths.get(path));
-        SmartASTParser parser = SmartASTParser.from(sources);
+        DefaultASTParser parser = DefaultASTParser.from(sources);
 
         Stream<Path> files = smart.extension(".java");
 

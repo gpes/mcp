@@ -18,21 +18,21 @@ import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
-public class SmartAllVisitor extends ASTVisitor {
+public class DefaultVisitor extends ASTVisitor {
 
-    private List<Call> ns;// = new ArrayList<>();
+    private List<Call> calls;// = new ArrayList<>();
 
     private MethodDeclaration currentMethodDeclaration;
     private Expression currentExpression;
     //TODO: criar uma classe para fazer substituir
     private final Stack<MethodDeclaration> stackMethodDeclaration = new Stack<>();
 
-    public SmartAllVisitor() {
+    public DefaultVisitor() {
         this(new ArrayList<>());
     }
 
-    public SmartAllVisitor(List<Call> elements) {
-        this.ns = elements;
+    public DefaultVisitor(List<Call> elements) {
+        this.calls = elements;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SmartAllVisitor extends ASTVisitor {
         no.setInvokedBy(ex.toString());
         //"Nem todos os que vagueiam estao perdidos"
         
-        ns.add(no);
+        calls.add(no);
         
         return super.visit(node);
     }
@@ -141,7 +141,7 @@ public class SmartAllVisitor extends ASTVisitor {
             no.setCalledInMethod(calledInMethodLambda);
         }
 
-        int count = ns.size();
+        int count = calls.size();
 
         //TODO: podemos usar a ideia do Stack para analisar?
         no.setInvokedBy(updateInv(mi));
@@ -149,7 +149,7 @@ public class SmartAllVisitor extends ASTVisitor {
         String methodInvocation = getMethodInvocation(count, mi.getName().toString());
 
         no.setCallMethod(methodInvocation);
-        ns.add(no); 
+        calls.add(no); 
         return super.visit(mi);
     }
  
@@ -185,11 +185,11 @@ public class SmartAllVisitor extends ASTVisitor {
             return null;
         }
 
-        if (!ns.get(count - 1).getInvokedBy().contains(methodName)) {
+        if (!calls.get(count - 1).getInvokedBy().contains(methodName)) {
             return null;
         }
 
-        return ns.get(count - 1).getMethodName();
+        return calls.get(count - 1).getMethodName();
     }
 
     private String fillMethodName(String methodName, ITypeBinding[] bindings) {
@@ -203,12 +203,12 @@ public class SmartAllVisitor extends ASTVisitor {
     }
 
     public List<Call> methodsCall() {
-        return Collections.unmodifiableList(ns);
+        return Collections.unmodifiableList(calls);
     }
 
     public List<Call> methodsCallFilter() {
         return Collections
-                .unmodifiableList(ns.stream()
+                .unmodifiableList(calls.stream()
                         .filter(t -> t.getCallMethod() != null || "null".equalsIgnoreCase(t.getCallMethod()))
                         .collect(Collectors.toList()));
     }

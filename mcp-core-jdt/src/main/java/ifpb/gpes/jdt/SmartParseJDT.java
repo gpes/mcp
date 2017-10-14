@@ -18,8 +18,7 @@ public class SmartParseJDT implements ParseJDT {
 
     //TODO: isso não está bom. Just do It!
     public SmartParseJDT() {
-        this.elements = new ArrayList<>();
-        this.visitor = new SmartAllVisitor(elements);
+        this.visitor = new DefaultVisitor(elements);
     }
 
     private SmartParseJDT(ASTVisitor visitor) {
@@ -32,7 +31,7 @@ public class SmartParseJDT implements ParseJDT {
 
     @Override
     public List<Call> from(Project project) {
-        SmartASTParser parser = SmartASTParser.from(project.sources());
+        DefaultASTParser parser = DefaultASTParser.from(project.sources());
 
         project.files().forEach(p -> {
             parser.updateUnitName(p);

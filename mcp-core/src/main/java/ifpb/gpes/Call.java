@@ -8,7 +8,6 @@ import java.util.Objects;
  */
 public class Call {
 
-    //TODO: atualizar os nomes dos atributos
     private String classType;
     private String methodName;
     private String returnType;
@@ -37,18 +36,19 @@ public class Call {
 
     //TODO: refatorar
     public static Call of(String line) {
+        //java.util.List, add[ifpb.gpes.domain.HasJCFObject], boolean, ifpb.gpes.domain.SampleObject, m2[], null
         String[] fields = line.split(",");
         String campo = fields[5].trim();
         return new Call(fields[0].trim(), fields[1].trim(), fields[2].trim(), fields[3].trim(), fields[4].trim(), campo.equals("null") ? null : campo);
     }
 
-    public boolean isFrom(String classe) {
+    public boolean isFrom(String classe) throws VerificationException {
         try {
+            System.out.println("\t"+returnType.split("<")[0]);
             Class classType = Class.forName(returnType.split("<")[0]);
             return Class.forName(classe).isAssignableFrom(classType);
         } catch (Exception ex) {
-            //TODO: refatorar. incluir exception não checada
-            return false;
+            throw new VerificationException(ex);
         }
     }
 

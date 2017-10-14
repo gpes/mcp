@@ -5,7 +5,6 @@ import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
 import ifpb.gpes.jdt.ParseStrategies;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
@@ -56,9 +55,6 @@ public class MatrixConfidenceTest {
 
         assertEquals(8, dg.generateMatrix().weightSum());
         Assert.assertEquals(3, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
-        
-        Matrix matrix = dg.generateMatrix();
-        System.out.println(matrix.toStr());
     }
 
 }
