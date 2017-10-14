@@ -1,8 +1,11 @@
 package ifpb.gpes.graph;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author Ricardo Job
@@ -144,6 +147,49 @@ public class Matrix {
             return "(" + linha + "-" + coluna + ") (" + get() + ")";
         }
     }
+
+    public String toStr() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        return "";
+    }
+
+    public void metric() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                int peso = matrix[i][j];
+                //os nos estão conectados
+                if (naoConecta(i, j, matrix)) {
+                    continue;
+                }
+                //quantos nos partem dele
+                int soma = soma(j, matrix) + peso;
+                BigDecimal metric = new BigDecimal(0);
+//                if (soma != 0) {
+                    metric = new BigDecimal(peso).divide(new BigDecimal(soma), MathContext.DECIMAL32);
+//                }
+                System.out.println(i
+                        + " -> " + j
+                        + " peso: " + peso
+                        + " soma: " + soma
+                        + " metric " + metric);
+            }
+        }
+    }
+
+    private int soma(int coluna, int[][] matrix) {
+        return IntStream.of(matrix[coluna]).sum();
+    }
+
+    private boolean naoConecta(int row, int col, int[][] matrix) {
+//        return false;
+        return matrix[row][col] == 0;
+    }
+
 }
 /**
  *
