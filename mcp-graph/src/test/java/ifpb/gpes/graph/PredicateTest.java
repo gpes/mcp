@@ -28,7 +28,7 @@ public class PredicateTest {
 
     }
 
-//    @Test
+    @Test
     public void returnSubListTest() {
 //        Predicate<Call> and = DecoratorPredicate.and(new TypePredicate("java.util.Collection"));
         Predicate<Call> and = DecoratorPredicate.and(new TypePredicate("java.util.List"));
@@ -48,7 +48,7 @@ public class PredicateTest {
 
     }
 
-//    @Test
+    @Test
     public void listPredicate() {
         List<Predicate<Call>> predicates = Arrays
                 .asList(new MethodPredicate("accept"), new TypePredicate("java.util.List"));
@@ -59,7 +59,7 @@ public class PredicateTest {
 
     }
 
-//    @Test//(expected = VerificationException.class)
+    @Test//(expected = VerificationException.class)
     public void andPredicate() {
         Predicate<Call> and = new DecoratorPredicate()
                 .and(new TypePredicate("java.util.List"))

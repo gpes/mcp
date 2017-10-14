@@ -45,16 +45,15 @@ public class MatrixConfidenceTest {
 
     @Test
     public void EdgeNumberTest() throws IOException {
-        Assert.assertEquals(7, dg.getGraph().edgeSet().size());
+        Assert.assertEquals(8, dg.getGraph().edgeSet().size());
     }
 
     @Test
     public void WeightSumTest() throws IOException {
         assertNotEquals(0, dg.generateMatrix().weightSum());
         dg.generateMatrix();
-
-        assertEquals(8, dg.generateMatrix().weightSum());
-        Assert.assertEquals(3, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
+        assertEquals(9, dg.generateMatrix().weightSum());
+        Assert.assertEquals(7, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
     }
 
 }

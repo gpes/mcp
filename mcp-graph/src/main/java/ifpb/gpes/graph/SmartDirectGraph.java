@@ -38,7 +38,9 @@ public class SmartDirectGraph implements Graph {
             updateNodesToGraph(secondnode, firstnode);
             String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getCallMethod();
             Node get = mapa.get(chave);
-            updateNodesToGraph(firstnode, get);
+            if (get != null) {
+                updateNodesToGraph(firstnode, get);
+            }
         }
     }
 
@@ -54,6 +56,7 @@ public class SmartDirectGraph implements Graph {
             graph.addVertex(secondnode);
         }
     }
+
     private void updateNodesToGraph(Node first, Node second) {
         if (!graph.containsEdge(first, second)) {
             DefaultWeightedEdge addEdge = graph.addEdge(first, second);
@@ -63,13 +66,11 @@ public class SmartDirectGraph implements Graph {
             graph.setEdgeWeight(edge, graph.getEdgeWeight(edge) + 1);
         }
     }
-    
+
     // OR isNullCallMethod
-    private boolean isNotNullCallMethod(Call call) { 
+    private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
     }
-
-    
 
     @Override
     public Matrix generateMatrix() {
