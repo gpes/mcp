@@ -37,10 +37,10 @@ public class MainMatrix {
         matrix.toStr();
         matrix.metric();
 
-//        dg.getGraph().edgeSet().forEach((DefaultWeightedEdge w) -> System.out.println(w));
+        dg.getGraph().edgeSet().forEach(w -> System.out.println(w));
+
 //        System.out.println(dg.getGraph());
         //        System.out.println(matrix.toStr());
-
 //        int[][] matrix = {
 //            {0, 2, 0, 0, 0},
 //            {0, 0, 0, 0, 1},

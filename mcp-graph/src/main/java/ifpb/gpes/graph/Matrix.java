@@ -149,9 +149,9 @@ public class Matrix {
     }
 
     public String toStr() {
-        for (int i = 0; i < matrix.length; i++) {
+        for (int[] matrix1 : matrix) {
             for (int j = 0; j < matrix.length; j++) {
-                System.out.print(matrix[i][j] + " ");
+                System.out.print(matrix1[j] + " ");
             }
             System.out.println("");
         }
@@ -168,9 +168,7 @@ public class Matrix {
                 }
                 //quantos nos partem dele
                 int soma = soma(j, matrix) + peso;
-                BigDecimal metric = new BigDecimal(0);
-//                if (soma != 0) {
-                    metric = new BigDecimal(peso).divide(new BigDecimal(soma), MathContext.DECIMAL32);
+                BigDecimal metric = metric = new BigDecimal(peso).divide(new BigDecimal(soma), MathContext.DECIMAL32);
 //                }
                 System.out.println(i
                         + " -> " + j

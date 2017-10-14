@@ -14,7 +14,7 @@ public class SmartDirectGraph implements Graph {
 
     private final SimpleDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private Matrix matrix = new Matrix();
-    private Map<String, Node> mapa = new HashMap<>();
+    private final Map<String, Node> mapa = new HashMap<>();
 
     public SimpleDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
         return graph;
