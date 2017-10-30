@@ -1,4 +1,4 @@
-package ifpb.gpes.graph;
+package ifpb.gpes.jdt;
 
 import ifpb.gpes.Call;
 import ifpb.gpes.Parse;
@@ -37,11 +37,11 @@ public class PredicateTest {
         Assert.assertEquals(coletado.size(), 5);
 //        Assert.assertEquals(coletado.size(), 6);
         assertThat(coletado, hasItems(
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "toArray[]"),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "stream[]"),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>", "accept[? super ifpb.gpes.domain.HasJCFObject]", "add[ifpb.gpes.domain.HasJCFObject]")
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "void", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", "void", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "void", "toArray[]"),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "void", "stream[]"),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>", "accept[? super ifpb.gpes.domain.HasJCFObject]", "void", "add[ifpb.gpes.domain.HasJCFObject]")
         //                Call.of("ifpb.gpes.domain.LambdaWithArguments", "m4[]", "java.util.Set<java.lang.Integer>", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "add[java.lang.Integer]")
         )
         );
@@ -124,13 +124,7 @@ class TypePredicate implements Predicate<Call> {
 
     @Override
     public boolean test(Call t) {
-
-        try {
-            return t.isFrom(value);
-        } catch (VerificationException ex) {
-            System.out.println("ex = " + ex);
-        }
-        return false;
+        return t.isFrom(value);
     }
 
 }

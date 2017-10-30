@@ -1,4 +1,4 @@
-package ifpb.gpes.graph.filter;
+package ifpb.gpes.filter;
 
 import ifpb.gpes.Call;
 import java.util.Arrays;

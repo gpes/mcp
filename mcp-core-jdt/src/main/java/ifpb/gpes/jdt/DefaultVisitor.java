@@ -1,6 +1,5 @@
 package ifpb.gpes.jdt;
 
-
 import ifpb.gpes.Call;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,26 +58,27 @@ public class DefaultVisitor extends ASTVisitor {
         Expression ex = node.getExpression();
         Expression castedEx = (Expression) node;
         String methodName = fillMethodName(
-                node.getName().getFullyQualifiedName(), 
+                node.getName().getFullyQualifiedName(),
                 node.resolveTypeBinding().getTypeArguments()
         );
-        IMethodBinding imb = castedEx.resolveTypeBinding().getFunctionalInterfaceMethod();          
+        IMethodBinding imb = castedEx.resolveTypeBinding().getFunctionalInterfaceMethod();
         String calledInMethod = fillMethodName(imb.getName(), imb.getParameterTypes());
-        
+
         Call no = new Call();
-       
+
         no.setClassType(ex.resolveTypeBinding().getQualifiedName());
         no.setMethodName(methodName);
         no.setReturnType(node.getName().resolveTypeBinding().toString());
         no.setCalledInClass(castedEx.resolveTypeBinding().getQualifiedName());
         no.setCalledInMethod(calledInMethod);
+        no.setCalledInMethodReturnType(imb.getReturnType().getQualifiedName());
         no.setCallMethod(null);
-        
+
         no.setInvokedBy(ex.toString());
         //"Nem todos os que vagueiam estao perdidos"
-        
+
         calls.add(no);
-        
+
         return super.visit(node);
     }
 
@@ -128,6 +128,8 @@ public class DefaultVisitor extends ASTVisitor {
         String calledInMethod = fillMethodName(currentMethodDeclaration.getName().getIdentifier(), bindings);
         no.setCalledInMethod(calledInMethod);
 
+        no.setCalledInMethodReturnType(currentMethodDeclaration.resolveBinding().getReturnType().getQualifiedName());
+
         if (currentExpression != null) { //lambda
             no.setCalledInClass(currentExpression
                     .resolveTypeBinding()
@@ -139,6 +141,11 @@ public class DefaultVisitor extends ASTVisitor {
                     .getFunctionalInterfaceMethod()
                     .getName(), bindingsLambda);
             no.setCalledInMethod(calledInMethodLambda);
+            String calledInMethodLambdaReturnType = currentExpression
+                    .resolveTypeBinding()
+                    .getFunctionalInterfaceMethod()
+                    .getReturnType().getQualifiedName();
+            no.setCalledInMethodReturnType(calledInMethodLambdaReturnType);
         }
 
         int count = calls.size();
@@ -149,10 +156,9 @@ public class DefaultVisitor extends ASTVisitor {
         String methodInvocation = getMethodInvocation(count, mi.getName().toString());
 
         no.setCallMethod(methodInvocation);
-        calls.add(no); 
+        calls.add(no);
         return super.visit(mi);
     }
- 
 
     @Override
     public void endVisit(MethodDeclaration node) {

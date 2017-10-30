@@ -30,8 +30,8 @@ public class SampleObjectTest {
         List<Call> samples = calls();
         System.out.println(samples.size());
 
-        assertThat(samples, hasItems(Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.SampleObject", "teste[]", "add[ifpb.gpes.domain.HasJCFObject]"),
-                Call.of("java.util.List", "add[ifpb.gpes.domain.HasJCFObject]", "boolean", "ifpb.gpes.domain.SampleObject", "teste[]", null)));
+        assertThat(samples, hasItems(Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.SampleObject", "teste[]", "void", "add[ifpb.gpes.domain.HasJCFObject]"),
+                Call.of("java.util.List", "add[ifpb.gpes.domain.HasJCFObject]", "boolean", "ifpb.gpes.domain.SampleObject", "teste[]", "void", null)));
         assertEquals(2, samples.size());
     }
 

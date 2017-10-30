@@ -31,7 +31,7 @@ public class MethodReferenceTest {
     private List<Call> ofMethodReferenceClass() {
         Project project = Project
                 .root("")
-                .path(sources + "ifpb/gpes/jdt/samples/MethodReferenceExample.java") // root
+                .path(sources + "ifpb/gpes/domain/MethodReferenceExample.java") // root
                 .sources(sources) // root - não obrigatorio
                 .filter(".java");
 

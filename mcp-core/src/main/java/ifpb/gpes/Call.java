@@ -13,43 +13,39 @@ public class Call {
     private String returnType;
     private String calledInClass;
     private String calledInMethod;
+    private String calledInMethodReturnType;
     private String callMethod;
     private String invokedBy;
 
     public Call() {
     }
 
-    public Call(String classType, String methodName, String returnType, String calledInClass,
-            String calledInMethod, String callMethod) {
+    public Call(String classType, String methodName, String returnType, String calledInClass, String calledInMethod, String calledInMethodReturnType, String callMethod) {
         this.classType = classType;
         this.methodName = methodName;
         this.returnType = returnType;
         this.calledInClass = calledInClass;
         this.calledInMethod = calledInMethod;
+        this.calledInMethodReturnType = calledInMethodReturnType;
         this.callMethod = callMethod;
     }
-
+    
     public static Call of(String classType, String methodName, String returnType, String calledInClass,
-            String calledInMethod, String callMethod) {
-        return new Call(classType, methodName, returnType, calledInClass, calledInMethod, callMethod);
+            String calledInMethod, String calledInMethodReturnType, String callMethod) {
+        return new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod);
     }
 
     //TODO: refatorar
     public static Call of(String line) {
         //java.util.List, add[ifpb.gpes.domain.HasJCFObject], boolean, ifpb.gpes.domain.SampleObject, m2[], null
         String[] fields = line.split(",");
-        String campo = fields[5].trim();
-        return new Call(fields[0].trim(), fields[1].trim(), fields[2].trim(), fields[3].trim(), fields[4].trim(), campo.equals("null") ? null : campo);
+        String campo = fields[6].trim();
+        return new Call(fields[0].trim(), fields[1].trim(), fields[2].trim(), fields[3].trim(), fields[4].trim(), fields[5].trim(), campo.equals("null") ? null : campo);
     }
 
-    public boolean isFrom(String classe) throws VerificationException {
-        try {
-            System.out.println("\t"+returnType.split("<")[0]);
-            Class classType = Class.forName(returnType.split("<")[0]);
-            return Class.forName(classe).isAssignableFrom(classType);
-        } catch (Exception ex) {
-            throw new VerificationException(ex);
-        }
+    public boolean isFrom(String classe) {
+        String nomeDaClasse = returnType.split("<")[0];
+        return Reflector.isAssignableFrom(classe, nomeDaClasse);
     }
 
     public String getInvokedBy() {
@@ -108,17 +104,25 @@ public class Call {
         this.callMethod = callMethod;
     }
 
-    @Override
-    public String toString() {
-        return "No{" + "classType=" + classType + ", methodName=" + methodName + ", returnType=" + returnType + ", calledInClass=" + calledInClass + ", calledInMethod=" + calledInMethod + ", callMethod=" + callMethod + ", invokedBy=" + invokedBy + '}';
+    public String getCalledInMethodReturnType() {
+        return calledInMethodReturnType;
     }
 
+    public void setCalledInMethodReturnType(String calledInMethodReturnType) {
+        this.calledInMethodReturnType = calledInMethodReturnType;
+    }
+
+    @Override
+    public String toString() {
+        return "Call{" + "classType=" + classType + ", methodName=" + methodName + ", returnType=" + returnType + ", calledInClass=" + calledInClass + ", calledInMethod=" + calledInMethod + ", calledInMethodReturnType=" + calledInMethodReturnType + ", callMethod=" + callMethod + ", invokedBy=" + invokedBy + '}';
+    }
+    
     public String callGraph() {
-        return "<" + classType + ", " + methodName + ", " + returnType + ", " + calledInClass + ", " + calledInMethod + ", " + callMethod + ">";
+        return "<" + classType + ", " + methodName + ", " + returnType + ", " + calledInClass + ", " + calledInMethod + ", " + calledInMethodReturnType + ", " + callMethod + ">";
     }
 
     public String noOf() {
-        return "No.of(\"" + classType + "\", \"" + methodName + "\",\"" + returnType + "\",\"" + calledInClass + "\",\"" + calledInMethod + "\",\"" + callMethod + "\"),";
+        return "No.of(\"" + classType + "\", \"" + methodName + "\",\"" + returnType + "\",\"" + calledInClass + "\",\"" + calledInMethod + "\",\"" + calledInMethodReturnType + "\",\"" + callMethod + "\"),";
     }
 
     @Override

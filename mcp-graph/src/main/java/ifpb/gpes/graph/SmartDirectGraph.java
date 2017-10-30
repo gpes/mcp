@@ -33,7 +33,7 @@ public class SmartDirectGraph implements Graph {
             Node secondnode = new Node();
             secondnode.setClassName(call.getCalledInClass());
             secondnode.setMethodName(call.getCalledInMethod());
-            secondnode.setReturnType("...");
+            secondnode.setReturnType(call.getCalledInMethodReturnType());
             addNodeAsVertix(secondnode);
             updateNodesToGraph(secondnode, firstnode);
             String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getCallMethod();

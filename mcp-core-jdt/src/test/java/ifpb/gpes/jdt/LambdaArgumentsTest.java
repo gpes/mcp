@@ -20,16 +20,16 @@ public class LambdaArgumentsTest {
 
     @Test
     public void testeM1() {
-        assertThat(result, hasItems(Call.of("java.lang.Iterable", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", null),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
-                Call.of("java.util.function.Predicate", "negate[]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.lang.Object", "accept[ifpb.gpes.domain.HasJCFObject]", null),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "m6[ifpb.gpes.domain.HasJCFObject]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.lang.Object", "accept[ifpb.gpes.domain.HasJCFObject]", "negate[]"),
-                Call.of("java.lang.Iterable", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", null),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
-                Call.of("java.util.function.Predicate", "negate[]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<ifpb.gpes.domain.HasJCFObject>", "accept[ifpb.gpes.domain.HasJCFObject]", null),
-                Call.of("ifpb.gpes.domain.HasJCFObject", "m6[ifpb.gpes.domain.HasJCFObject]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<ifpb.gpes.domain.HasJCFObject>", "accept[ifpb.gpes.domain.HasJCFObject]", "negate[]"),
-                Call.of("java.util.stream.Stream", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", null),
-                Call.of("java.util.Collection", "stream[]", "java.util.stream.Stream<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]")
+        assertThat(result, hasItems(Call.of("java.lang.Iterable", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "void", null),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m1[]", "void", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
+                Call.of("java.util.function.Predicate", "negate[]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.lang.Object", "accept[ifpb.gpes.domain.HasJCFObject]", "void", null),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "m6[ifpb.gpes.domain.HasJCFObject]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.lang.Object", "accept[ifpb.gpes.domain.HasJCFObject]", "void", "negate[]"),
+                Call.of("java.lang.Iterable", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", "void", null),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "getElements[]", "java.util.List<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m2[]", "void", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]"),
+                Call.of("java.util.function.Predicate", "negate[]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<ifpb.gpes.domain.HasJCFObject>", "accept[ifpb.gpes.domain.HasJCFObject]", "void", null),
+                Call.of("ifpb.gpes.domain.HasJCFObject", "m6[ifpb.gpes.domain.HasJCFObject]", "java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>", "java.util.function.Consumer<ifpb.gpes.domain.HasJCFObject>", "accept[ifpb.gpes.domain.HasJCFObject]", "void", "negate[]"),
+                Call.of("java.util.stream.Stream", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]", "void", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "void", null),
+                Call.of("java.util.Collection", "stream[]", "java.util.stream.Stream<ifpb.gpes.domain.HasJCFObject>", "ifpb.gpes.domain.LambdaWithArguments", "m3[]", "void", "forEach[java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>]")
         ));
         assertNotNull(result);
         assertFalse(result.isEmpty());

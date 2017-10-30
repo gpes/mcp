@@ -9,7 +9,7 @@ package ifpb.gpes;
  *
  * @author juan
  */
-public class VerificationException extends Exception{
+public class VerificationException extends RuntimeException{
     public VerificationException(Exception e) {
         super("Ocorreu uma falha na verificação", e);
     }
