@@ -29,7 +29,7 @@ public class MainMatrix {
         List<Call> calls = Parse.with(ParseStrategies.JDT).from(project);
         SmartDirectGraph dg = new SmartDirectGraph();
         calls.stream()
-                //                .filter((call) -> call.getCallMethod() != null)
+                //                                .filter((call) -> call.getCallMethod() != null)
                 .peek(c -> System.out.println(c.callGraph())) //apenas imprime
                 .forEach(dg::adicionarNos);
 //        
@@ -37,7 +37,7 @@ public class MainMatrix {
         matrix.toStr();
         matrix.metric();
 
-//        dg.getGraph().edgeSet().forEach((DefaultWeightedEdge w) -> System.out.println(w));
+        dg.getGraph().edgeSet().forEach((w) -> System.out.println(w));
 //        System.out.println(dg.getGraph());
         //        System.out.println(matrix.toStr());
 

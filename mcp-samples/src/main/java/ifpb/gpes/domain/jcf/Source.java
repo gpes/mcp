@@ -16,6 +16,6 @@ public class Source {
     public void m2() {
         Target target = new Target();
         target.getEl().add(null);
-        target.getEl().set(1, null);
+        Runnable r = () -> target.getEl().set(1, null);
     }
 }

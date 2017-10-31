@@ -3,6 +3,7 @@ package ifpb.gpes.graph;
 import ifpb.gpes.Call;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -15,6 +16,7 @@ public class SmartDirectGraph implements Graph {
     private final SimpleDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private Matrix matrix = new Matrix();
     private Map<String, Node> mapa = new HashMap<>();
+    private final Stack<Node> nodes = new Stack<>();
 
     public SimpleDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
         return graph;
@@ -26,21 +28,34 @@ public class SmartDirectGraph implements Graph {
         firstnode.setClassName(call.getClassType());
         firstnode.setMethodName(call.getMethodName());
         firstnode.setReturnType(call.getReturnType());
-        putNode(call, firstnode);
+//        putNode(call, firstnode);
         addNodeAsVertix(firstnode);
 
         if (isNotNullCallMethod(call)) {
+            Node second = nodes.pop();
+            Node get = nodes.pop();
+            addNodeAsVertix(second);
+            addNodeAsVertix(get);
+            updateNodesToGraph(second, firstnode);
+            updateNodesToGraph(firstnode, get);
+//            Node secondnode = new Node();
+//            secondnode.setClassName(call.getCalledInClass());
+//            secondnode.setMethodName(call.getCalledInMethod());
+//            secondnode.setReturnType(call.getCalledInMethodReturnType());
+//            addNodeAsVertix(secondnode);
+//            updateNodesToGraph(secondnode, firstnode);
+//            String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getCallMethod();
+//            Node get = mapa.get(chave);
+//            if (get != null) {
+//                updateNodesToGraph(firstnode, get);
+//            }
+        } else {
             Node secondnode = new Node();
             secondnode.setClassName(call.getCalledInClass());
             secondnode.setMethodName(call.getCalledInMethod());
             secondnode.setReturnType(call.getCalledInMethodReturnType());
-            addNodeAsVertix(secondnode);
-            updateNodesToGraph(secondnode, firstnode);
-            String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getCallMethod();
-            Node get = mapa.get(chave);
-            if (get != null) {
-                updateNodesToGraph(firstnode, get);
-            }
+            nodes.push(firstnode);
+            nodes.push(secondnode);
         }
     }
 
