@@ -13,4 +13,8 @@ public class Target {
     public List getEl(){
         return new ArrayList();
     }
+    
+    public Target loop(){
+        return this;
+    }
 }

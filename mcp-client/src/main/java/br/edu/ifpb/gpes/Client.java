@@ -20,14 +20,13 @@ import java.util.List;
  * @author juan
  */
 public class Client {
-    private static final String sources = "../mcp-samples/src/main/java/";
 
     public static void main(String[] args) {
 
         Project project = Project
-                .root("")
-                .path(sources + "ifpb/gpes/domain/LambdaWithArguments.java")
-                .sources(sources)
+                .root("/home/juan/Projeto-POO/MyPersonalAgenda/")
+                .path("/src")
+                .sources("/src")
                 .filter(".java");
         
         Study.of(project)
@@ -46,7 +45,6 @@ public class Client {
             elements.stream().forEach(graph::adicionarNos);
             Matrix generateMatrix = graph.generateMatrix();
             System.out.println(generateMatrix.toStr());
-            graph.getGraph().vertexSet().stream().forEach(System.out::println);
             generateMatrix.metric();
         }
         

@@ -11,6 +11,7 @@ public class Source {
         new Target().getEl().add(null);
         new Target().getEl().set(1, null);
         new Target().getEl().add(null);
+        new Target().loop().loop().loop();
     }
 
     public void m2() {
