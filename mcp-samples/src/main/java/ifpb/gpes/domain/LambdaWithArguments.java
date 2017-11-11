@@ -19,9 +19,9 @@ public class LambdaWithArguments {
                         ts.m6(ts).negate();
                     }
                 });
-//        m4().add(1);
+        m4().add(1);
     }
-
+    
     public void m2() {
         new HasJCFObject().getElements()
                 .forEach((HasJCFObject t) -> {

@@ -1,6 +1,7 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -32,12 +33,16 @@ public class SmartDirectGraph implements Graph {
         addNodeAsVertix(firstnode);
 
         if (isNotNullCallMethod(call)) {
-            Node second = nodes.pop();
             Node get = nodes.pop();
-            addNodeAsVertix(second);
             addNodeAsVertix(get);
-            updateNodesToGraph(second, firstnode);
             updateNodesToGraph(firstnode, get);
+            if (call.getInvokedBy().endsWith(")") && !call.getInvokedBy().contains("new")) {
+                nodes.push(firstnode);
+            } else {
+                Node second = nodes.pop();
+                addNodeAsVertix(second);
+                updateNodesToGraph(second, firstnode);
+            }
 //            Node secondnode = new Node();
 //            secondnode.setClassName(call.getCalledInClass());
 //            secondnode.setMethodName(call.getCalledInMethod());
@@ -54,8 +59,8 @@ public class SmartDirectGraph implements Graph {
             secondnode.setClassName(call.getCalledInClass());
             secondnode.setMethodName(call.getCalledInMethod());
             secondnode.setReturnType(call.getCalledInMethodReturnType());
-            nodes.push(firstnode);
             nodes.push(secondnode);
+            nodes.push(firstnode);
         }
     }
 

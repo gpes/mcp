@@ -19,6 +19,7 @@
         <module>mcp-core-jdt</module>
         <module>mcp-graph</module>
         <module>mcp-samples</module>
+        <module>mcp-client</module>
     </modules>
 
     <properties>

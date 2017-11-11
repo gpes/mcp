@@ -34,26 +34,25 @@ public class MatrixConfidenceTest {
 
     @Before
     public void before() throws IOException {
-        calls.stream().filter((call) -> call.getCallMethod() != null).forEach(dg::adicionarNos);
+        calls.stream().forEach(dg::adicionarNos);
     }
 
     @Test
     public void VertexNumberTest() throws IOException, InterruptedException, ClassNotFoundException {
-        Assert.assertEquals(9, dg.getGraph().vertexSet().size());
+        Assert.assertEquals(17, dg.getGraph().vertexSet().size());
     }
 //
 
     @Test
     public void EdgeNumberTest() throws IOException {
-        Assert.assertEquals(8, dg.getGraph().edgeSet().size());
+        Assert.assertEquals(14, dg.getGraph().edgeSet().size());
     }
 
     @Test
     public void WeightSumTest() throws IOException {
         assertNotEquals(0, dg.generateMatrix().weightSum());
-        dg.generateMatrix();
-        assertEquals(9, dg.generateMatrix().weightSum());
-        Assert.assertEquals(7, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
+        assertEquals(17, dg.generateMatrix().weightSum());
+        Assert.assertEquals(10, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
     }
 
 }
