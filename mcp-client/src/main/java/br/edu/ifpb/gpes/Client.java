@@ -20,13 +20,16 @@ import java.util.List;
  * @author juan
  */
 public class Client {
-
+    
     public static void main(String[] args) {
-
+//      https://github.com/pmxa/plugin
         Project project = Project
-                .root("/home/juan/Projeto-POO/MyPersonalAgenda/")
-                .path("/src")
-                .sources("/src")
+//                .root("/media/juan/DATA/linux/plugin")
+//                .path("/src/")
+//                .sources("/src/")
+                .root("")
+                .path("../mcp-samples/src/main/java/")
+                .sources("../mcp-samples/src/main/java/")
                 .filter(".java");
         
         Study.of(project)

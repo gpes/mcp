@@ -111,7 +111,7 @@ public class DefaultVisitor extends ASTVisitor {
             classType = imb.getDeclaringClass().getBinaryName();
             returnType = imb.getReturnType().getQualifiedName();
         }
-
+        
         no.setClassType(classType);
         no.setReturnType(returnType);
 

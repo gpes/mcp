@@ -21,6 +21,7 @@ public class DefaultASTParser {
 
     private final ASTParser parser = ASTParser.newParser(AST.JLS8);
     private final String[] sources;
+    private Hashtable options = JavaCore.getOptions();
     private final String[] classpath = {System.getProperty("java.home") + "/lib/rt.jar"};
 
     public static DefaultASTParser createParse(String[] sources) {
@@ -44,15 +45,13 @@ public class DefaultASTParser {
     private DefaultASTParser(String[] sources) {
         this.sources = sources;
         this.parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        Hashtable options = JavaCore.getOptions();
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
 //        this.parser.setCompilerOptions(JavaCore.getOptions());
-        this.parser.setCompilerOptions(options);
     }
 
-    public void updateUnitName(Path fileJava) {
+    public void updateUnitName(Path fileJava) {    
         try {
             byte[] readAllBytes = Files.readAllBytes(fileJava);
             String str = new String(readAllBytes);
@@ -67,6 +66,9 @@ public class DefaultASTParser {
     }
 
     public void acceptVisitor(ASTVisitor visitor) {
+        //resolve problema do "unknow source"
+        this.parser.setCompilerOptions(options);
+        //--
         ASTNode createAST = parser.createAST(null);
         if (createAST.getAST().hasBindingsRecovery()) {
             Logger.getLogger(DefaultASTParser.class.getName()).log(Level.INFO, "Binding activated.");
