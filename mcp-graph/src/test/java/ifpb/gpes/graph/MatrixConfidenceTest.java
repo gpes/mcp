@@ -34,7 +34,7 @@ public class MatrixConfidenceTest {
 
     @Before
     public void before() throws IOException {
-        calls.stream().forEach(dg::adicionarNos);
+        calls.stream().forEach(dg::buildNode);
     }
 
     @Test

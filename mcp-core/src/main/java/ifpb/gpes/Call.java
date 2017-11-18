@@ -122,7 +122,7 @@ public class Call {
     }
 
     public String noOf() {
-        return "No.of(\"" + classType + "\", \"" + methodName + "\",\"" + returnType + "\",\"" + calledInClass + "\",\"" + calledInMethod + "\",\"" + calledInMethodReturnType + "\",\"" + callMethod + "\"),";
+        return "Call.of(\"" + classType + "\", \"" + methodName + "\",\"" + returnType + "\",\"" + calledInClass + "\",\"" + calledInMethod + "\",\"" + calledInMethodReturnType + "\",\"" + callMethod + "\"),";
     }
 
     @Override

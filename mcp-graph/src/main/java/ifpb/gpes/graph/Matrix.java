@@ -1,7 +1,5 @@
 package ifpb.gpes.graph;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,68 +29,6 @@ public class Matrix {
         return this.matrix;
     }
 
-//    public void generateMatrix() throws IOException, ExportException {
-//        Node[] vertices = graph.vertexSet().toArray(new Node[]{});
-//
-//        matrix = new int[vertices.length][vertices.length];
-//        ArrayList<Integer> notNullLinesIndex = new ArrayList<>();
-//
-//        for (int i = 0; i < vertices.length; i++) {
-////            Set edgesOfVertice = graph.edgesOf(vertices[i]);
-//            int soma = 0;
-//            for (int j = 0; j < vertices.length; j++) {
-//                Node node = vertices[i];
-//                Node node2 = vertices[j];
-//                DefaultWeightedEdge edge = graph.getEdge(node, node2);
-//                if (edge != null) {
-//                    matrix[i][j] = (int) graph.getEdgeWeight(edge);
-//                    soma += matrix[i][j];
-//                } else {
-//                    matrix[i][j] = 0;
-//                }
-//                System.out.println("(" + i + "-" + j + ") (" + matrix[i][j] + ") (" + " )");
-//            }
-//            if (soma != 0) {
-//                notNullLinesIndex.add(i);
-//            }
-//        }
-//
-//        int[][] refactoredmatrix = new int[notNullLinesIndex.size()][vertices.length];
-//
-//        notNullLinesIndex.forEach((line) -> {
-//            refactoredmatrix[notNullLinesIndex.indexOf(line)] = matrix[line];
-//        });
-//
-//        System.out.println("  A B C D E F G H I");
-//        char[] letras = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
-//        for (int i = 0; i < vertices.length; i++) {
-//            for (int j = 0; j < vertices.length; j++) {
-//                if (j == 0) {
-//                    if (i < 9) {
-//                        System.out.print(letras[i]);
-//                    }
-//                }
-//                System.out.print(" " + matrix[i][j]);
-//            }
-//            System.out.println("");
-//        }
-//
-//        System.out.println('\n');
-//
-//        System.out.println("  A B C D E F G H I");
-//        for (int i = 0; i < refactoredmatrix.length; i++) {
-//            for (int j = 0; j < vertices.length; j++) {
-//                if (j == 0) {
-//                    if (i < 9) {
-//                        System.out.print(letras[notNullLinesIndex.get(i)]);
-//                    }
-//                }
-//                System.out.print(" " + refactoredmatrix[i][j]);
-//            }
-//            System.out.println("");
-//        }
-//
-//    }
     public int weightSum() {
         if (matrix == null) {
             return 0;
@@ -101,13 +37,13 @@ public class Matrix {
     }
 
     public List<Integer> linhasNaoNulas(int[][] dados) {
-        List<Integer> linhasIndex = new ArrayList<>();
+        List<Integer> rowsIndex = new ArrayList<>();
         for (int i = 0; i < dados.length; i++) {
             if (Arrays.stream(dados[i]).sum() > 0) {
-                linhasIndex.add(i);
+                rowsIndex.add(i);
             }
         }
-        return linhasIndex;
+        return rowsIndex;
     }
 
 //    TODO: It's not work 
@@ -126,108 +62,65 @@ public class Matrix {
 
     class Cell {
 
-        private final int linha;
-        private final int coluna;
+        private final int row;
+        private final int column;
 
-        protected Cell(int linha, int coluna) {
-            this.linha = linha;
-            this.coluna = coluna;
+        protected Cell(int row, int column) {
+            this.row = row;
+            this.column = column;
         }
 
         public void set(int value) {
-            matrix[linha][coluna] = value;
+            matrix[row][column] = value;
         }
 
         public int get() {
-            return matrix[linha][coluna];
+            return matrix[row][column];
         }
 
         @Override
         public String toString() {
-            return "(" + linha + "-" + coluna + ") (" + get() + ")";
+            return "(" + row + "-" + column + ") (" + get() + ")";
         }
     }
 
-    public String toStr() {
-        for (int i = 0; i < matrix.length; i++) {
+    public String valuesToString() {
+        StringBuilder builder = new StringBuilder();
+        for (int[] row : matrix) {
             for (int j = 0; j < matrix.length; j++) {
-                System.out.print(matrix[i][j] + " ");
+                builder.append(row[j]).append(" ");
             }
-            System.out.println("");
+            builder.append("\n");
         }
-        return "";
+        return builder.toString();
     }
 
-    public void metric() {
+    public List<Metric> computeWithMetric(StrategyMetric strategy) {
+        List<Metric> metrics = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
-                int peso = matrix[i][j];
-                //os nos estão conectados
-                if (naoConecta(i, j, matrix)) {
+                int weight = matrix[i][j];
+                if (notConnected(i, j)) {//os nos estão conectados
                     continue;
                 }
-                //quantos nos partem dele
-                int soma = soma(j, matrix) + peso;
-                BigDecimal metric = new BigDecimal(0);
-//                if (soma != 0) {
-                    metric = new BigDecimal(peso).divide(new BigDecimal(soma), MathContext.DECIMAL32);
-//                }
-                System.out.println(i
-                        + " -> " + j
-                        + " peso: " + peso
-                        + " soma: " + soma
-                        + " metric " + metric);
+                int sum = sum(j) + weight; //quantos nos partem dele
+                metrics.add(new Metric(String.valueOf(i), String.valueOf(j),
+                        weight, sum, strategy));
             }
         }
+        return metrics;
     }
 
-    private int soma(int coluna, int[][] matrix) {
-        return IntStream.of(matrix[coluna]).sum();
+    public List<Metric> computeMetric() {
+        return computeWithMetric(new DefaultStrategyMetric());
     }
 
-    private boolean naoConecta(int row, int col, int[][] matrix) {
-//        return false;
-        return matrix[row][col] == 0;
+    private int sum(int column) {
+        return IntStream.of(matrix[column]).sum();
+    }
+
+    private boolean notConnected(int row, int col) {
+        return this.matrix[row][col] == 0;
     }
 
 }
-/**
- *
- * public static void main(String[] args) throws java.lang.Exception { int[][]
- * data = new int[][]{ {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
- *
- * useArray(data);
- *
- * useObject(data);
- *
- * useStream(data); }
- *
- * private static void useArray(int[][] data) { System.out.println("----- usando
- * Array -----"); int size = data.length; Integer[][] array = IntStream.range(0,
- * size) .filter(linhas -> Arrays.stream(data[linhas]).sum() > 6) .mapToObj((int
- * linha) -> IntStream.range(0, size) .mapToObj(coluna -> { return
- * data[linha][coluna]; }) .toArray(Integer[]::new)) .toArray(Integer[][]::new);
- *
- * for (Integer[] integers : array) { for (Integer integer : integers) {
- * System.out.println(integer); } } }
- *
- * private static void useObject(int[][] data) { System.out.println("-----
- * usando Object -----"); Object[] ll = Arrays .stream(data) .map((a) -> a)
- * .toArray();
- *
- * for (Object l : ll) { //cada elemento referencia um outro array
- * System.out.println(l + " " + l.getClass().getSimpleName()); } }
- *
- * private static void useStream(int[][] data) { System.out.println("-----
- * usando Stream -----");
- *
- * Integer[][] toArray = Arrays.stream(data) .filter(linhas ->
- * Arrays.stream(linhas).sum() > 6) .map( r ->
- * Arrays.stream(r).mapToObj(Integer::new).toArray(Integer[]::new)
- * ).toArray(Integer[][]::new);
- *
- * for (Integer[] integers : toArray) { for (Integer integer : integers) {
- * System.out.println(integer); } } }
- *
- *
- */

@@ -1,3 +1,5 @@
+package br.edu.ifpb.gpes.old;
+
 
 import ifpb.gpes.Call;
 import ifpb.gpes.Parse;
@@ -31,11 +33,11 @@ public class MainMatrix {
         calls.stream()
                 //                                .filter((call) -> call.getCallMethod() != null)
                 .peek(c -> System.out.println(c.callGraph())) //apenas imprime
-                .forEach(dg::adicionarNos);
+                .forEach(dg::buildNode);
 //        
         Matrix matrix = dg.generateMatrix();
-        matrix.toStr();
-        matrix.metric();
+        matrix.valuesToString();
+        matrix.computeMetric();
 
         dg.getGraph().edgeSet().forEach((w) -> System.out.println(w));
 //        System.out.println(dg.getGraph());

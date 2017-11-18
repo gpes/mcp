@@ -1,8 +1,6 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -15,7 +13,6 @@ public class SmartDirectGraph implements Graph {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private Matrix matrix = new Matrix();
-    private Map<String, Node> mapa = new HashMap<>();
     private final Stack<Node> nodes = new Stack<>();
 
     public DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
@@ -23,36 +20,25 @@ public class SmartDirectGraph implements Graph {
     }
 
     @Override
-    public void adicionarNos(Call call) {
+    public void buildNode(Call call) {
         Node firstnode = new Node();
         firstnode.setClassName(call.getClassType());
         firstnode.setMethodName(call.getMethodName());
         firstnode.setReturnType(call.getReturnType());
-//        putNode(call, firstnode);
         addNodeAsVertix(firstnode);
 
         if (isNotNullCallMethod(call)) {
             Node get = nodes.pop();
             addNodeAsVertix(get);
             updateNodesToGraph(firstnode, get);
-            if (call.getInvokedBy().endsWith(")") && !call.getInvokedBy().contains("new")) {
+
+            if (isInvokedByMethod(call)) {
                 nodes.push(firstnode);
             } else {
                 Node second = nodes.pop();
                 addNodeAsVertix(second);
                 updateNodesToGraph(second, firstnode);
             }
-//            Node secondnode = new Node();
-//            secondnode.setClassName(call.getCalledInClass());
-//            secondnode.setMethodName(call.getCalledInMethod());
-//            secondnode.setReturnType(call.getCalledInMethodReturnType());
-//            addNodeAsVertix(secondnode);
-//            updateNodesToGraph(secondnode, firstnode);
-//            String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getCallMethod();
-//            Node get = mapa.get(chave);
-//            if (get != null) {
-//                updateNodesToGraph(firstnode, get);
-//            }
         } else {
             Node secondnode = new Node();
             secondnode.setClassName(call.getCalledInClass());
@@ -63,16 +49,13 @@ public class SmartDirectGraph implements Graph {
         }
     }
 
-    private void putNode(Call call, Node firstnode) {
-        String chave = call.getCalledInClass() + call.getCalledInMethod() + call.getMethodName();
-        if (!mapa.containsKey(chave)) {
-            mapa.put(chave, firstnode);
-        }
+    private static boolean isInvokedByMethod(Call call) {
+        return call.getInvokedBy().endsWith(")") && !call.getInvokedBy().contains("new");
     }
 
-    private void addNodeAsVertix(Node secondnode) {
-        if (!graph.containsVertex(secondnode)) {
-            graph.addVertex(secondnode);
+    private void addNodeAsVertix(Node node) {
+        if (!graph.containsVertex(node)) {
+            graph.addVertex(node);
         }
     }
 
@@ -104,24 +87,10 @@ public class SmartDirectGraph implements Graph {
                 Matrix.Cell cell = matrix.cell(i, j);
                 DefaultWeightedEdge edge = edge(vertices, i, j);
                 cell.set(weight(edge));
-//                System.out.println(cell);
             }
         }
 
         return this.matrix;
-//         Integer[][] array = IntStream.range(0, 2)
-//                .mapToObj(linha -> {
-//                    return IntStream.range(0, 2)
-//                            .mapToObj(coluna -> {
-//                                int a = matrix[linha][coluna];
-//                                if (a > 0) {
-//                                    return matrix[linha][coluna] + 1;
-//                                }
-//                                return matrix[linha][coluna];
-//                            })
-//                            .toArray(Integer[]::new);
-//                })
-//                .toArray(Integer[][]::new);
     }
 
     private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
