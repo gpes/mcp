@@ -50,8 +50,8 @@ public class MatrixConfidenceTest {
 
     @Test
     public void WeightSumTest() throws IOException {
-        assertNotEquals(0, dg.generateMatrix().weightSum());
-        assertEquals(17, dg.generateMatrix().weightSum());
+        assertNotEquals(0, dg.generateMatrix().sumAllWeight());
+        assertEquals(17, dg.generateMatrix().sumAllWeight());
         Assert.assertEquals(10, dg.generateMatrix().matrizDeAdjacencia().toArray().length);
     }
 

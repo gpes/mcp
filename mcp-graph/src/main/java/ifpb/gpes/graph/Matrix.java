@@ -12,13 +12,16 @@ import java.util.stream.IntStream;
 public class Matrix {
 
     protected final int[][] matrix;
+    private String[] columns;
 
     private Matrix(int[][] matrix) {
         this.matrix = matrix;
+        this.columns = new String[matrix.length];
     }
 
     public Matrix(int numeroDeVertices) {
         this(new int[numeroDeVertices][numeroDeVertices]);
+
     }
 
     public Matrix() {
@@ -29,26 +32,50 @@ public class Matrix {
         return this.matrix;
     }
 
-    public int weightSum() {
+    public int sumAllWeight() {
         if (matrix == null) {
             return 0;
         }
         return Arrays.stream(matrix).flatMapToInt(Arrays::stream).sum();
     }
 
-    public List<Integer> linhasNaoNulas(int[][] dados) {
-        List<Integer> rowsIndex = new ArrayList<>();
-        for (int i = 0; i < dados.length; i++) {
-            if (Arrays.stream(dados[i]).sum() > 0) {
-                rowsIndex.add(i);
+    public String valuesToString() {
+        StringBuilder builder = new StringBuilder();
+        for (int[] row : matrix) {
+            for (int j = 0; j < matrix.length; j++) {
+                builder.append(row[j]).append(" ");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+    public String[] namesColumns() {
+        return  this.columns;
+    }
+
+    public List<Metric> computeWithMetric(StrategyMetric strategy) {
+        List<Metric> metrics = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                int weight = matrix[i][j];
+                if (notConnected(i, j)) {//os nos estão conectados
+                    continue;
+                }
+                int sum = sum(j) + weight; //quantos nos partem dele
+                metrics.add(new Metric(String.valueOf(i), String.valueOf(j),
+                        weight, sum, strategy));
             }
         }
-        return rowsIndex;
+        return metrics;
+    }
+
+    public List<Metric> computeMetric() {
+        return computeWithMetric(new DefaultStrategyMetric());
     }
 
 //    TODO: It's not work 
     public Matrix matrizDeAdjacencia() {
-        List<Integer> linhasNaoNulas = linhasNaoNulas(matrix);
+        List<Integer> linhasNaoNulas = rowsNotNull(matrix);
         int[][] refactoredMatrix = new int[linhasNaoNulas.size()][matrix.length];
         for (int i = 0; i < refactoredMatrix.length; i++) {
             refactoredMatrix[i] = matrix[linhasNaoNulas.get(i)];
@@ -58,6 +85,28 @@ public class Matrix {
 
     public Cell cell(int linha, int coluna) {
         return new Cell(linha, coluna);
+    }
+
+    public void updateNameColumn(int column, String name) {
+        this.columns[column] = name;
+    }
+
+    private List<Integer> rowsNotNull(int[][] dados) {
+        List<Integer> rowsIndex = new ArrayList<>();
+        for (int i = 0; i < dados.length; i++) {
+            if (Arrays.stream(dados[i]).sum() > 0) {
+                rowsIndex.add(i);
+            }
+        }
+        return rowsIndex;
+    }
+
+    private int sum(int column) {
+        return IntStream.of(matrix[column]).sum();
+    }
+
+    private boolean notConnected(int row, int col) {
+        return this.matrix[row][col] == 0;
     }
 
     class Cell {
@@ -82,45 +131,6 @@ public class Matrix {
         public String toString() {
             return "(" + row + "-" + column + ") (" + get() + ")";
         }
-    }
-
-    public String valuesToString() {
-        StringBuilder builder = new StringBuilder();
-        for (int[] row : matrix) {
-            for (int j = 0; j < matrix.length; j++) {
-                builder.append(row[j]).append(" ");
-            }
-            builder.append("\n");
-        }
-        return builder.toString();
-    }
-
-    public List<Metric> computeWithMetric(StrategyMetric strategy) {
-        List<Metric> metrics = new ArrayList<>();
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
-                int weight = matrix[i][j];
-                if (notConnected(i, j)) {//os nos estão conectados
-                    continue;
-                }
-                int sum = sum(j) + weight; //quantos nos partem dele
-                metrics.add(new Metric(String.valueOf(i), String.valueOf(j),
-                        weight, sum, strategy));
-            }
-        }
-        return metrics;
-    }
-
-    public List<Metric> computeMetric() {
-        return computeWithMetric(new DefaultStrategyMetric());
-    }
-
-    private int sum(int column) {
-        return IntStream.of(matrix[column]).sum();
-    }
-
-    private boolean notConnected(int row, int col) {
-        return this.matrix[row][col] == 0;
     }
 
 }

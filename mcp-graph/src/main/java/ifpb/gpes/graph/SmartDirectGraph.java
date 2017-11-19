@@ -1,7 +1,9 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
+import java.util.List;
 import java.util.Stack;
+import java.util.function.Function;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -9,7 +11,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  *
  * @author juan
  */
-public class SmartDirectGraph implements Graph {
+public class SmartDirectGraph implements Graph, Function<List<Call>, Matrix> {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private Matrix matrix = new Matrix();
@@ -19,6 +21,17 @@ public class SmartDirectGraph implements Graph {
         return graph;
     }
 
+    //TODO: Can we use this Function? 
+    @Override
+    public Matrix apply(List<Call> calls) {
+        calls.forEach(this::buildNode);
+        return matrix;
+    }
+    
+    @Override
+    public Matrix applyToMatrix(List<Call> calls){
+        return apply(calls);
+    }
     @Override
     public void buildNode(Call call) {
         Node firstnode = new Node();
@@ -87,7 +100,9 @@ public class SmartDirectGraph implements Graph {
                 Matrix.Cell cell = matrix.cell(i, j);
                 DefaultWeightedEdge edge = edge(vertices, i, j);
                 cell.set(weight(edge));
+                
             }
+            matrix.updateNameColumn(i, vertices[i].getMethodName());
         }
 
         return this.matrix;
@@ -107,5 +122,7 @@ public class SmartDirectGraph implements Graph {
             return 0;
         }
     }
+
+    
 
 }

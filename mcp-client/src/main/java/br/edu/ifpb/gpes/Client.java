@@ -9,6 +9,7 @@ import ifpb.gpes.graph.Matrix;
 import ifpb.gpes.graph.SmartDirectGraph;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,10 +39,16 @@ public class Client {
 
         @Override
         public void export(List<Call> elements) {
-            elements.stream().forEach(graph::buildNode);
-            Matrix generateMatrix = graph.generateMatrix();
-            System.out.println(generateMatrix.valuesToString());
-            generateMatrix.computeMetric().forEach(System.out::println);
+            // It's
+            Matrix matrix = graph.applyToMatrix(elements);
+            // Or It's
+//            elements.stream().forEach(graph::buildNode);
+//            Matrix matrix = graph.generateMatrix();
+            
+            System.out.println(Arrays.toString(matrix.namesColumns()));
+            System.out.println(matrix.valuesToString());
+            matrix.computeMetric().forEach(System.out::println);
+            
         }
 
     }
