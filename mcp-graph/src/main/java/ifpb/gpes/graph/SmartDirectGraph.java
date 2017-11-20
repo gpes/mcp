@@ -12,27 +12,12 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 public class SmartDirectGraph implements Graph {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-    private Matrix matrix = new Matrix();
+//    private Matrix matrix = new Matrix();
     private final Stack<Node> nodes = new Stack<>();
 
     @Override
     public Matrix toMatrix() {
-
-        Node[] vertices = graph.vertexSet().toArray(new Node[]{});
-        int numeroDeVertices = vertices.length;
-
-        this.matrix = new Matrix(numeroDeVertices);
-
-        for (int i = 0; i < numeroDeVertices; i++) {
-            for (int j = 0; j < numeroDeVertices; j++) {
-                Matrix.Cell cell = matrix.cell(i, j);
-                DefaultWeightedEdge edge = edge(vertices, i, j);
-                cell.set(weight(edge));
-            }
-            matrix.updateNameColumn(i, vertices[i].getMethodName());
-        }
-
-        return this.matrix;
+        return new AdapterMatrix().apply(graph);
     }
 
     @Override
@@ -98,70 +83,57 @@ public class SmartDirectGraph implements Graph {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
     }
 
-    private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
-        Node firstNode = vertices[i];
-        Node secondNode = vertices[j];
-        DefaultWeightedEdge edge = graph.getEdge(firstNode, secondNode);
-        return edge;
-    }
-
-    private int weight(DefaultWeightedEdge edge) {
-        if (edge != null) {
-            return (int) graph.getEdgeWeight(edge);
-        } else {
-            return 0;
-        }
-    }
-    //TODO: Can we use this Function? 
-//    public Matrix apply(List<Call> calls) {
-//        calls.forEach(this::buildNode);
-//        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        }, (Matrix t, Matrix u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        });
-//        
-//        Matrix collect = calls.stream().collect(() -> {
-//            return new Matrix();
-//        }, new BiConsumer<Matrix, Call>() {
-//            @Override
-//            public void accept(Matrix t, Call u) {
-//                buildNode(u);
-//                
-//            }
-//        }, new BiConsumer<Matrix, Matrix>() {
-//            @Override
-//            public void accept(Matrix t, Matrix u) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
-//        return matrix;
+//    private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
+//        Node firstNode = vertices[i];
+//        Node secondNode = vertices[j];
+//        DefaultWeightedEdge edge = graph.getEdge(firstNode, secondNode);
+//        return edge;
 //    }
-
-//    @Override
-//    public Matrix applyToMatrix(List<Call> calls) {
-//        calls.forEach(this::buildNode);
-//        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        }, (Matrix t, Matrix u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        });
-//
-//        Matrix collect = calls.stream().collect(() -> {
-//            return new Matrix();
-//        }, new BiConsumer<Matrix, Call>() {
-//            @Override
-//            public void accept(Matrix t, Call u) {
-//                buildNode(u);
-//
-//            }
-//        }, new BiConsumer<Matrix, Matrix>() {
-//            @Override
-//            public void accept(Matrix t, Matrix u) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
-//        return matrix;
-////        return apply(calls);
+//    private int weight(DefaultWeightedEdge edge) {
+//        if (edge != null) {
+//            return (int) graph.getEdgeWeight(edge);
+//        } else {
+//            return 0;
+//        }
 //    }
 }
+
+//class AdapterMatrix implements Function<AbstractBaseGraph<Node, DefaultWeightedEdge>, Matrix> {
+//
+//    private Matrix matrix = new Matrix();
+//    private AbstractBaseGraph<Node, DefaultWeightedEdge> graph;
+//
+//    @Override
+//    public Matrix apply(AbstractBaseGraph<Node, DefaultWeightedEdge> graph) {
+//        this.graph = graph;
+//        Node[] vertices =  graph.vertexSet().toArray(new Node[]{});
+//        int numeroDeVertices = vertices.length;
+//
+//        this.matrix = new Matrix(numeroDeVertices);
+//
+//        for (int i = 0; i < numeroDeVertices; i++) {
+//            for (int j = 0; j < numeroDeVertices; j++) {
+//                Matrix.Cell cell = matrix.cell(i, j);
+//                DefaultWeightedEdge edge = edge(vertices, i, j);
+//                cell.set(weight(edge));
+//            }
+//            matrix.updateNameColumn(i, vertices[i].getMethodName());
+//        }
+//        return this.matrix;
+//    }
+//
+//    private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
+//        Node firstNode = vertices[i];
+//        Node secondNode = vertices[j];
+//        DefaultWeightedEdge edge = graph.getEdge(firstNode, secondNode);
+//        return edge;
+//    }
+//
+//    private int weight(DefaultWeightedEdge edge) {
+//        if (edge != null) {
+//            return (int) graph.getEdgeWeight(edge);
+//        } else {
+//            return 0;
+//        }
+//    }
+//}
