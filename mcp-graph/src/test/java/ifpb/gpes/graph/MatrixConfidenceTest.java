@@ -19,7 +19,7 @@ import org.junit.Test;
 public class MatrixConfidenceTest {
 
     private final List<Call> calls = ofProject();
-    private final SmartDirectGraph dg = new SmartDirectGraph();
+    private final DefaultDirectGraph dg = new DefaultDirectGraph();
     private static final String sources = "../mcp-samples/src/main/java/";
 
     private List<Call> ofProject() {
@@ -41,7 +41,6 @@ public class MatrixConfidenceTest {
     public void VertexNumberTest() throws IOException, InterruptedException, ClassNotFoundException {
         Assert.assertEquals(17, dg.getGraph().vertexSet().size());
     }
-//
 
     @Test
     public void EdgeNumberTest() throws IOException {
@@ -51,7 +50,7 @@ public class MatrixConfidenceTest {
     @Test
     public void WeightSumTest() throws IOException {
         assertNotEquals(0, dg.toMatrix().sumAllWeight());
-        assertEquals(17, dg.toMatrix().sumAllWeight());
+        assertEquals(17, dg.toMatrix().sumAllWeight()); //dg.getGraph().vertexSet().size()
         Assert.assertEquals(10, dg.toMatrix().matrizDeAdjacencia().toArray().length);
     }
 

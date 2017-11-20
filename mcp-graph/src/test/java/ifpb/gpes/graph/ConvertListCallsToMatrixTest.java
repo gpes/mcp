@@ -33,7 +33,7 @@ public class ConvertListCallsToMatrixTest {
     @Test
     public void collectTest() throws IOException {
 
-        Graph graph = calls.stream().collect(SmartDirectGraph::new,
+        Graph graph = calls.stream().collect(DefaultDirectGraph::new,
                 Graph::buildNode, (Graph t, Graph u) -> {
                 });
 
@@ -47,7 +47,7 @@ public class ConvertListCallsToMatrixTest {
     @Test
     public void reduceTest() throws IOException {
 
-        Graph graph = calls.stream().reduce(new SmartDirectGraph(),
+        Graph graph = calls.stream().reduce(new DefaultDirectGraph(),
                 (Graph t, Call u) -> {
                     t.buildNode(u);
                     return t;

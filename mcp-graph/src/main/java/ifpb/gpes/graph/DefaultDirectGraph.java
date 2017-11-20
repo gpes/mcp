@@ -9,15 +9,15 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  *
  * @author juan
  */
-public class SmartDirectGraph implements Graph {
+public class DefaultDirectGraph implements Graph {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-//    private Matrix matrix = new Matrix();
     private final Stack<Node> nodes = new Stack<>();
 
     @Override
     public Matrix toMatrix() {
-        return new AdapterMatrix().apply(graph);
+        return new AdapterMatrix(graph)
+                .get();
     }
 
     @Override
@@ -50,6 +50,7 @@ public class SmartDirectGraph implements Graph {
         }
     }
 
+    // @juan is it necessary?
     public DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
         return graph;
     }
@@ -78,62 +79,7 @@ public class SmartDirectGraph implements Graph {
         }
     }
 
-    // OR isNullCallMethod
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
     }
-
-//    private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
-//        Node firstNode = vertices[i];
-//        Node secondNode = vertices[j];
-//        DefaultWeightedEdge edge = graph.getEdge(firstNode, secondNode);
-//        return edge;
-//    }
-//    private int weight(DefaultWeightedEdge edge) {
-//        if (edge != null) {
-//            return (int) graph.getEdgeWeight(edge);
-//        } else {
-//            return 0;
-//        }
-//    }
 }
-
-//class AdapterMatrix implements Function<AbstractBaseGraph<Node, DefaultWeightedEdge>, Matrix> {
-//
-//    private Matrix matrix = new Matrix();
-//    private AbstractBaseGraph<Node, DefaultWeightedEdge> graph;
-//
-//    @Override
-//    public Matrix apply(AbstractBaseGraph<Node, DefaultWeightedEdge> graph) {
-//        this.graph = graph;
-//        Node[] vertices =  graph.vertexSet().toArray(new Node[]{});
-//        int numeroDeVertices = vertices.length;
-//
-//        this.matrix = new Matrix(numeroDeVertices);
-//
-//        for (int i = 0; i < numeroDeVertices; i++) {
-//            for (int j = 0; j < numeroDeVertices; j++) {
-//                Matrix.Cell cell = matrix.cell(i, j);
-//                DefaultWeightedEdge edge = edge(vertices, i, j);
-//                cell.set(weight(edge));
-//            }
-//            matrix.updateNameColumn(i, vertices[i].getMethodName());
-//        }
-//        return this.matrix;
-//    }
-//
-//    private DefaultWeightedEdge edge(Node[] vertices, int i, int j) {
-//        Node firstNode = vertices[i];
-//        Node secondNode = vertices[j];
-//        DefaultWeightedEdge edge = graph.getEdge(firstNode, secondNode);
-//        return edge;
-//    }
-//
-//    private int weight(DefaultWeightedEdge edge) {
-//        if (edge != null) {
-//            return (int) graph.getEdgeWeight(edge);
-//        } else {
-//            return 0;
-//        }
-//    }
-//}

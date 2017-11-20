@@ -1,6 +1,6 @@
 package ifpb.gpes.graph;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 import org.jgrapht.graph.AbstractBaseGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -9,15 +9,18 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  * @mail ricardo.job@ifpb.edu.br
  * @since 20/11/2017, 16:51:04
  */
-public class AdapterMatrix implements Function<AbstractBaseGraph<Node, DefaultWeightedEdge>, Matrix> {
+public class AdapterMatrix implements Supplier<Matrix> {
 
     private Matrix matrix = new Matrix();
-    private AbstractBaseGraph<Node, DefaultWeightedEdge> graph;
+    private final AbstractBaseGraph<Node, DefaultWeightedEdge> graph;
+
+    public AdapterMatrix(AbstractBaseGraph<Node, DefaultWeightedEdge> graph) {
+        this.graph = graph;
+    }
 
     @Override
-    public Matrix apply(AbstractBaseGraph<Node, DefaultWeightedEdge> graph) {
-        this.graph = graph;
-        Node[] vertices =  graph.vertexSet().toArray(new Node[]{});
+    public Matrix get() {
+        Node[] vertices = graph.vertexSet().toArray(new Node[]{});
         int numeroDeVertices = vertices.length;
 
         this.matrix = new Matrix(numeroDeVertices);
@@ -47,4 +50,5 @@ public class AdapterMatrix implements Function<AbstractBaseGraph<Node, DefaultWe
             return 0;
         }
     }
+
 }

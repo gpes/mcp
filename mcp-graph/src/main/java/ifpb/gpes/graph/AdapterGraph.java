@@ -14,7 +14,7 @@ public class AdapterGraph implements Function<List<Call>, Graph> {
     @Override
     public Graph apply(List<Call> calls) {
         Graph graph = calls.stream()
-                .collect(SmartDirectGraph::new,
+                .collect(DefaultDirectGraph::new,
                 Graph::buildNode, (Graph t, Graph u) -> {
                 });
         return graph;
