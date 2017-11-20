@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 public class Matrix {
 
     protected final int[][] matrix;
-    private String[] columns;
+    private final String[] columns;
 
     private Matrix(int[][] matrix) {
         this.matrix = matrix;
@@ -83,8 +83,8 @@ public class Matrix {
         return new Matrix(refactoredMatrix);
     }
 
-    public Cell cell(int linha, int coluna) {
-        return new Cell(linha, coluna);
+    public Cell cell(int row, int column) {
+        return new Cell(row, column);
     }
 
     public void updateNameColumn(int column, String name) {
