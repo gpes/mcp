@@ -37,7 +37,7 @@ public class ConvertListCallsToMatrixTest {
                 Graph::buildNode, (Graph t, Graph u) -> {
                 });
 
-        Matrix generateMatrix = graph.generateMatrix();
+        Matrix generateMatrix = graph.toMatrix();
 
         assertNotNull(graph);
         assertNotNull(generateMatrix);
@@ -53,7 +53,7 @@ public class ConvertListCallsToMatrixTest {
                     return t;
                 }, (Graph t, Graph u) -> t);
 
-        Matrix generateMatrix = graph.generateMatrix();
+        Matrix generateMatrix = graph.toMatrix();
 
         assertNotNull(graph);
         assertNotNull(generateMatrix);
@@ -65,7 +65,7 @@ public class ConvertListCallsToMatrixTest {
         Graph graph = new AdapterGraph()
                 .apply(calls);
 
-        Matrix generateMatrix = graph.generateMatrix();
+        Matrix generateMatrix = graph.toMatrix();
 
         assertNotNull(graph);
         assertNotNull(generateMatrix);

@@ -1,9 +1,7 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
-import java.util.List;
 import java.util.Stack;
-import java.util.function.BiConsumer;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -17,12 +15,8 @@ public class SmartDirectGraph implements Graph {
     private Matrix matrix = new Matrix();
     private final Stack<Node> nodes = new Stack<>();
 
-    public DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
-        return graph;
-    }
-
     @Override
-    public Matrix generateMatrix() {
+    public Matrix toMatrix() {
 
         Node[] vertices = graph.vertexSet().toArray(new Node[]{});
         int numeroDeVertices = vertices.length;
@@ -39,58 +33,6 @@ public class SmartDirectGraph implements Graph {
         }
 
         return this.matrix;
-    }
-    //TODO: Can we use this Function? 
-//    public Matrix apply(List<Call> calls) {
-//        calls.forEach(this::buildNode);
-//        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        }, (Matrix t, Matrix u) -> {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        });
-//        
-//        Matrix collect = calls.stream().collect(() -> {
-//            return new Matrix();
-//        }, new BiConsumer<Matrix, Call>() {
-//            @Override
-//            public void accept(Matrix t, Call u) {
-//                buildNode(u);
-//                
-//            }
-//        }, new BiConsumer<Matrix, Matrix>() {
-//            @Override
-//            public void accept(Matrix t, Matrix u) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        });
-//        return matrix;
-//    }
-
-    @Override
-    public Matrix applyToMatrix(List<Call> calls) {
-        calls.forEach(this::buildNode);
-        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }, (Matrix t, Matrix u) -> {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        });
-
-        Matrix collect = calls.stream().collect(() -> {
-            return new Matrix();
-        }, new BiConsumer<Matrix, Call>() {
-            @Override
-            public void accept(Matrix t, Call u) {
-                buildNode(u);
-
-            }
-        }, new BiConsumer<Matrix, Matrix>() {
-            @Override
-            public void accept(Matrix t, Matrix u) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-        return matrix;
-//        return apply(calls);
     }
 
     @Override
@@ -123,7 +65,11 @@ public class SmartDirectGraph implements Graph {
         }
     }
 
-    private static boolean isInvokedByMethod(Call call) {
+    public DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
+        return graph;
+    }
+
+    private boolean isInvokedByMethod(Call call) {
         String invokedBy = call.getInvokedBy();
         if (invokedBy == null) {
             return false;
@@ -166,5 +112,56 @@ public class SmartDirectGraph implements Graph {
             return 0;
         }
     }
+    //TODO: Can we use this Function? 
+//    public Matrix apply(List<Call> calls) {
+//        calls.forEach(this::buildNode);
+//        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
+//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        }, (Matrix t, Matrix u) -> {
+//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        });
+//        
+//        Matrix collect = calls.stream().collect(() -> {
+//            return new Matrix();
+//        }, new BiConsumer<Matrix, Call>() {
+//            @Override
+//            public void accept(Matrix t, Call u) {
+//                buildNode(u);
+//                
+//            }
+//        }, new BiConsumer<Matrix, Matrix>() {
+//            @Override
+//            public void accept(Matrix t, Matrix u) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+//        return matrix;
+//    }
 
+//    @Override
+//    public Matrix applyToMatrix(List<Call> calls) {
+//        calls.forEach(this::buildNode);
+//        Matrix reduce = calls.stream().reduce(new Matrix(), (Matrix t, Call u) -> {
+//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        }, (Matrix t, Matrix u) -> {
+//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        });
+//
+//        Matrix collect = calls.stream().collect(() -> {
+//            return new Matrix();
+//        }, new BiConsumer<Matrix, Call>() {
+//            @Override
+//            public void accept(Matrix t, Call u) {
+//                buildNode(u);
+//
+//            }
+//        }, new BiConsumer<Matrix, Matrix>() {
+//            @Override
+//            public void accept(Matrix t, Matrix u) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        });
+//        return matrix;
+////        return apply(calls);
+//    }
 }

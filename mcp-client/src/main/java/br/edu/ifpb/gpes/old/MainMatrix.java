@@ -35,7 +35,7 @@ public class MainMatrix {
                 .peek(c -> System.out.println(c.callGraph())) //apenas imprime
                 .forEach(dg::buildNode);
 //        
-        Matrix matrix = dg.generateMatrix();
+        Matrix matrix = dg.toMatrix();
         matrix.valuesToString();
         matrix.computeMetric();
 

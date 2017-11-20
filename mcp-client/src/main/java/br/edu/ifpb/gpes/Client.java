@@ -40,10 +40,10 @@ public class Client {
         @Override
         public void export(List<Call> elements) {
             // It's
-            Matrix matrix = graph.applyToMatrix(elements);
+//            Matrix matrix = graph.applyToMatrix(elements);
             // Or It's
-//            elements.stream().forEach(graph::buildNode);
-//            Matrix matrix = graph.generateMatrix();
+            elements.stream().forEach(graph::buildNode);
+            Matrix matrix = graph.toMatrix();
             
             System.out.println(Arrays.toString(matrix.namesColumns()));
             System.out.println(matrix.valuesToString());

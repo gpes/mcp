@@ -61,7 +61,7 @@ public class Matrix {
                 if (notConnected(i, j)) {//os nos estão conectados
                     continue;
                 }
-                int sum = sum(j) + weight; //quantos nos partem dele
+                int sum = sumCallsTo(j) + weight; //quantos nos partem dele
                 metrics.add(new Metric(String.valueOf(i), String.valueOf(j),
                         weight, sum, strategy));
             }
@@ -101,7 +101,7 @@ public class Matrix {
         return rowsIndex;
     }
 
-    private int sum(int column) {
+    private int sumCallsTo(int column) {
         return IntStream.of(matrix[column]).sum();
     }
 
