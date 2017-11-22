@@ -4,10 +4,6 @@ import ifpb.gpes.Call;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Supplier;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
@@ -34,7 +30,7 @@ public class ConvertListCallsToMatrixTest {
     public void collectTest() throws IOException {
 
         Graph graph = calls.stream().collect(DefaultDirectGraph::new,
-                Graph::buildNode, (Graph t, Graph u) -> {
+                DefaultDirectGraph::buildNode, (DefaultDirectGraph t, DefaultDirectGraph u) -> {
                 });
 
         Matrix generateMatrix = graph.toMatrix();
@@ -48,10 +44,10 @@ public class ConvertListCallsToMatrixTest {
     public void reduceTest() throws IOException {
 
         Graph graph = calls.stream().reduce(new DefaultDirectGraph(),
-                (Graph t, Call u) -> {
+                (DefaultDirectGraph t, Call u) -> {
                     t.buildNode(u);
                     return t;
-                }, (Graph t, Graph u) -> t);
+                }, (DefaultDirectGraph t, DefaultDirectGraph u) -> t);
 
         Matrix generateMatrix = graph.toMatrix();
 

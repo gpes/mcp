@@ -39,12 +39,7 @@ public class MatrixConfidenceTest {
 
     @Test
     public void VertexNumberTest() throws IOException, InterruptedException, ClassNotFoundException {
-        Assert.assertEquals(17, dg.getGraph().vertexSet().size());
-    }
-
-    @Test
-    public void EdgeNumberTest() throws IOException {
-        Assert.assertEquals(14, dg.getGraph().edgeSet().size());
+        Assert.assertEquals(17, dg.vertex().size());
     }
 
     @Test

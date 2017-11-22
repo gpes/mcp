@@ -1,15 +1,16 @@
 package ifpb.gpes.graph;
 
-import ifpb.gpes.Call;
+import java.util.Set;
 
 /**
  *
  * @author juan
  */
 public interface Graph {
+
     Matrix toMatrix();
-    void buildNode(Call call);
-    //TODO?
-    // public Set<Node> vertex 
-    // public int edge 
+
+    public Set<Node> vertex();
+    public double edge(Node source, Node target);
+    public boolean isConnected(Node source, Node target);
 }

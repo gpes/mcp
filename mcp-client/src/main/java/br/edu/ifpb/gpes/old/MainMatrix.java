@@ -5,7 +5,7 @@ import ifpb.gpes.Call;
 import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
 import ifpb.gpes.graph.Matrix;
-import ifpb.gpes.graph.SmartDirectGraph;
+import ifpb.gpes.graph.DefaultDirectGraph;
 import ifpb.gpes.jdt.ParseStrategies;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -29,7 +29,7 @@ public class MainMatrix {
                 .filter(".java");
 
         List<Call> calls = Parse.with(ParseStrategies.JDT).from(project);
-        SmartDirectGraph dg = new SmartDirectGraph();
+        DefaultDirectGraph dg = new DefaultDirectGraph();
         calls.stream()
                 //                                .filter((call) -> call.getCallMethod() != null)
                 .peek(c -> System.out.println(c.callGraph())) //apenas imprime
@@ -39,7 +39,6 @@ public class MainMatrix {
         matrix.valuesToString();
         matrix.computeMetric();
 
-        dg.getGraph().edgeSet().forEach((w) -> System.out.println(w));
 //        System.out.println(dg.getGraph());
         //        System.out.println(matrix.toStr());
 

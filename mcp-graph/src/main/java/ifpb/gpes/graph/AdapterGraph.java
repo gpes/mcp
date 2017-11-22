@@ -15,7 +15,7 @@ public class AdapterGraph implements Function<List<Call>, Graph> {
     public Graph apply(List<Call> calls) {
         Graph graph = calls.stream()
                 .collect(DefaultDirectGraph::new,
-                Graph::buildNode, (Graph t, Graph u) -> {
+                DefaultDirectGraph::buildNode, (DefaultDirectGraph t, DefaultDirectGraph u) -> {
                 });
         return graph;
     }

@@ -1,6 +1,7 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
+import java.util.Set;
 import java.util.Stack;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -20,7 +21,6 @@ public class DefaultDirectGraph implements Graph {
                 .get();
     }
 
-    @Override
     public void buildNode(Call call) {
         Node firstnode = new Node();
         firstnode.setClassName(call.getClassType());
@@ -50,9 +50,18 @@ public class DefaultDirectGraph implements Graph {
         }
     }
 
-    // @juan is it necessary?
-    public DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> getGraph() {
-        return graph;
+    @Override
+    public Set<Node> vertex() {
+        return graph.vertexSet();
+    }
+
+    @Override
+    public double edge(Node source, Node target) {
+        if(isConnected(source, target)){
+            DefaultWeightedEdge edge = graph.getEdge(source, target);
+            return graph.getEdgeWeight(edge);
+        }
+        return 0;
     }
 
     private boolean isInvokedByMethod(Call call) {
@@ -81,5 +90,12 @@ public class DefaultDirectGraph implements Graph {
 
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
+    }
+    
+    @Override
+    public boolean isConnected(Node source, Node target) {
+        if(graph.getEdge(source, target) != null)
+            return true;
+        return false;      
     }
 }

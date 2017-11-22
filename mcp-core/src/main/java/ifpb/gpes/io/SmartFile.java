@@ -40,7 +40,7 @@ public class SmartFile {
 
     public Stream<Path> extension(String extensionFile) {
         List<Path> paths = new ArrayList<>();
-
+        
         try {
             Files.walkFileTree(this.path, new SimpleFileVisitor<Path>() {
                 @Override
