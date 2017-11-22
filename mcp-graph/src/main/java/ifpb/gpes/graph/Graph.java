@@ -6,11 +6,10 @@ import java.util.Set;
  *
  * @author juan
  */
-public interface Graph {
+public interface Graph<V,E> {
 
     Matrix toMatrix();
-
-    public Set<Node> vertex();
-    public double edge(Node source, Node target);
-    public boolean isConnected(Node source, Node target);
+    public Set<V> vertex();
+    public E edge(V source, V target);
+    public boolean isConnected(V source, V target);
 }

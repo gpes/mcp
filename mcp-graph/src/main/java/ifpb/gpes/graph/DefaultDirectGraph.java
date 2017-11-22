@@ -10,7 +10,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  *
  * @author juan
  */
-public class DefaultDirectGraph implements Graph {
+public class DefaultDirectGraph implements Graph<Node,Double> {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private final Stack<Node> nodes = new Stack<>();
@@ -56,12 +56,12 @@ public class DefaultDirectGraph implements Graph {
     }
 
     @Override
-    public double edge(Node source, Node target) {
+    public Double edge(Node source, Node target) {
         if(isConnected(source, target)){
             DefaultWeightedEdge edge = graph.getEdge(source, target);
             return graph.getEdgeWeight(edge);
         }
-        return 0;
+        return 0d;
     }
 
     private boolean isInvokedByMethod(Call call) {
@@ -94,8 +94,6 @@ public class DefaultDirectGraph implements Graph {
     
     @Override
     public boolean isConnected(Node source, Node target) {
-        if(graph.getEdge(source, target) != null)
-            return true;
-        return false;      
+        return graph.getEdge(source, target) != null;      
     }
 }
