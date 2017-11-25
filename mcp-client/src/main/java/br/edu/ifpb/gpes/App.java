@@ -10,7 +10,7 @@ public class App {
         String[] arg = "-dir src/  -from https://github.com/pmxa/plugin -c true".split(" ");
         for (String string : arg) {
             System.out.println("string = " + string);
-        }
-        
     }
+    
+}
 }
