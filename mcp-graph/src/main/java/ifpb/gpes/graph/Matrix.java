@@ -14,7 +14,7 @@ public class Matrix {
     protected final int[][] matrix;
     private final String[] columns;
 
-    private Matrix(int[][] matrix) {
+    public Matrix(int[][] matrix) {
         this.matrix = matrix;
         this.columns = new String[matrix.length];
     }
@@ -39,6 +39,27 @@ public class Matrix {
         return Arrays.stream(matrix).flatMapToInt(Arrays::stream).sum();
     }
 
+//    public int sumRow(int row) {
+//        if (matrix == null) {
+//            return 0;
+//        }
+//
+//        return IntStream.range(0, matrix.length)
+//                .filter(j -> j == row)
+//                .sum();
+//    }
+    public boolean conectado(int row) {
+        int soma = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix.length; j++) {
+                if ((i == row) || (row == j)) {
+                    soma = soma + matrix[i][j];
+                }
+            }
+        }
+        return soma > 0;
+    }
+
     public String valuesToString() {
         StringBuilder builder = new StringBuilder();
         for (int[] row : matrix) {
@@ -49,8 +70,9 @@ public class Matrix {
         }
         return builder.toString();
     }
+
     public String[] namesColumns() {
-        return  this.columns;
+        return this.columns;
     }
 
     public List<Metric> computeWithMetric(StrategyMetric strategy) {

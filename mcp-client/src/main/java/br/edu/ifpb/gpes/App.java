@@ -7,7 +7,7 @@ package br.edu.ifpb.gpes;
  */
 public class App {
     public static void main(String[] args) {
-        String[] arg = "-dir src/  -from https://github.com/pmxa/plugin".split(" ");
+        String[] arg = "-dir src/  -from https://github.com/pmxa/plugin -c true".split(" ");
         for (String string : arg) {
             System.out.println("string = " + string);
         }
