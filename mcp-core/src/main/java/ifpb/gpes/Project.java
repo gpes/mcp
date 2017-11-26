@@ -19,7 +19,7 @@ public class Project {
     private final String root;
     private String name = UUID.randomUUID().toString();
 
-    private Project(String dir) {
+    protected Project(String dir) {
         this.root = dir;
     }
 

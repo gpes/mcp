@@ -36,9 +36,9 @@ public class ArgumentParser {
     }
 
     public ArgParserOTP parse(String[] args) {
-        
+
         ArgParserOTP output = new ArgParserOTP();
-        
+
         populate(args);
 
         if (hasHelpFlag()) {
@@ -48,8 +48,8 @@ public class ArgumentParser {
 
         arguments.forEach((k, v) -> {
             argumentTypeList.forEach((ar) -> ar.parseArgument(k, v, output));
-        });       
-        arguments.forEach((k, v)-> System.out.println(k + " " + v));
+        });
+        arguments.forEach((k, v) -> System.out.println(k + " " + v));
         return output;
     }
 

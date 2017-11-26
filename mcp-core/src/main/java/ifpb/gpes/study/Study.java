@@ -21,6 +21,10 @@ public class Study {
     private final Parse parse;
     private final Project project;
 
+    public Study(Project project) {
+        this(new PrintOutManager(), Parse.with(new DefaultStrategy()), project);
+    }
+
     private Study(ExportManager strategy, Parse parse, Project project) {
         this.strategy = strategy;
         this.parse = parse;
@@ -32,7 +36,7 @@ public class Study {
     }
 
     public static Study of(Project project) {
-        return new Study(new PrintOutManager(), Parse.with(new DefaultStrategy()), project);
+        return new Study(project);
     }
 
     public Study with(Parse parse) {
