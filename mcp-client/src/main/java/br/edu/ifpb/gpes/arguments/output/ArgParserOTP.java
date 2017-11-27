@@ -16,6 +16,7 @@ public class ArgParserOTP {
     private String export;
     private boolean calls;
     private boolean matrix;
+    private final String SOURCE = "src/";
 
     public String getDir() {
         return dir;
@@ -62,9 +63,13 @@ public class ArgParserOTP {
         return this;
     }
 
+    public String getSource() {
+        return this.SOURCE;
+    }
+    
     @Override
     public String toString() {
         return "ArgParserOTP{" + "dir=" + dir + ", from=" + from + ", export=" + export + ", calls=" + calls + ", matrix=" + matrix + '}';
     }
-    
+
 }

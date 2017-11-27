@@ -28,7 +28,7 @@ public class DirectoryArgument extends AbstractArgument {
 
     @Override
     public void getHelp() {
-        System.out.println("-d or --dir -> argumento usado para informar o path das classes do projeto que será analisado");
+        System.out.println("-d or --dir    -> argumento usado para informar o path das classes do projeto que será analisado (required)");
     }
 
 }

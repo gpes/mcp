@@ -29,7 +29,7 @@ public class RepositoryArgument extends AbstractArgument {
 
     @Override
     public void getHelp() {
-        System.out.println("-f or --from -> use este argumento para informar o link do projeto a ser analisado");
+        System.out.println("-f or --from   -> use este argumento para informar o link do projeto a ser analisado (required)");
     }
 
 }

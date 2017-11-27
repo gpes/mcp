@@ -31,7 +31,7 @@ public class MatrixArgument extends AbstractArgument {
 
     @Override
     public void getHelp() {
-        System.out.println("-m or --matrix -> argumento usado para informar se a matrix será adicionada no output da ferramenta \n\t\tvalor default: false");
+        System.out.println("-m or --matrix -> argumento usado para informar se a matrix será adicionada no output da ferramenta \n\t\t  valor default: false");
     }
     
 }

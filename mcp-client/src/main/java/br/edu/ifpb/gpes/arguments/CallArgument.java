@@ -31,7 +31,7 @@ public class CallArgument extends AbstractArgument {
 
     @Override
     public void getHelp() {
-        System.out.println("-c or --call -> argumento usado para informar se a lista de chamadas será adicionada no output da ferramenta \n\t\tvalor default: false");
+        System.out.println("-c or --call   -> argumento usado para informar se a lista de chamadas será adicionada no output da ferramenta \n\t\t  valor default: false");
     }
     
 }

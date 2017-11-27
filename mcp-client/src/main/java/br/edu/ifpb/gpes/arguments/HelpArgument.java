@@ -28,7 +28,7 @@ public class HelpArgument extends AbstractArgument{
 
     @Override
     public void getHelp() {
-        System.out.println("-h or --help -> use this argument to see the info of others arguments");
+        System.out.println("-h or --help   -> use this argument to see the info of others arguments");
     }
     
 }

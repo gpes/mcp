@@ -28,7 +28,7 @@ public class ExportArgument extends AbstractArgument {
 
     @Override
     public void getHelp() {
-        System.out.println("-e or --export -> argumento usado para informar o tipo do output gerado pela ferramenta \n\t\tvalor default: txt");
+        System.out.println("-e or --export -> argumento usado para informar o tipo do output gerado pela ferramenta \n\t\t  valor default: txt");
     }
     
 }
