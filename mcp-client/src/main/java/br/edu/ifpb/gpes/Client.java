@@ -39,8 +39,10 @@ public class Client {
 //                .analysis(new ExportVoid(true, true))
 //                .execute();
         ArgParserOTP output = new ArgumentParser().
-                parse("--from /Users/job/Documents/dev/gpes/data/projects/pmxa-plugin/".split(" "));
-        InputOfStudy.from(output).execute();
+                parse(args);
+        if (output != null) {
+            InputOfStudy.from(output).execute();
+        }
     }
 
     static class ExportVoid implements ExportManager {
@@ -56,11 +58,11 @@ public class Client {
 
         @Override
         public void export(List<Call> elements) {
-            
+
             if (calls) {
                 origin.export(elements);
             }
-            
+
             if (matriz) {
                 Graph graph = new AdapterGraph().apply(elements);
                 Matrix matrix = graph.toMatrix();
@@ -86,8 +88,8 @@ public class Client {
             return new InputOfStudy(arg,
                     Project
                             .root(arg.getFrom())
-                            .path("src/")
-                            .sources("src/")
+                            .path(arg.getDir())
+                            .sources(arg.getSource())
                             .filter(".java"));
         }
 
