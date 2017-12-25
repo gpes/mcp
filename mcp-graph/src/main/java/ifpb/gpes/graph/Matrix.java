@@ -110,7 +110,8 @@ public class Matrix {
     }
 
     public void updateNameColumn(int column, String name) {
-        this.columns[column] = name;
+//        if(conectado(column))
+            this.columns[column] = name;
     }
 
     private List<Integer> rowsNotNull(int[][] dados) {

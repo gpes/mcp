@@ -19,17 +19,26 @@ public class FilterClassType implements Predicate<Call> {
         this.types = Arrays.asList(types);
     }
 
-    public FilterClassType(Class type) {
-        this.type = type;
+    public FilterClassType(String type) {
+        try {
+            this.type = Class.forName(type);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public boolean test(Call t) {
-        //recupera a segunda parte da string do objeto type
-        //defini a seguda parte pois todo tostring de Class segue um padrão 
-        //"identificador nomeQualificado"
-        String value = type.toString().split(" ")[1];
-        return t.getReturnType().contains(value);
+        try {
+//        recupera a segunda parte da string do objeto type
+//        defini a seguda parte pois todo tostring de Class segue um padrão
+//        "identificador nomeQualificado"
+//        String value = type.toString().split(" ")[1];
+            return t.getClassType().contains("java.util.") && type.isAssignableFrom(Class.forName(t.getClassType().split("<")[0]));
+        } catch (ClassNotFoundException ex) {
+            System.out.println("não foi possivel encontrar a classe: " + t.toString());
+        }
+        return false;
     }
 
 //    @Override

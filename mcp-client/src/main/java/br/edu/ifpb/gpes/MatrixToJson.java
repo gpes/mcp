@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -59,27 +60,45 @@ public class MatrixToJson {
 
     private void escreverNoArquivo(String nodes, String edges,
             String[] namesColumns) {
-        String file = "function fillGraph() { "
-                + " var nodes = '" + nodes + "';"
-                + " var arr = '" + edges + "';"
-                + " var data = {"
-                + "     nodes: JSON.parse(nodes),"
-                + "     edges: JSON.parse(arr)"
-                + " };"
-                + " var options = {};"
-                + " var container = document.getElementById('graph');"
-                + " var network = new vis.Network(container, data, options);"
-                + " var ns = document.getElementById('nodes');"
-                + " ns.innerText = '" + colunas(namesColumns) + "';"
+        Path script = Paths.get("./src/main/java/br/edu/ifpb/gpes/script.js");
+        Path elements = Paths.get("./src/main/java/br/edu/ifpb/gpes/elements.json");
+        String elementsFile = "{\n"
+                + "	\"nodes\":" + nodes + ",\n"
+                + "	\"edges\":" + edges + "\n"
                 + "}";
-        salvarArquivo(file);
 
+        salvarArquivo(elementsFile, elements);
+
+//        String file = "var imported = document.createElement('script');"
+//                + "imported.src = 'elements.js';"
+//                + "document.head.appendChild(imported);"
+//                + "function fillGraph() { "
+//                + " var data = {"
+//                + "     nodes: JSON.parse(nodes),"
+//                + "     edges: JSON.parse(arr)"
+//                + " };"
+//                + " var options = {};"
+//                + " var container = document.getElementById('graph');"
+//                + " var network = new vis.Network(container, data, options);"
+//                + " var ns = document.getElementById('nodes');"
+//                + " ns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;"
+//                + "}";
+//        salvarArquivo(file, script);
+        String texto = "\n ns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;";
+        atualizarScript(texto, script);
     }
 
-    private void salvarArquivo(String texto) {
-        Path get = Paths.get("./src/main/java/br/edu/ifpb/gpes/script.js");
-        try (BufferedWriter writer = Files.newBufferedWriter(get)) {
+    private void salvarArquivo(String texto, Path path) {
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(texto);
+        } catch (IOException ex) {
+            Logger.getLogger(MatrixEx.class.getName()).log(Level.SEVERE, "problem write file", ex);
+        }
+    }
+
+    private void atualizarScript(String texto, Path path) {
+        try {
+            Files.write(path, texto.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException ex) {
             Logger.getLogger(MatrixEx.class.getName()).log(Level.SEVERE, "problem write file", ex);
         }
@@ -90,6 +109,12 @@ public class MatrixToJson {
                 .mapToObj(x -> String.format("%d - %s", x, namesColumns[x]))
                 .collect(Collectors.joining(" "));
         return collect;
+    }
+
+    private String colunasFormatadasHtml(String[] namesColumns) {
+        return IntStream.range(0, namesColumns.length)
+                .mapToObj(x -> String.format("<p class=\"col-md-4\"><span class=\"badge\">%d</span> %s</p>", x, namesColumns[x]))
+                .collect(Collectors.joining("\n"));
     }
 
     private static class EdgeVis {

@@ -1,1 +1,25 @@
-function fillGraph() {  var nodes = '[{"id":"5", "label":"5"}, {"id":"6", "label":"6"}, {"id":"15", "label":"15"}, {"id":"16", "label":"16"}, {"id":"22", "label":"22"}, {"id":"23", "label":"23"}, {"id":"31", "label":"31"}, {"id":"33", "label":"33"}, {"id":"34", "label":"34"}, {"id":"35", "label":"35"}, {"id":"36", "label":"36"}, {"id":"42", "label":"42"}, {"id":"43", "label":"43"}]'; var arr = '[{"from":"5", "to":"23", "arrows":"to", "label":"1"}, {"from":"6", "to":"16", "arrows":"to", "label":"1"}, {"from":"16", "to":"15", "arrows":"to", "label":"1"}, {"from":"23", "to":"22", "arrows":"to", "label":"2"}, {"from":"31", "to":"23", "arrows":"to", "label":"1"}, {"from":"33", "to":"42", "arrows":"to", "label":"1"}, {"from":"35", "to":"34", "arrows":"to", "label":"1"}, {"from":"36", "to":"35", "arrows":"to", "label":"1"}, {"from":"43", "to":"33", "arrows":"to", "label":"1"}]'; var data = {     nodes: JSON.parse(nodes),     edges: JSON.parse(arr) }; var options = {}; var container = document.getElementById('graph'); var network = new vis.Network(container, data, options); var ns = document.getElementById('nodes'); ns.innerText = '0 - getDisplayName[] 1 - getLogger[] 2 - getRemoteUser[] 3 - isSystemAdmin[] 4 - getUserKey[] 5 - redirectToLogin[it.pmx.atlassian.plugins.servlet.HttpServletRequest, it.pmx.atlassian.plugins.servlet.HttpServletResponse] 6 - getIssues[it.pmx.atlassian.plugins.servlet.HttpServletRequest] 7 - debug[] 8 - newHashMap[] 9 - put[java.lang.String, java.lang.Object] 10 - render[] 11 - getWriter[] 12 - getUser[] 13 - getRemoteUsername[] 14 - newClauseBuilder[] 15 - buildQuery[] 16 - project[] 17 - getUnlimitedFilter[] 18 - search[] 19 - printStackTrace[] 20 - getIssues[] 21 - sendRedirect[] 22 - toASCIIString[] 23 - getLoginUri[] 24 - getUri[it.pmx.atlassian.plugins.servlet.HttpServletRequest] 25 - getRequestURL[] 26 - getQueryString[] 27 - append[java.lang.String] 28 - append[java.lang.Object] 29 - create[java.lang.String] 30 - toString[] 31 - redirectToLogin[it.pmx.atlassian.plugins.servlet.HttpServletRequest, it.pmx.atlassian.plugins.servlet.HttpServletResponse] 32 - getUri[it.pmx.atlassian.plugins.servlet.HttpServletRequest] 33 - create[] 34 - equals[] 35 - projectKey[] 36 - validate[it.pmx.atlassian.plugins.template.ValidateData] 37 - addErrorMessage[] 38 - getComponentInstanceOfType[] 39 - getIssueLinkTypesByName[] 40 - isEmpty[] 41 - createIssueLinkType[] 42 - setRedirect[] 43 - configure[it.pmx.atlassian.plugins.template.ConfigureData] 44 - getStringFromSingularObject[java.math.BigDecimal] 45 - getSingularObjectFromString[java.lang.String] 46 - toString[] 47 - scale[] 48 - setScale[int]';}
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+//usage:
+readTextFile("elements.json", function(text){
+    var parsedData = JSON.parse(text);
+    console.log(parsedData.nodes);
+    var data = {
+        nodes: parsedData.nodes,
+        edges: parsedData.edges
+    };
+    var options = {};
+    var container = document.getElementById('graph');
+    var network = new vis.Network(container, data, options);
+}); 
+var ns = document.getElementById('nodes');

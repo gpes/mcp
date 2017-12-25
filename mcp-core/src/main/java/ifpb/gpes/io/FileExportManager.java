@@ -38,7 +38,7 @@ public class FileExportManager implements ExportManager {
         write(text);
     }
 
-    private void write(String text) {
+    protected void write(String text) {
         Path path = Paths.get(name);
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {

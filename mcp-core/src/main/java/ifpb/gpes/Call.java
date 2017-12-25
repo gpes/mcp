@@ -44,6 +44,7 @@ public class Call {
     }
 
     public boolean isFrom(String classe) {
+        //get return type??
         String nomeDaClasse = returnType.split("<")[0];
         return Reflector.isAssignableFrom(classe, nomeDaClasse);
     }

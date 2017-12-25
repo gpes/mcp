@@ -1,8 +1,13 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -10,7 +15,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  *
  * @author juan
  */
-public class DefaultDirectGraph implements Graph<Node,Double> {
+public class DefaultDirectGraph implements Graph<Node, Double> {
 
     private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private final Stack<Node> nodes = new Stack<>();
@@ -51,13 +56,36 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
     }
 
     @Override
+    public List<Call> getCandidates() {
+        List<Node> sources = graph.vertexSet().stream().filter((n) -> graph.incomingEdgesOf(n).isEmpty()).collect(Collectors.toList());
+        List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
+        List<Call> mountedCalls = new ArrayList<>();
+        for (Node source : sources) {
+            for (Node leaf : leafs) {
+                DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
+                GraphPath<Node, DefaultWeightedEdge> shortestPath = dijk.getPath(source, leaf);
+                if (shortestPath != null) {
+                    Call mountedCall = mountCall(shortestPath.getStartVertex(), shortestPath.getEndVertex());
+                    mountedCalls.add(mountedCall);
+                }
+            }
+        }
+        return mountedCalls;
+    }
+
+    private Call mountCall(Node start, Node end) {
+        return Call.of(end.getClassName(), end.getMethodName(), end.getReturnType(),
+                start.getClassName(), start.getMethodName(), start.getReturnType(), null);
+    }
+
+    @Override
     public Set<Node> vertex() {
         return graph.vertexSet();
     }
 
     @Override
     public Double edge(Node source, Node target) {
-        if(isConnected(source, target)){
+        if (isConnected(source, target)) {
             DefaultWeightedEdge edge = graph.getEdge(source, target);
             return graph.getEdgeWeight(edge);
         }
@@ -91,9 +119,9 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
     }
-    
+
     @Override
     public boolean isConnected(Node source, Node target) {
-        return graph.getEdge(source, target) != null;      
+        return graph.getEdge(source, target) != null;
     }
 }
