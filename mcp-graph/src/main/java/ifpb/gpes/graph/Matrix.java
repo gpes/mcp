@@ -12,11 +12,11 @@ import java.util.stream.IntStream;
 public class Matrix {
 
     protected final int[][] matrix;
-    private final String[] columns;
+    private final Node[] columns;
 
     public Matrix(int[][] matrix) {
         this.matrix = matrix;
-        this.columns = new String[matrix.length];
+        this.columns = new Node[matrix.length];
     }
 
     public Matrix(int numeroDeVertices) {
@@ -72,7 +72,11 @@ public class Matrix {
     }
 
     public String[] namesColumns() {
-        return this.columns;
+        StringBuilder columnNames = new StringBuilder();
+        for (Node column : columns) {
+            columnNames.append(column.getMethodName()).append(",");
+        }
+        return columnNames.toString().split(",");
     }
 
     public List<Metric> computeWithMetric(StrategyMetric strategy) {
@@ -109,9 +113,9 @@ public class Matrix {
         return new Cell(row, column);
     }
 
-    public void updateNameColumn(int column, String name) {
+    public void updateColumns(int column, Node vertice) {
 //        if(conectado(column))
-            this.columns[column] = name;
+            this.columns[column] = vertice;
     }
 
     private List<Integer> rowsNotNull(int[][] dados) {
@@ -132,6 +136,10 @@ public class Matrix {
         return this.matrix[row][col] == 0;
     }
 
+    public Node[] getColumns() {
+        return columns;
+    }
+    
     class Cell {
 
         private final int row;

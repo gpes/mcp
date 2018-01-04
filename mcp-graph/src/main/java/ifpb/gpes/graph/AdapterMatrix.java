@@ -31,7 +31,7 @@ public class AdapterMatrix implements Supplier<Matrix> {
                 DefaultWeightedEdge edge = edge(vertices, i, j);
                 cell.set(weight(edge));
             }
-            matrix.updateNameColumn(i, vertices[i].getMethodName());
+            matrix.updateColumns(i, vertices[i]);
         }
         return this.matrix;
     }

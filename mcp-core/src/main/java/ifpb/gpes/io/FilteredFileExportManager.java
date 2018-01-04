@@ -28,15 +28,13 @@ public class FilteredFileExportManager extends FileExportManager{
     
     @Override
     public void export(List<Call> elements) {
-        StringBuilder calls = new StringBuilder().append(elements.stream()
-                .map(Call::callGraph)
-                .collect(Collectors.joining("\n")));
-        calls.append("\n\n----primeira filtragem----\n\n");
+        StringBuilder calls = new StringBuilder();
+        calls.append("\n\n----Candidatos----\n\n");
         List<Call> collect = elements.stream().filter(new FilterClassType("java.util.Collection")).collect(Collectors.toList());
         calls.append(collect.stream()
                 .map(Call::callGraph)
                 .collect(Collectors.joining("\n")));
-        calls.append("\n\n----segunda filtragem----\n\n");
+        calls.append("\n\n----Culpados----\n\n");
         calls.append(collect.stream().filter(new FilterByMethod())
                 .map(Call::callGraph)
                 .collect(Collectors.joining("\n")));

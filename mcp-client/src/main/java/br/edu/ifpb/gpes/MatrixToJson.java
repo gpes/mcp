@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
+import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -26,9 +28,9 @@ public class MatrixToJson {
         this.matrix = matrix;
     }
 
-    public void toJson() {
+    public void toJson(List<Integer> indices) {
 //        System.out.println(matrix.valuesToString());
-        String nodes = nodesToJson(matrix);
+        String nodes = nodesToJson(matrix, indices);
         String edges = edgesToJson(matrix);
         escreverNoArquivo(nodes, edges, matrix.namesColumns());
     }
@@ -46,14 +48,24 @@ public class MatrixToJson {
         return array;
     }
 
-    private String nodesToJson(Matrix matrix) {
+    private String nodesToJson(Matrix matrix, List<Integer> indices) {
         String[] namesColumns = matrix.namesColumns();
         String collect = IntStream.range(0, namesColumns.length)
                 .filter(this.matrix::conectado)
-                .mapToObj(i
-                        -> String.format("{\"id\":\"%d\", \"label\":\"%s\"}",
-                        //                        i, namesColumns[i]))
-                        i, String.valueOf(i)))
+                .mapToObj(new IntFunction<String>() {
+                    @Override
+                    public String apply(int i) {
+                        if (indices.contains(i)) {
+                            return String.format("{\"id\":\"%d\", \"label\":\"%s\","
+                                    + "\"color\":{\"border\": \"black\", \"background\": \"red\"}}",
+                                    //i, namesColumns[i]))
+                                    i, String.valueOf(i));
+                        }
+                        return String.format("{\"id\":\"%d\", \"label\":\"%s\"}",
+                                //i, namesColumns[i]))
+                                i, String.valueOf(i));
+                    }
+                })
                 .collect(Collectors.joining(", ", "[", "]"));
         return collect;
     }
@@ -116,7 +128,7 @@ public class MatrixToJson {
                 .mapToObj(x -> String.format("<p class=\"col-md-4\"><span class=\"badge\">%d</span> %s</p>", x, namesColumns[x]))
                 .collect(Collectors.joining("\n"));
     }
-
+    
     private static class EdgeVis {
 
         private final String from;

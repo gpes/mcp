@@ -11,6 +11,7 @@ import ifpb.gpes.graph.AdapterGraph;
 import ifpb.gpes.graph.Graph;
 import ifpb.gpes.graph.Matrix;
 import ifpb.gpes.graph.Metric;
+import ifpb.gpes.graph.Node;
 import ifpb.gpes.io.FileExportManager;
 import ifpb.gpes.io.FilteredFileExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -99,7 +101,6 @@ public class Client {
             if (calls) {
                 origin.export(elements);
             }
-
             if (matriz) {
                 Path path = Paths.get(MATRIX_FILE_PATH);
                 Graph graph = new AdapterGraph().apply(elements);
@@ -108,17 +109,25 @@ public class Client {
                         .asList(new FilterByMethod(), new FilterClassType("java.util.Collection"));
                 Predicate<Call> compositePredicate
                         = predicates.stream().reduce(w -> true, Predicate::and);
-                List<Call> filtered = elements.stream().filter(compositePredicate).collect(Collectors.toList());
+                elements = elements.stream().filter(compositePredicate).collect(Collectors.toList());
+                List<Integer> indices = new ArrayList<>();
+                Matrix matrix = graph.toMatrix();
+                List<Node> columnsList = Arrays.asList(matrix.getColumns());
                 for (Call candidate : candidates) {
-                    if (filtered.contains(candidate)) {
-                        System.out.println("achei um - " + candidate);
+                    if (elements.contains(candidate)) {
+                        for (Node node : columnsList) {
+                            if(nodeFromCall(candidate, node))
+                                indices.add(columnsList.indexOf(node));
+                        }
                     }
                 }
-                Matrix matrix = graph.toMatrix();
+                for (Integer indice : indices) {
+                    System.out.print(indice + " - ");
+                }
                 System.out.println(Arrays.toString(matrix.namesColumns()));
                 System.out.println(matrix.valuesToString());
                 matrix.computeMetric().forEach(System.out::println);
-                new MatrixToJson(matrix).toJson();
+                new MatrixToJson(matrix).toJson(indices);
                 //salvando matrix no arquivo
                 try (BufferedWriter writer = Files.newBufferedWriter(path)) {
                     for (int[] line : matrix.toArray()) {
@@ -142,6 +151,16 @@ public class Client {
                     Logger.getLogger(FileExportManager.class.getName()).log(Level.SEVERE, "problem write txt", ex);
                 }
             }
+        }
+
+        public boolean nodeFromCall(Call call, Node node) {
+            if(!call.getMethodName().equals(node.getMethodName()))
+                return false;
+            if(!call.getClassType().equals(node.getClassName()))
+                return false;
+            if(!call.getReturnType().equals(node.getReturnType()))
+                return false;
+            return true;
         }
     }
 

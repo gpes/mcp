@@ -72,9 +72,9 @@ public class MatrixEx {
 
     private static void build(int[][] matrixValues) {
         Matrix matrix = new Matrix(matrixValues);
-        String[] names = {"A", "B", "C", "D", "E", "F"};
-        IntStream.range(0, names.length)
-                .forEach(i -> matrix.updateNameColumn((i), names[i]));
+        String[] names = {"A", "B", "C", "D", "E", "F"};        
+//        IntStream.range(0, names.length)
+//                .forEach(i -> matrix.updateNameColumn((i), names[i]));
 
         System.out.println(matrix.valuesToString());
 
