@@ -55,12 +55,12 @@ public class MatrixToJson {
                 .mapToObj(new IntFunction<String>() {
                     @Override
                     public String apply(int i) {
-                        if (indices.contains(i)) {
-                            return String.format("{\"id\":\"%d\", \"label\":\"%s\","
-                                    + "\"color\":{\"border\": \"black\", \"background\": \"red\"}}",
-                                    //i, namesColumns[i]))
-                                    i, String.valueOf(i));
-                        }
+                    if (indices.contains(i)) {
+                        return String.format("{\"id\":\"%d\", \"label\":\"%s\","
+                                + "\"color\":{\"border\": \"black\", \"background\": \"red\"}}",
+                                //i, namesColumns[i]))
+                                i, String.valueOf(i));
+                    }
                         return String.format("{\"id\":\"%d\", \"label\":\"%s\"}",
                                 //i, namesColumns[i]))
                                 i, String.valueOf(i));

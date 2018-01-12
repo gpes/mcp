@@ -74,9 +74,9 @@ public class Matrix {
     public String[] namesColumns() {
         StringBuilder columnNames = new StringBuilder();
         for (Node column : columns) {
-            columnNames.append(column.getMethodName()).append(",");
+            columnNames.append(column.getMethodName()).append(";");
         }
-        return columnNames.toString().split(",");
+        return columnNames.toString().split(";");
     }
 
     public List<Metric> computeWithMetric(StrategyMetric strategy) {

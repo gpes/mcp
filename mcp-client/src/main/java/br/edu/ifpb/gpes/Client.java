@@ -72,7 +72,7 @@ public class Client {
         //https://github.com/rodrigobentorodrigues/POO
         Project project = Project
                 .root("../mcp-samples/src/main/java/")
-                .path("ifpb/gpes/domain/AnonymousClass.java")
+                .path("ifpb/gpes/domain/jcf/Source.java")
                 .sources("")
                 .filter(".java");
         Study.of(project)
@@ -120,9 +120,6 @@ public class Client {
                                 indices.add(columnsList.indexOf(node));
                         }
                     }
-                }
-                for (Integer indice : indices) {
-                    System.out.print(indice + " - ");
                 }
                 System.out.println(Arrays.toString(matrix.namesColumns()));
                 System.out.println(matrix.valuesToString());
