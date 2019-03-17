@@ -35,6 +35,13 @@ public class Call {
         return new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod);
     }
 
+    public static Call of(String classType, String methodName, String returnType, String calledInClass,
+                          String calledInMethod, String calledInMethodReturnType, String callMethod, String invokedBy) {
+        Call call = new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod);
+        call.setInvokedBy(invokedBy);
+        return call;
+    }
+
     //TODO: refatorar
     public static Call of(String line) {
         //java.util.List, add[ifpb.gpes.domain.HasJCFObject], boolean, ifpb.gpes.domain.SampleObject, m2[], null
@@ -119,7 +126,7 @@ public class Call {
     }
     
     public String callGraph() {
-        return "<" + classType + ", " + methodName + ", " + returnType + ", " + calledInClass + ", " + calledInMethod + ", " + calledInMethodReturnType + ", " + callMethod + ">";
+        return "<" + classType + ", " + methodName + ", " + returnType + ", " + calledInClass + ", " + calledInMethod + ", " + calledInMethodReturnType + ", " + callMethod + ", " + invokedBy + ">";
     }
 
     public String noOf() {
@@ -166,6 +173,9 @@ public class Call {
             return false;
         }
         if (!Objects.equals(this.callMethod, other.callMethod)) {
+            return false;
+        }
+        if (!Objects.equals(this.invokedBy, other.invokedBy)) {
             return false;
         }
         return true;

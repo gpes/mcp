@@ -76,7 +76,6 @@ public class DefaultVisitor extends ASTVisitor {
 
         no.setInvokedBy(ex.toString());
         //"Nem todos os que vagueiam estao perdidos"
-
         calls.add(no);
 
         return super.visit(node);
@@ -102,8 +101,8 @@ public class DefaultVisitor extends ASTVisitor {
     @Override
     public boolean visit(MethodInvocation mi) {
         Call no = new Call();
-        String classType = "SAD";
-        String returnType = "SADNESS";
+        String classType = "not found";
+        String returnType = "not found";
         IMethodBinding imb = mi.resolveMethodBinding();
         ITypeBinding[] bindings = {};
         if (imb != null) {
@@ -177,13 +176,9 @@ public class DefaultVisitor extends ASTVisitor {
     private String updateInv(MethodInvocation mi) {
         Expression inv = mi.getExpression();
         if (inv == null) {
-            return "nothing here";
+            return "this";
         }
-
-        String[] ms = inv.toString().split("\\.");
-        int size = ms.length;
-
-        return ms[size - 1];
+        return inv.toString();
     }
 
     private String getMethodInvocation(int count, String methodName) {

@@ -1,18 +1,17 @@
 package ifpb.gpes.graph;
 
 import ifpb.gpes.Call;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 /**
- *
  * @author juan
  */
 public class DefaultDirectGraph implements Graph<Node, Double> {
@@ -31,6 +30,7 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         firstnode.setClassName(call.getClassType());
         firstnode.setMethodName(call.getMethodName());
         firstnode.setReturnType(call.getReturnType());
+        firstnode.setInvokedBy(call.getInvokedBy());
         addNodeAsVertix(firstnode);
 
         if (isNotNullCallMethod(call)) {
@@ -60,11 +60,30 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         List<Node> sources = graph.vertexSet().stream().filter((n) -> graph.incomingEdgesOf(n).isEmpty()).collect(Collectors.toList());
         List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
         List<Call> mountedCalls = new ArrayList<>();
+        //
+        Predicate<String> invokedByThis = s -> s != null ? s.equals("this") : false;
+        Predicate<String> returnJCF = c -> {
+            try {
+                Class clazz = Class.forName(c);
+                return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+            } catch (ClassNotFoundException ex) {
+                return false;
+            }
+        };
+        //
         for (Node source : sources) {
             for (Node leaf : leafs) {
                 DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
                 GraphPath<Node, DefaultWeightedEdge> shortestPath = dijk.getPath(source, leaf);
                 if (shortestPath != null) {
+                    Optional<Node> opt = shortestPath.getVertexList()
+                            .stream()
+                            .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnJCF.test(v.getReturnType()))
+                            .findAny();
+                    //
+                    if(opt.isPresent())
+                        continue;
+                    //
                     Call mountedCall = mountCall(shortestPath.getStartVertex(), shortestPath.getEndVertex());
                     mountedCalls.add(mountedCall);
                 }
@@ -75,7 +94,7 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
 
     private Call mountCall(Node start, Node end) {
         return Call.of(end.getClassName(), end.getMethodName(), end.getReturnType(),
-                start.getClassName(), start.getMethodName(), start.getReturnType(), null);
+                start.getClassName(), start.getMethodName(), start.getReturnType(), null, end.getInvokedBy());
     }
 
     @Override
@@ -94,7 +113,7 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
 
     private boolean isInvokedByMethod(Call call) {
         String invokedBy = call.getInvokedBy();
-        if (invokedBy == null) {
+        if (invokedBy == null || invokedBy.equals("this")) {
             return false;
         }
         return invokedBy.endsWith(")") && !invokedBy.contains("new");

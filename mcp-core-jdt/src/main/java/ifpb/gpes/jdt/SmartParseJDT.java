@@ -32,7 +32,6 @@ public class SmartParseJDT implements ParseJDT {
     @Override
     public List<Call> from(Project project) {
         DefaultASTParser parser = DefaultASTParser.from(project.sources());
-
         project.files().forEach(p -> {
             parser.updateUnitName(p);
             parser.acceptVisitor(visitor);

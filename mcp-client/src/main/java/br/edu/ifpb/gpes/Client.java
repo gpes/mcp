@@ -36,31 +36,10 @@ import java.util.stream.Collectors;
 public class Client {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        if (!args[0].equals("--dir") && !args[0].equals("-d")) {
-            return;
-        }
-        if (args[1].equals("")) {
-            return;
-        }
-        if (args[1].endsWith("/")) {
-            if (verification(args[1] + "src/main/java")) {
-                return;
-            }
-        } else {
-            if (verification(args[1] + "/src/main/java")) {
-                return;
-            }
-        }
-        String path = "";
-        if (!args[1].endsWith("/")) {
-            path = args[1] + "/";
-        } else {
-            path = args[1];
-        }
         Project project = Project
-                .root(path)
-                .path("src/main/java")
-                .sources("src/main/java")
+                .root("../axion/")
+                .path("src/org/")
+                .sources("src/org/")
                 .filter(".java");
         Study.of(project)
                 .with(Parse.with(ParseStrategies.JDT))
@@ -113,6 +92,7 @@ public class Client {
 //                broken.append("\n\nQuebram o confinamento\n\n");
 //                Path path = Paths.get(MATRIX_FILE_PATH);
                 Graph graph = new AdapterGraph().apply(elements);
+
                 List<Call> candidates = graph.getCandidates();
 
                 List<Call> subCandidates = new ArrayList<>();
@@ -155,7 +135,9 @@ public class Client {
                 }
 
                 result.append("\n\nQuebram o confinamento(").append(brokers.size()).append(")\n\n");
-                brokers.forEach((call) -> result.append(call.callGraph()).append("\n"));
+                brokers.forEach((call) -> {
+                    result.append(call.callGraph()).append("\n");
+                });
                 write(result.toString());
 
 //                System.out.println(Arrays.toString(matrix.namesColumns()));
@@ -204,6 +186,9 @@ public class Client {
                 return false;
             }
             if (!call.getReturnType().equals(node.getReturnType())) {
+                return false;
+            }
+            if (!call.getInvokedBy().equals(node.getInvokedBy())) {
                 return false;
             }
             return true;

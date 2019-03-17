@@ -10,6 +10,7 @@ public class Node {
     private String className;
     private String methodName;
     private String returnType;
+    private String invokedBy;
 
     public String getClassName() {
         return className;
@@ -33,6 +34,14 @@ public class Node {
 
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    public String getInvokedBy() {
+        return invokedBy;
+    }
+
+    public void setInvokedBy(String invokedBy) {
+        this.invokedBy = invokedBy;
     }
 
     @Override
@@ -65,11 +74,19 @@ public class Node {
         if (!Objects.equals(this.returnType, other.returnType)) {
             return false;
         }
+        if (!Objects.equals(this.invokedBy, other.invokedBy)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Node{" + "className=" + className + ", methodName=" + methodName + ", returnType=" + returnType + '}';
+        return "Node{" +
+                "className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", returnType='" + returnType + '\'' +
+                ", invokedBy='" + invokedBy + '\'' +
+                '}';
     }
 }
