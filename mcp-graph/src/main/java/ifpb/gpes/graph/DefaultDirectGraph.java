@@ -67,7 +67,7 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
                 Class clazz = Class.forName(c);
                 return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
             } catch (ClassNotFoundException ex) {
-                return false;
+                throw new RuntimeException(ex);
             }
         };
         //

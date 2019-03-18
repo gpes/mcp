@@ -37,9 +37,9 @@ public class Client {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         Project project = Project
-                .root("../axion/")
-                .path("src/org/")
-                .sources("src/org/")
+                .root("../collections-3.2.1/")
+                .path("src/java/")
+                .sources("src/java/")
                 .filter(".java");
         Study.of(project)
                 .with(Parse.with(ParseStrategies.JDT))
