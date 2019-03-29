@@ -37,9 +37,9 @@ public class Client {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         Project project = Project
-                .root("../collections-3.2.1/")
-                .path("src/java/")
-                .sources("src/java/")
+                .root("/Users/job/Desktop/jext-5.0/")
+                .path("src/")
+                .sources("src/")
                 .filter(".java");
         Study.of(project)
                 .with(Parse.with(ParseStrategies.JDT))
