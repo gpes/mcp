@@ -34,11 +34,16 @@ public class FilterClassType implements Predicate<Call> {
 //        defini a seguda parte pois todo tostring de Class segue um padrão
 //        "identificador nomeQualificado"
 //        String value = type.toString().split(" ")[1];
-            if(t.getClassType() == null) {
+            if (t.getClassType() == null) {
                 System.out.println(t);
                 return false;
             }
-            return t.getClassType().contains("java.util.") && type.isAssignableFrom(Class.forName(t.getClassType().split("<")[0]));
+            return t.getClassType().contains("java.util.")
+                && type.isAssignableFrom(
+                    Class.forName(
+                        t.getClassType().split("<")[0]
+                    )
+                );
         } catch (ClassNotFoundException ex) {
             System.out.println("não foi possivel encontrar a classe: " + t.toString());
         }

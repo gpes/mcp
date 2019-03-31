@@ -14,15 +14,15 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 /**
  * @author juan
  */
-public class DefaultDirectGraph implements Graph<Node, Double> {
+public class DefaultDirectGraph implements Graph<Node,Double> {
 
-    private final DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+    private final DefaultDirectedWeightedGraph<Node,DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private final Stack<Node> nodes = new Stack<>();
 
     @Override
     public Matrix toMatrix() {
         return new AdapterMatrix(graph)
-                .get();
+            .get();
     }
 
     public void buildNode(Call call) {
@@ -36,14 +36,14 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         if (isNotNullCallMethod(call)) {
             Node get = nodes.pop();
             addNodeAsVertix(get);
-            updateNodesToGraph(firstnode, get);
+            updateNodesToGraph(firstnode,get);
 
             if (isInvokedByMethod(call)) {
                 nodes.push(firstnode);
             } else {
                 Node second = nodes.pop();
                 addNodeAsVertix(second);
-                updateNodesToGraph(second, firstnode);
+                updateNodesToGraph(second,firstnode);
             }
         } else {
             Node secondnode = new Node();
@@ -65,26 +65,33 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         Predicate<String> returnJCF = c -> {
             try {
                 Class clazz = Class.forName(c);
-                return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+                return Collection.class.isAssignableFrom(clazz)
+                    || Map.class.isAssignableFrom(clazz);
             } catch (ClassNotFoundException ex) {
+//                if (c.contains(".")) {
+//                    System.out.println(ex);
+//                    return false;
+//                }
                 throw new RuntimeException(ex);
+
             }
         };
         //
         for (Node source : sources) {
             for (Node leaf : leafs) {
                 DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
-                GraphPath<Node, DefaultWeightedEdge> shortestPath = dijk.getPath(source, leaf);
+                GraphPath<Node,DefaultWeightedEdge> shortestPath = dijk.getPath(source,leaf);
                 if (shortestPath != null) {
                     Optional<Node> opt = shortestPath.getVertexList()
-                            .stream()
-                            .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnJCF.test(v.getReturnType()))
-                            .findAny();
+                        .stream()
+                        .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnJCF.test(v.getReturnType()))
+                        .findAny();
                     //
-                    if(opt.isPresent())
+                    if (opt.isPresent()) {
                         continue;
+                    }
                     //
-                    Call mountedCall = mountCall(shortestPath.getStartVertex(), shortestPath.getEndVertex());
+                    Call mountedCall = mountCall(shortestPath.getStartVertex(),shortestPath.getEndVertex());
                     mountedCalls.add(mountedCall);
                 }
             }
@@ -92,9 +99,9 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         return mountedCalls;
     }
 
-    private Call mountCall(Node start, Node end) {
-        return Call.of(end.getClassName(), end.getMethodName(), end.getReturnType(),
-                start.getClassName(), start.getMethodName(), start.getReturnType(), null, end.getInvokedBy());
+    private Call mountCall(Node start,Node end) {
+        return Call.of(end.getClassName(),end.getMethodName(),end.getReturnType(),
+                       start.getClassName(),start.getMethodName(),start.getReturnType(),null,end.getInvokedBy());
     }
 
     @Override
@@ -103,9 +110,9 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
     }
 
     @Override
-    public Double edge(Node source, Node target) {
-        if (isConnected(source, target)) {
-            DefaultWeightedEdge edge = graph.getEdge(source, target);
+    public Double edge(Node source,Node target) {
+        if (isConnected(source,target)) {
+            DefaultWeightedEdge edge = graph.getEdge(source,target);
             return graph.getEdgeWeight(edge);
         }
         return 0d;
@@ -125,13 +132,13 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
         }
     }
 
-    private void updateNodesToGraph(Node first, Node second) {
-        if (!graph.containsEdge(first, second)) {
-            DefaultWeightedEdge addEdge = graph.addEdge(first, second);
-            graph.setEdgeWeight(addEdge, 1);
+    private void updateNodesToGraph(Node first,Node second) {
+        if (!graph.containsEdge(first,second)) {
+            DefaultWeightedEdge addEdge = graph.addEdge(first,second);
+            graph.setEdgeWeight(addEdge,1);
         } else {
-            DefaultWeightedEdge edge = graph.getEdge(first, second);
-            graph.setEdgeWeight(edge, graph.getEdgeWeight(edge) + 1);
+            DefaultWeightedEdge edge = graph.getEdge(first,second);
+            graph.setEdgeWeight(edge,graph.getEdgeWeight(edge) + 1);
         }
     }
 
@@ -140,7 +147,7 @@ public class DefaultDirectGraph implements Graph<Node, Double> {
     }
 
     @Override
-    public boolean isConnected(Node source, Node target) {
-        return graph.getEdge(source, target) != null;
+    public boolean isConnected(Node source,Node target) {
+        return graph.getEdge(source,target) != null;
     }
 }
