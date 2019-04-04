@@ -62,20 +62,6 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
         List<Call> mountedCalls = new ArrayList<>();
         //
         Predicate<String> invokedByThis = s -> s != null ? s.equals("this") : false;
-        Predicate<String> returnJCF = c -> {
-            try {
-                Class clazz = Class.forName(c);
-                return Collection.class.isAssignableFrom(clazz)
-                    || Map.class.isAssignableFrom(clazz);
-            } catch (ClassNotFoundException ex) {
-//                if (c.contains(".")) {
-//                    System.out.println(ex);
-//                    return false;
-//                }
-                throw new RuntimeException(ex);
-
-            }
-        };
         //
         for (Node source : sources) {
             for (Node leaf : leafs) {
@@ -84,7 +70,7 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
                 if (shortestPath != null) {
                     Optional<Node> opt = shortestPath.getVertexList()
                         .stream()
-                        .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnJCF.test(v.getReturnType()))
+                        .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnsJCF(v.getReturnType()))
                         .findAny();
                     //
                     if (opt.isPresent()) {
@@ -144,6 +130,27 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
 
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
+    }
+
+    private boolean returnsJCF(String className) {
+        Class clazz = null;
+        try {
+            clazz = Class.forName(className);
+            return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+        } catch (ClassNotFoundException e) {
+            if(className.contains(".")) {
+                int index = className.lastIndexOf('.');
+                StringBuffer buffer = new StringBuffer(className);
+                buffer.setCharAt(index, '$');
+                try {
+                    clazz = Class.forName(buffer.toString());
+                    return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+                } catch (ClassNotFoundException e1) {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 
     @Override

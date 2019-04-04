@@ -12,14 +12,17 @@ import ifpb.gpes.graph.Node;
 import ifpb.gpes.io.FileExportManager;
 import ifpb.gpes.jdt.DefaultVisitor;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,11 +44,13 @@ public class NaVera {
         List<Call> elements = new ArrayList<>();
         ASTVisitor visitor = new DefaultVisitor(elements);
         Project project = Project
-            .root("/Users/job/Desktop/collections-3.2.1/")
+            .root("/home/shotaro/myProjects/TCC/collections-3.2.1/")
             .path("src/java/")
             .sources("src/java/")
+            .classpath("bin/")
             .filter(".java");
         Default parser = Default.from(project.sources());
+        parser.addToClasspath(new File(project.classpath()));
         project.files().forEach(p -> {
             parser.updateUnitName(p);
             parser.acceptVisitor(visitor);
@@ -68,7 +73,7 @@ class Default {
     private final String[] classpath = {
         System.getProperty("java.home") + "/lib/rt.jar",
         //        "/Users/job/Desktop/jext-5.0/lib/*.jar"
-        "/Users/job/Desktop/collections-3.2.1/bin"
+        "/home/shotaro/myProjects/TCC/collections-3.2.1/bin/"
     };
 
     public static Default createParse(String[] sources) {
@@ -96,6 +101,17 @@ class Default {
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,JavaCore.VERSION_1_8);
         options.put(JavaCore.COMPILER_SOURCE,JavaCore.VERSION_1_8);
 //        this.parser.setCompilerOptions(JavaCore.getOptions());
+    }
+
+
+    public void addToClasspath(File file) {
+        try {
+            Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
+            method.setAccessible(true);
+            method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{file.toURI().toURL()});
+        } catch (MalformedURLException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateUnitName(Path fileJava) {
@@ -210,12 +226,6 @@ class ExportVoidNavera implements ExportManager {
             result.append(call.callGraph()).append("\n");
         });
 
-        String collect = candidates
-            .stream()
-            .map(c -> c.toString())
-            .collect(Collectors.joining(";"));
-        result.append("candidadots: ").append(collect);
-        
         write(result.toString());
         
 
