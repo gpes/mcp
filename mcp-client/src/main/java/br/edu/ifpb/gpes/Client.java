@@ -37,7 +37,7 @@ public class Client {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         Project project = Project
-                .root("/Users/job/Desktop/jext-5.0/")
+                .root("../freecs-1.3/")
                 .path("src/")
                 .sources("src/")
                 .filter(".java");

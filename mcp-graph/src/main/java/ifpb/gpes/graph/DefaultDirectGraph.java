@@ -61,38 +61,14 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
         List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
         List<Call> mountedCalls = new ArrayList<>();
         //
-        Predicate<String> invokedByThis = s -> s != null ? s.equals("this") : false;
-        Predicate<String> returnJCF = c -> {
-            try {
-                Class clazz = Class.forName(c);
-                return Collection.class.isAssignableFrom(clazz)
-                    || Map.class.isAssignableFrom(clazz);
-            } catch (ClassNotFoundException ex) {
-//                if (c.contains(".")) {
-//                    System.out.println(ex);
-//                    return false;
-//                }
-                throw new RuntimeException(ex);
-
-            }
-        };
-        //
         for (Node source : sources) {
             for (Node leaf : leafs) {
                 DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
                 GraphPath<Node,DefaultWeightedEdge> shortestPath = dijk.getPath(source,leaf);
                 if (shortestPath != null) {
-                    Optional<Node> opt = shortestPath.getVertexList()
-                        .stream()
-                        .filter(v -> invokedByThis.test(v.getInvokedBy()) && returnJCF.test(v.getReturnType()))
-                        .findAny();
-                    //
-                    if (opt.isPresent()) {
-                        continue;
-                    }
-                    //
                     Call mountedCall = mountCall(shortestPath.getStartVertex(),shortestPath.getEndVertex());
-                    mountedCalls.add(mountedCall);
+                    if(!isInvokedByThis(mountedCall.getInvokedBy()))
+                        mountedCalls.add(mountedCall);
                 }
             }
         }
@@ -116,6 +92,15 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
             return graph.getEdgeWeight(edge);
         }
         return 0d;
+    }
+
+    private boolean isInvokedByThis(String invokedBy) {
+        if (!invokedBy.contains("."))
+            return true;
+        String[] strs = invokedBy.split("\\.");
+        if (strs.length == 2 && strs[0].equals("this"))
+            return true;
+        return false;
     }
 
     private boolean isInvokedByMethod(Call call) {
