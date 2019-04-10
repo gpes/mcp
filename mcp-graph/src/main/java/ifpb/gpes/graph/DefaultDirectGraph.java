@@ -3,7 +3,6 @@ package ifpb.gpes.graph;
 import ifpb.gpes.Call;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
@@ -129,6 +128,27 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
 
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
+    }
+
+    private boolean returnsJCF(String className) {
+        Class clazz = null;
+        try {
+            clazz = Class.forName(className);
+            return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+        } catch (ClassNotFoundException e) {
+            if(className.contains(".")) {
+                int index = className.lastIndexOf('.');
+                StringBuffer buffer = new StringBuffer(className);
+                buffer.setCharAt(index, '$');
+                try {
+                    clazz = Class.forName(buffer.toString());
+                    return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
+                } catch (ClassNotFoundException e1) {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 
     @Override
