@@ -71,7 +71,7 @@ public class DefaultASTParser {
         //--
         ASTNode createAST = parser.createAST(null);
         if (createAST.getAST().hasBindingsRecovery()) {
-            Logger.getLogger(DefaultASTParser.class.getName()).log(Level.INFO, "Binding activated.");
+//            Logger.getLogger(DefaultASTParser.class.getName()).log(Level.INFO, "Binding activated.");
         }
         createAST.accept(visitor);
     }

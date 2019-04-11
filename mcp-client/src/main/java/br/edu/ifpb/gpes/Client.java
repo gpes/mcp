@@ -1,6 +1,5 @@
 package br.edu.ifpb.gpes;
 
-import br.edu.ifpb.gpes.arguments.output.ArgParserOTP;
 import ifpb.gpes.Call;
 import ifpb.gpes.ExportManager;
 import ifpb.gpes.Parse;
@@ -12,7 +11,6 @@ import ifpb.gpes.graph.Graph;
 import ifpb.gpes.graph.Matrix;
 import ifpb.gpes.graph.Node;
 import ifpb.gpes.io.FileExportManager;
-import ifpb.gpes.io.FilteredFileExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
 import java.io.BufferedWriter;
@@ -37,7 +35,7 @@ public class Client {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         Project project = Project
-                .root("../freecs-1.3/")
+                .root("../axion/")
                 .path("src/")
                 .sources("src/")
                 .filter(".java");
@@ -55,7 +53,7 @@ public class Client {
         return false;
     }
 
-    static class ExportVoid implements ExportManager {
+    public static class ExportVoid implements ExportManager {
 
 //        private final String MATRIX_FILE_PATH = "../matrix.csv";
 //        private final String METRICS_FILE_PATH = "../metrics";
@@ -63,7 +61,7 @@ public class Client {
         private final boolean calls;
         private final boolean matriz;
 
-        private ExportVoid(boolean CallsEnabled, boolean MatrixEnabled) {
+        public ExportVoid(boolean CallsEnabled, boolean MatrixEnabled) {
             this.calls = CallsEnabled;
             this.matriz = MatrixEnabled;
         }
@@ -192,32 +190,6 @@ public class Client {
                 return false;
             }
             return true;
-        }
-    }
-
-    static class InputOfStudy extends Study {
-
-        private final ArgParserOTP arg;
-
-        private InputOfStudy(ArgParserOTP arg, Project project) {
-            super(project);
-            this.arg = arg;
-        }
-
-        public static Study from(ArgParserOTP arg) {
-            return new InputOfStudy(arg,
-                    Project
-                            .root(arg.getFrom())
-                            .path(arg.getDir())
-                            .sources(arg.getSource())
-                            .filter(".java"));
-        }
-
-        @Override
-        public void execute() {
-            super.with(Parse.with(ParseStrategies.JDT))
-                    .analysis(new ExportVoid(arg.CallsEnabled(), arg.MatrixEnabled()))
-                    .execute();
         }
     }
 }

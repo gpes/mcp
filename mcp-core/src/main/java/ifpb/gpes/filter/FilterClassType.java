@@ -35,7 +35,6 @@ public class FilterClassType implements Predicate<Call> {
 //        "identificador nomeQualificado"
 //        String value = type.toString().split(" ")[1];
             if (t.getClassType() == null) {
-                System.out.println(t);
                 return false;
             }
             return t.getClassType().contains("java.util.")
