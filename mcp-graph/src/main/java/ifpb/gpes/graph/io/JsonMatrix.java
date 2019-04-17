@@ -1,13 +1,9 @@
-package br.edu.ifpb.gpes;
+package ifpb.gpes.graph.io;
 
-import br.edu.ifpb.gpes.old.MatrixEx;
 import ifpb.gpes.graph.Matrix;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+
+import java.io.*;
+import java.nio.file.*;
 import java.util.List;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -15,24 +11,25 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 /**
  * @author Ricardo Job
  * @mail ricardo.job@ifpb.edu.br
  * @since 25/11/2017, 09:56:38
  */
-public class MatrixToJson {
+public class JsonMatrix {
 
     private Matrix matrix;
 
-    public MatrixToJson(Matrix matrix) {
+    public JsonMatrix(Matrix matrix) {
         this.matrix = matrix;
     }
 
-    public void toJson(List<Integer> indices) {
-//        System.out.println(matrix.valuesToString());
+    public void toJson(List<Integer> indices, String outputDir) {
         String nodes = nodesToJson(matrix, indices);
         String edges = edgesToJson(matrix);
-        escreverNoArquivo(nodes, edges, matrix.namesColumns());
+        generateFiles(nodes, edges, matrix.namesColumns(), outputDir);
     }
 
     private static String edgesToJson(Matrix matrix) {
@@ -58,11 +55,9 @@ public class MatrixToJson {
                     if (indices.contains(i)) {
                         return String.format("{\"id\":\"%d\", \"label\":\"%s\","
                                 + "\"color\":{\"border\": \"black\", \"background\": \"red\"}}",
-                                //i, namesColumns[i]))
                                 i, String.valueOf(i));
                     }
                         return String.format("{\"id\":\"%d\", \"label\":\"%s\"}",
-                                //i, namesColumns[i]))
                                 i, String.valueOf(i));
                     }
                 })
@@ -70,49 +65,49 @@ public class MatrixToJson {
         return collect;
     }
 
-    private void escreverNoArquivo(String nodes, String edges,
-            String[] namesColumns) {
-        Path script = Paths.get("./src/main/java/br/edu/ifpb/gpes/script.js");
-        Path elements = Paths.get("./src/main/java/br/edu/ifpb/gpes/elements.json");
+    private void generateFiles(String nodes, String edges,
+            String[] namesColumns, String outputDir) {
+        Path script = Paths.get(outputDir + "script.js");
+        Path elements = Paths.get(outputDir + "elements.json");
+        Path page = Paths.get(outputDir + "graph.html");
+        //
         String elementsFile = "{\n"
                 + "	\"nodes\":" + nodes + ",\n"
                 + "	\"edges\":" + edges + "\n"
                 + "}";
-
-        salvarArquivo(elementsFile, elements);
-
-//        String file = "var imported = document.createElement('script');"
-//                + "imported.src = 'elements.js';"
-//                + "document.head.appendChild(imported);"
-//                + "function fillGraph() { "
-//                + " var data = {"
-//                + "     nodes: JSON.parse(nodes),"
-//                + "     edges: JSON.parse(arr)"
-//                + " };"
-//                + " var options = {};"
-//                + " var container = document.getElementById('graph');"
-//                + " var network = new vis.Network(container, data, options);"
-//                + " var ns = document.getElementById('nodes');"
-//                + " ns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;"
-//                + "}";
-//        salvarArquivo(file, script);
-        String texto = "\n ns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;";
-        atualizarScript(texto, script);
+        createJson(elementsFile, elements);
+        //
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("script.js");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        StringBuffer buffer = reader.lines().collect(StringBuffer::new, StringBuffer::append, StringBuffer::append);
+        buffer.append("\nns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;");
+        createScript(buffer.toString(), script);
+        //
+        createPageCopy(page);
     }
 
-    private void salvarArquivo(String texto, Path path) {
+    private void createJson(String texto, Path path) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(texto);
         } catch (IOException ex) {
-            Logger.getLogger(MatrixEx.class.getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
         }
     }
 
-    private void atualizarScript(String texto, Path path) {
+    private void createScript(String texto, Path path) {
         try {
-            Files.write(path, texto.getBytes(), StandardOpenOption.APPEND);
+            Files.write(path, texto.getBytes());
         } catch (IOException ex) {
-            Logger.getLogger(MatrixEx.class.getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
+        }
+    }
+
+    private void createPageCopy(Path path) {
+        try {
+            InputStream stream = getClass().getClassLoader().getResourceAsStream("graph.html");
+            Files.copy(stream, path, REPLACE_EXISTING);
+        } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
         }
     }
 

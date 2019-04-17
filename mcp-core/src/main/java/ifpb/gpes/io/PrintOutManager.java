@@ -13,10 +13,6 @@ public class PrintOutManager  implements ExportManager {
 
         @Override
         public void export(List<Call> elements) {
-            elements.stream()
-//                    .filter(t -> t.getMi() != null || "null".equalsIgnoreCase(t.getMi()))
-//                    .collect(Collectors.toList())
-                    .forEach(no -> System.out.println(no.callGraph()));
-
+            elements.stream().forEach(no -> System.out.println(no.callGraph()));
         }
     }

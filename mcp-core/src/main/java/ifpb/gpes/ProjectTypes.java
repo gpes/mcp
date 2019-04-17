@@ -15,14 +15,5 @@ public enum ProjectTypes implements ProjectType {
         public String sources() {
             return "src/main/java/";
         }
-
-        @Override
-        public void addClasspath(String path) {
-        }
-
-        @Override
-        public String classpath() {
-            return "target/*.jar";
-        }
     }
 }

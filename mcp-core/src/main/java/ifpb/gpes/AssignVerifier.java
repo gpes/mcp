@@ -6,11 +6,15 @@ import java.util.HashMap;
  *
  * @author juan
  */
-public class Reflector {
+public class AssignVerifier {
 
-    private static final HashMap primitiveMap = new HashMap<String, Object>();
+    private final HashMap primitiveMap;
+    private final String baseClass;
 
-    static {
+    public AssignVerifier(String baseClass) {
+        this.baseClass = baseClass;
+        //
+        primitiveMap = new HashMap<String, Object>();
         primitiveMap.put("int", int.class);
         primitiveMap.put("long", long.class);
         primitiveMap.put("double", double.class);
@@ -21,19 +25,20 @@ public class Reflector {
         primitiveMap.put("void", void.class);
     }
 
-    public static boolean isAssignableFrom(String classe, String nomeDaClasse) {
+    public boolean isAssignable(String nomeDaClasse) {
         if (nomeDaClasse.contains("[]")){
             String replacedClass = nomeDaClasse.replaceAll("\\[]", "");
-            return isAssignableFrom(classe, replacedClass);
+            return isAssignable(replacedClass);
         }if (primitiveMap.containsKey(nomeDaClasse)) {
             return false;
         }
         try {
-            Class baseClass = Class.forName(classe);
+            Class baseClass = Class.forName(this.baseClass);
             Class classToCompare = Class.forName(nomeDaClasse);
             return baseClass.isAssignableFrom(classToCompare);
         } catch (Exception ex) {
-            throw new VerificationException((ex));
+            System.out.println("An error occurred trying get a class from a string name, returning false.");
+            return false;
         }
     }
 }

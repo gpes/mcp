@@ -33,20 +33,20 @@ public class MatrixConfidenceTest {
     }
 
     @Before
-    public void before() throws IOException {
+    public void before() {
         calls.stream().forEach(dg::buildNode);
     }
 
     @Test
-    public void VertexNumberTest() throws IOException, InterruptedException, ClassNotFoundException {
-        Assert.assertEquals(17, dg.vertex().size());
+    public void VertexNumberTest() {
+        Assert.assertEquals(21, dg.vertex().size());
     }
 
     @Test
     public void WeightSumTest() throws IOException {
         assertNotEquals(0, dg.toMatrix().sumAllWeight());
         assertEquals(17, dg.toMatrix().sumAllWeight()); //dg.getGraph().vertexSet().size()
-        Assert.assertEquals(10, dg.toMatrix().matrizDeAdjacencia().toArray().length);
+        Assert.assertEquals(13, dg.toMatrix().matrizDeAdjacencia().toArray().length);
     }
 
 }

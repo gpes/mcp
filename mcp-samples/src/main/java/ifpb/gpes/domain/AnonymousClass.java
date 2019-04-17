@@ -25,16 +25,4 @@ public class AnonymousClass {
         Interface seg = () -> new HasJCFObject().getElements().iterator();
         new HasJCFObject().getElements().hashCode();
     }
-
-//    public void m4() {
-//        Interface seg = () -> new HasJCFObject().getElements().iterator();
-//        int a = 1;
-//        m5(new HasJCFObject().getElements());
-//    }
-
-//    private void m5(List<A> lista) {
-//        HasJCFObject value = lista.get(0);
-//        value.getElements().listIterator();
-//        lista.get(1).getElements().hashCode();
-//    }
 }

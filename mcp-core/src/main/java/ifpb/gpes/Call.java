@@ -20,7 +20,7 @@ public class Call {
     public Call() {
     }
 
-    public Call(String classType, String methodName, String returnType, String calledInClass, String calledInMethod, String calledInMethodReturnType, String callMethod) {
+    public Call(String classType, String methodName, String returnType, String calledInClass, String calledInMethod, String calledInMethodReturnType, String callMethod, String invokedBy) {
         this.classType = classType;
         this.methodName = methodName;
         this.returnType = returnType;
@@ -28,32 +28,24 @@ public class Call {
         this.calledInMethod = calledInMethod;
         this.calledInMethodReturnType = calledInMethodReturnType;
         this.callMethod = callMethod;
-    }
-    
-    public static Call of(String classType, String methodName, String returnType, String calledInClass,
-            String calledInMethod, String calledInMethodReturnType, String callMethod) {
-        return new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod);
+        this.invokedBy = invokedBy;
     }
 
     public static Call of(String classType, String methodName, String returnType, String calledInClass,
                           String calledInMethod, String calledInMethodReturnType, String callMethod, String invokedBy) {
-        Call call = new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod);
-        call.setInvokedBy(invokedBy);
-        return call;
+        return new Call(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod, invokedBy);
     }
 
     //TODO: refatorar
     public static Call of(String line) {
-        //java.util.List, add[ifpb.gpes.domain.HasJCFObject], boolean, ifpb.gpes.domain.SampleObject, m2[], null
-        String[] fields = line.split(",");
-        String campo = fields[6].trim();
-        return new Call(fields[0].trim(), fields[1].trim(), fields[2].trim(), fields[3].trim(), fields[4].trim(), fields[5].trim(), campo.equals("null") ? null : campo);
+        String[] fields = line.trim().split(";");
+        return new Call(fields[0].trim(), fields[1].trim(), fields[2].trim(), fields[3].trim(), fields[4].trim(), fields[5].trim(), fields[6].trim().equals("null") ? null : fields[6].trim(), fields[7].trim());
     }
 
     public boolean isFrom(String classe) {
-        //get return type??
-        String nomeDaClasse = returnType.split("<")[0];
-        return Reflector.isAssignableFrom(classe, nomeDaClasse);
+        String nomeDaClasse = classType.split("<")[0];
+        AssignVerifier verifier = new AssignVerifier(classe);
+        return verifier.isAssignable(nomeDaClasse);
     }
 
     public String getInvokedBy() {
@@ -126,23 +118,16 @@ public class Call {
     }
     
     public String callGraph() {
-        return "<" + classType + ", " + methodName + ", " + returnType + ", " + calledInClass + ", " + calledInMethod + ", " + calledInMethodReturnType + ", " + callMethod + ", " + invokedBy + ">";
+        return "<" + classType + "; " + methodName + "; " + returnType + "; " + calledInClass + "; " + calledInMethod + "; " + calledInMethodReturnType + "; " + callMethod + "; " + invokedBy + ">";
     }
 
     public String noOf() {
-        return "Call.of(\"" + classType + "\", \"" + methodName + "\",\"" + returnType + "\",\"" + calledInClass + "\",\"" + calledInMethod + "\",\"" + calledInMethodReturnType + "\",\"" + callMethod + "\"),";
+        return "Call.of(\"" + classType + "\"; \"" + methodName + "\";\"" + returnType + "\";\"" + calledInClass + "\";\"" + calledInMethod + "\";\"" + calledInMethodReturnType + "\";\"" + callMethod + "\";\"" + invokedBy + "\")";
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.classType);
-        hash = 89 * hash + Objects.hashCode(this.methodName);
-        hash = 89 * hash + Objects.hashCode(this.returnType);
-        hash = 89 * hash + Objects.hashCode(this.calledInClass);
-        hash = 89 * hash + Objects.hashCode(this.calledInMethod);
-        hash = 89 * hash + Objects.hashCode(this.callMethod);
-        return hash;
+        return Objects.hash(classType, methodName, returnType, calledInClass, calledInMethod, calledInMethodReturnType, callMethod, invokedBy);
     }
 
     @Override

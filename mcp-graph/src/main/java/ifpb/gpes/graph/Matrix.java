@@ -39,15 +39,6 @@ public class Matrix {
         return Arrays.stream(matrix).flatMapToInt(Arrays::stream).sum();
     }
 
-//    public int sumRow(int row) {
-//        if (matrix == null) {
-//            return 0;
-//        }
-//
-//        return IntStream.range(0, matrix.length)
-//                .filter(j -> j == row)
-//                .sum();
-//    }
     public boolean conectado(int row) {
         int soma = 0;
         for (int i = 0; i < matrix.length; i++) {
@@ -114,7 +105,6 @@ public class Matrix {
     }
 
     public void updateColumns(int column, Node vertice) {
-//        if(conectado(column))
             this.columns[column] = vertice;
     }
 
@@ -163,5 +153,4 @@ public class Matrix {
             return "(" + row + "-" + column + ") (" + get() + ")";
         }
     }
-
 }

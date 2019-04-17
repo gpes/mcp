@@ -40,5 +40,4 @@ public class LambdaWithArguments {
     public Set<Integer> m4() {
         return new TreeSet<>();
     }
-
 }

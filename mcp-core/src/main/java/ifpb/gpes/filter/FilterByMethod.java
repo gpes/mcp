@@ -1,9 +1,15 @@
 package ifpb.gpes.filter;
 
 import ifpb.gpes.Call;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -11,35 +17,23 @@ import java.util.function.Predicate;
  */
 public class FilterByMethod implements Predicate<Call> {
 
-    private String methodName;
-    private List<String> nameList = Arrays.asList(
-            "add", "addAll", "clear",
-            "remove", "removeAll", "retainAll", 
-            "pollFirst", "pollLast", "replaceAll", 
-            "set", "sort", "offer",
-            "poll", "addFirst", "addLast", 
-            "offerFirst", "offerLast", "removeFirst", 
-            "removeLast", "removeFirstOccurrence", "removeLastOccurrence", 
-            "push", "pop", "put",
-            "replace", "putAll", "putIfAbsent",
-            "computeIfAbsent", "computeIfPresent", "compute",
-            "merge", "pollFirstEntry", "pollLastEntry");
+    private List<String> nameList;
 
-    //estrategia para receber varios nomes de metodos possiveis
     public FilterByMethod() {
+        this.populateNameList();
     }
 
-    public FilterByMethod(String methodName) {
-        this.methodName = methodName;
+    private void populateNameList() {
+            InputStream stream = this.getClass().getClassLoader().getResourceAsStream("methods.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            this.nameList = reader.lines()
+                    .map(s -> Arrays.asList(s.replace(" ", "").split(",")))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
     }
 
     @Override
     public boolean test(Call t) {
         return nameList.contains(t.getMethodName().split("\\[")[0]);
     }
-
-//    @Override
-//    public boolean test(Call t) {
-//        return nameList.stream().anyMatch((name) -> (t.getMethodName().contains(name)));
-//    }
 }

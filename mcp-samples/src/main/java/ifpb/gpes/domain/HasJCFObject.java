@@ -24,6 +24,5 @@ public class HasJCFObject {
                 return false;
             }
         };
-
     }
 }

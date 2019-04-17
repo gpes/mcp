@@ -6,7 +6,10 @@ import ifpb.gpes.Project;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertThat;
 
 public class MethodReferenceTest {
 
@@ -15,13 +18,15 @@ public class MethodReferenceTest {
     private static final String sources = "../mcp-samples/src/main/java/";
 
     @Test
-    public void testeChamadaComReference() {
-    }
+    public void testeChamadaComReference() { }
 
     @Test
     public void testM1() {
         List<Call> expected = ofListM1();
-        result.forEach(no -> System.out.println(no.callGraph()));
+        assertThat(result, hasItems(
+                Call.of("java.io.PrintStream; println[? super ifpb.gpes.domain.HasJCFObject]; void; java.util.function.Consumer<? super ifpb.gpes.domain.HasJCFObject>; accept[ifpb.gpes.domain.HasJCFObject]; void; null; System.out"),
+                Call.of("java.util.List; size[]; int; ifpb.gpes.domain.MethodReferenceExample; m1[java.util.function.Predicate<ifpb.gpes.domain.HasJCFObject>]; void; null; new HasJCFObject().getElements()")
+        ));
     }
 
     private List<Call> ofListM1() {

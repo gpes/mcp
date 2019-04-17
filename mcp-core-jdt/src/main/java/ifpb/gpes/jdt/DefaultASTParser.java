@@ -48,7 +48,6 @@ public class DefaultASTParser {
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-//        this.parser.setCompilerOptions(JavaCore.getOptions());
     }
 
     public void updateUnitName(Path fileJava) {    
@@ -70,9 +69,6 @@ public class DefaultASTParser {
         this.parser.setCompilerOptions(options);
         //--
         ASTNode createAST = parser.createAST(null);
-        if (createAST.getAST().hasBindingsRecovery()) {
-//            Logger.getLogger(DefaultASTParser.class.getName()).log(Level.INFO, "Binding activated.");
-        }
         createAST.accept(visitor);
     }
 }

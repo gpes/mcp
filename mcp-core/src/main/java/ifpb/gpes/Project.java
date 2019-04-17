@@ -47,21 +47,12 @@ public class Project {
         return this;
     }
 
-    public Project classpath(String path) {
-        this.type.addClasspath(path);
-        return this;
-    }
-
     public Stream<Path> files() {
         return this.smart.extension(extensions);
     }
 
     public String sources() {
         return this.root + this.type.sources();
-    }
-
-    public String classpath() {
-        return this.root + this.type.classpath();
     }
 
     public String name() {
@@ -76,7 +67,6 @@ public class Project {
     private static class DefaultProjectType implements ProjectType {
 
         private String sources;
-        private String classpath;
 
         @Override
         public void addSources(String source) {
@@ -87,11 +77,5 @@ public class Project {
         public String sources() {
             return this.sources;
         }
-
-        @Override
-        public void addClasspath(String path) { this.classpath = path; }
-
-        @Override
-        public String classpath() { return classpath; }
     }
 }

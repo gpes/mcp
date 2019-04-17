@@ -12,11 +12,11 @@ import java.util.List;
  * @since 06/07/2017, 19:07:59
  */
 public enum ParseStrategies implements ParseStrategy {
+
     JDT {
         @Override
         public List<Call> from(Project project) {
             return new SmartParseJDT().from(project);
         }
-
     }
 }
