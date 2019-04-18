@@ -28,7 +28,7 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-p", "--path"}, required = true, description = "The path of the file(s) that you want to be parsed.")
     private String path;
 
-    @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created.")
+    @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class CommandClient implements Callable<Void> {
     }
 
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         Project project = Project
                 .root(root)
                 .path(path)

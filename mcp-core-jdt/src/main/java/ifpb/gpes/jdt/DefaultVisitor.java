@@ -17,9 +17,10 @@ import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
+//"Nem todos aqueles vagueiam estao perdidos" - Gandalf
 public class DefaultVisitor extends ASTVisitor {
 
-    private List<Call> calls;// = new ArrayList<>();
+    private List<Call> calls;
 
     private MethodDeclaration currentMethodDeclaration;
     private Expression currentExpression;
@@ -75,7 +76,6 @@ public class DefaultVisitor extends ASTVisitor {
         no.setCallMethod(null);
 
         no.setInvokedBy(ex.toString());
-        //"Nem todos os que vagueiam estao perdidos"
         calls.add(no);
 
         return super.visit(node);

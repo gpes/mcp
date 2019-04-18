@@ -1,5 +1,7 @@
 package ifpb.gpes;
 
+import ifpb.gpes.filter.AssignVerifier;
+
 import java.util.Objects;
 
 /**

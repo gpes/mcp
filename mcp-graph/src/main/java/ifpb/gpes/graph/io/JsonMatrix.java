@@ -65,22 +65,18 @@ public class JsonMatrix {
         return collect;
     }
 
-    private void generateFiles(String nodes, String edges,
-            String[] namesColumns, String outputDir) {
+    private void generateFiles(String nodes, String edges, String[] namesColumns, String outputDir) {
         Path script = Paths.get(outputDir + "script.js");
         Path elements = Paths.get(outputDir + "elements.json");
         Path page = Paths.get(outputDir + "graph.html");
         //
-        String elementsFile = "{\n"
-                + "	\"nodes\":" + nodes + ",\n"
-                + "	\"edges\":" + edges + "\n"
-                + "}";
+        String elementsFile = "{" + "\"nodes\":" + nodes + "," + "\"edges\":" + edges + "}";
         createJson(elementsFile, elements);
         //
         InputStream stream = getClass().getClassLoader().getResourceAsStream("script.js");
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         StringBuffer buffer = reader.lines().collect(StringBuffer::new, StringBuffer::append, StringBuffer::append);
-        buffer.append("\nns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;");
+        buffer.append("ns.innerHTML = `" + colunasFormatadasHtml(namesColumns) + "`;");
         createScript(buffer.toString(), script);
         //
         createPageCopy(page);
@@ -90,7 +86,7 @@ public class JsonMatrix {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(texto);
         } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem writing file, the directory was not found or not exist.");
         }
     }
 
@@ -98,7 +94,7 @@ public class JsonMatrix {
         try {
             Files.write(path, texto.getBytes());
         } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem writing file, the directory was not found or not exist.");
         }
     }
 
@@ -107,7 +103,7 @@ public class JsonMatrix {
             InputStream stream = getClass().getClassLoader().getResourceAsStream("graph.html");
             Files.copy(stream, path, REPLACE_EXISTING);
         } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem writing file, probably the directory was not found or not exist.");
         }
     }
 
@@ -121,7 +117,7 @@ public class JsonMatrix {
     private String colunasFormatadasHtml(String[] namesColumns) {
         return IntStream.range(0, namesColumns.length)
                 .mapToObj(x -> String.format("<p class=\"col-md-4\"><span class=\"badge\">%d</span> %s</p>", x, namesColumns[x]))
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(""));
     }
     
     private static class EdgeVis {
@@ -156,8 +152,6 @@ public class JsonMatrix {
             return String.format("{\"from\":\"%s\", "
                     + "\"to\":\"%s\", \"arrows\":\"to\", \"label\":\"%s\"}",
                     from, to, label);
-
         }
-
     }
 }

@@ -1,9 +1,7 @@
 package ifpb.gpes.filter;
 
-import ifpb.gpes.AssignVerifier;
 import ifpb.gpes.Call;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.function.Predicate;
 
 /**
@@ -20,9 +18,9 @@ public class FilterClassType implements Predicate<Call> {
 
     @Override
     public boolean test(Call t) {
-        if (t.getClassType() == null) {
+        if (t.getClassType() == null || !t.getClassType().contains("java.util.")) {
             return false;
         }
-        return t.getClassType().contains("java.util.") && verifier.isAssignable(t.getClassType().split("<")[0]);
+        return  verifier.isAssignable(t.getClassType().split("<")[0]);
     }
 }

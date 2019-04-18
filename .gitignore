@@ -1,9 +1,10 @@
 .DS_Store
 
+# Java
+*.class
+
 # Maven
-/target/
-**/target/
-**/target/
+**/target
 
 # Netbeans
 /nbproject
@@ -15,6 +16,5 @@ nb-configuration.xml
 **/.classpath
 
 # IDEA
-**/target
-.idea/**
-**/*.iml
+.idea/
+*.iml

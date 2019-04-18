@@ -97,7 +97,7 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
         if (!invokedBy.contains("."))
             return true;
         String[] strs = invokedBy.split("\\.");
-        if (strs.length == 2 && strs[0].equals("this"))
+        if (strs.length >= 2 && strs[0].equals("this"))
             return true;
         return false;
     }

@@ -1,4 +1,4 @@
-package ifpb.gpes;
+package ifpb.gpes.filter;
 
 import java.util.HashMap;
 
@@ -37,7 +37,7 @@ public class AssignVerifier {
             Class classToCompare = Class.forName(nomeDaClasse);
             return baseClass.isAssignableFrom(classToCompare);
         } catch (Exception ex) {
-            System.out.println("An error occurred trying get a class from a string name, returning false.");
+            ex.printStackTrace();
             return false;
         }
     }

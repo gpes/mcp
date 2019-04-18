@@ -7,6 +7,7 @@ import ifpb.gpes.filter.FilterClassType;
 import ifpb.gpes.graph.*;
 import ifpb.gpes.io.FileExportManager;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,38 +38,47 @@ public class BrokeExportManager implements ExportManager {
     @Override
     public void export(List<Call> elements) {
 
+        File file = Paths.get(handleOutputFilePath(outputDir, "")).toFile();
+        if(!file.exists()) {
+            file.mkdirs();
+        }
+
         StringBuilder result = new StringBuilder();
 
         result.append("Todas as calls(").append(elements.size()).append(")\n\n");
         elements.stream().map(Call::callGraph).forEach((call) -> result.append(call).append("\n"));
 
-        List<Predicate<Call>> predicates = Arrays.asList(new FilterClassType("java.util.Map"), new FilterClassType("java.util.Collection"));
-        Predicate<Call> compositePredicate = predicates.stream().reduce(w -> true, Predicate::or);
+        Predicate<Call> predicate = new FilterClassType("java.util.Map").or(new FilterClassType("java.util.Collection"));
 
-        long count = elements.stream().filter(compositePredicate).count();
+        long count = elements.stream().filter(predicate).count();
 
         result.append("\n\nCalls pertencentes ao JCF (").append(count).append(")\n\n");
-        elements.stream().filter(compositePredicate).forEach((call) -> result.append(call.callGraph()).append("\n"));
+        elements.stream().filter(predicate).forEach((call) -> result.append(call.callGraph()).append("\n"));
 
         Path path = Paths.get(handleOutputFilePath(outputDir, MATRIX_FILE_NAME));
         Graph graph = new AdapterGraph().apply(elements);
 
         List<Call> candidates = graph.getCandidates();
 
-        List<Call> verifiedCandidates = candidates.stream().filter(elements::contains).collect(Collectors.toList());
+        predicate = predicate.and(new Predicate<Call>() {
+            @Override
+            public boolean test(Call call) {
+                return elements.contains(call);
+            }
+        });
 
-        List<Call> subCandidates = verifiedCandidates.stream().filter(compositePredicate).collect(Collectors.toList());
+        candidates = candidates.stream().filter(predicate).collect(Collectors.toList());
 
-        result.append("\n\nCalls candidatas(").append(subCandidates.size()).append(")\n\n");
-        subCandidates.forEach((call) -> result.append(call.callGraph()).append("\n"));
+        result.append("\n\nCalls candidatas(").append(candidates.size()).append(")\n\n");
+        candidates.forEach((call) -> result.append(call.callGraph()).append("\n"));
 
-        subCandidates = subCandidates.stream().filter(new FilterByMethod()).collect(Collectors.toList());
+        candidates = candidates.stream().filter(new FilterByMethod()).collect(Collectors.toList());
 
         List<Integer> indices = new ArrayList<>();
         Matrix matrix = graph.toMatrix();
         List<Node> columnsList = Arrays.asList(matrix.getColumns());
         List<Call> brokers = new ArrayList<>();
-        for (Call candidate : subCandidates) {
+        for (Call candidate : candidates) {
             for (Node node : columnsList) {
                 if (nodeFromCall(candidate, node)) {
                     brokers.add(candidate);
@@ -81,39 +91,33 @@ public class BrokeExportManager implements ExportManager {
         brokers.forEach((call) -> {
             result.append(call.callGraph()).append("\n");
         });
-        write(result.toString());
-
+        write(result.toString(), Paths.get(handleOutputFilePath(outputDir, BROKEN_FILE_NAME)));
+        //criando arquivos html,json,js
         new JsonMatrix(matrix).toJson(indices, handleOutputFilePath(outputDir, ""));
         //salvando matrix no arquivo
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (int[] line : matrix.toArray()) {
-                for (int column : line) {
-                    writer.append(String.valueOf(column));
-                    writer.append(",");
-                }
-                writer.append("\n");
+        StringBuffer buffer = new StringBuffer();
+        for (int[] line : matrix.toArray()) {
+            for (int column : line) {
+                buffer.append(String.valueOf(column));
+                buffer.append(",");
             }
-        } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "problem write csv", ex);
+            buffer.append("\n");
         }
+        write(buffer.toString(), Paths.get(handleOutputFilePath(outputDir, MATRIX_FILE_NAME)));
         //salvando metricas no arquivo
-        path = Paths.get(handleOutputFilePath(outputDir, METRICS_FILE_NAME));
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (Metric metric : matrix.computeMetric()) {
-                writer.append(metric.toString());
-                writer.append("\n");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(FileExportManager.class.getName()).log(Level.SEVERE, "problem write txt", ex);
+        buffer = new StringBuffer();
+        for (Metric metric : matrix.computeMetric()) {
+            buffer.append(metric.toString());
+            buffer.append("\n");
         }
+        write(buffer.toString(), Paths.get(handleOutputFilePath(outputDir, METRICS_FILE_NAME)));
     }
 
-    protected void write(String text) {
-        Path path = Paths.get(handleOutputFilePath(outputDir, BROKEN_FILE_NAME));
+    private void write(String text, Path path) {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(text);
         } catch (IOException ex) {
-            Logger.getLogger(FileExportManager.class.getName()).log(Level.SEVERE, "problem write file", ex);
+            Logger.getLogger(FileExportManager.class.getName()).log(Level.SEVERE, "Problem writing a file in " + path.getFileName().toString() + " path.");
         }
     }
 
