@@ -60,17 +60,17 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
         List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
         List<Call> mountedCalls = new ArrayList<>();
         //
-        for (Node source : sources) {
-            for (Node leaf : leafs) {
+        sources.parallelStream().forEach(s -> {
+            leafs.parallelStream().forEach(l -> {
                 DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
-                GraphPath<Node,DefaultWeightedEdge> shortestPath = dijk.getPath(source,leaf);
+                GraphPath<Node,DefaultWeightedEdge> shortestPath = dijk.getPath(s,l);
                 if (shortestPath != null) {
                     Call mountedCall = mountCall(shortestPath.getStartVertex(),shortestPath.getEndVertex());
                     if(!isInvokedByThis(mountedCall.getInvokedBy()))
                         mountedCalls.add(mountedCall);
                 }
-            }
-        }
+            });
+        });
         return mountedCalls;
     }
 
@@ -128,27 +128,6 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
 
     private boolean isNotNullCallMethod(Call call) {
         return call.getCallMethod() != null && !"null".equals(call.getCallMethod().trim());
-    }
-
-    private boolean returnsJCF(String className) {
-        Class clazz = null;
-        try {
-            clazz = Class.forName(className);
-            return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
-        } catch (ClassNotFoundException e) {
-            if(className.contains(".")) {
-                int index = className.lastIndexOf('.');
-                StringBuffer buffer = new StringBuffer(className);
-                buffer.setCharAt(index, '$');
-                try {
-                    clazz = Class.forName(buffer.toString());
-                    return Collection.class.isAssignableFrom(clazz) || Map.class.isAssignableFrom(clazz);
-                } catch (ClassNotFoundException e1) {
-                    return false;
-                }
-            }
-            return false;
-        }
     }
 
     @Override

@@ -45,14 +45,14 @@ public class BrokeExportManager implements ExportManager {
 
         StringBuilder result = new StringBuilder();
 
-        result.append("Todas as calls(").append(elements.size()).append(")\n\n");
+        result.append("All Method Calls (").append(elements.size()).append(")\n\n");
         elements.stream().map(Call::callGraph).forEach((call) -> result.append(call).append("\n"));
 
         Predicate<Call> predicate = new FilterClassType("java.util.Map").or(new FilterClassType("java.util.Collection"));
 
         long count = elements.stream().filter(predicate).count();
 
-        result.append("\n\nCalls pertencentes ao JCF (").append(count).append(")\n\n");
+        result.append("\n\nCalls That Belongs To JCF (").append(count).append(")\n\n");
         elements.stream().filter(predicate).forEach((call) -> result.append(call.callGraph()).append("\n"));
 
         Path path = Paths.get(handleOutputFilePath(outputDir, MATRIX_FILE_NAME));
@@ -69,7 +69,7 @@ public class BrokeExportManager implements ExportManager {
 
         candidates = candidates.stream().filter(predicate).collect(Collectors.toList());
 
-        result.append("\n\nCalls candidatas(").append(candidates.size()).append(")\n\n");
+        result.append("\n\nCalls That Are Candidatas (").append(candidates.size()).append(")\n\n");
         candidates.forEach((call) -> result.append(call.callGraph()).append("\n"));
 
         candidates = candidates.stream().filter(new FilterByMethod()).collect(Collectors.toList());
@@ -87,7 +87,7 @@ public class BrokeExportManager implements ExportManager {
             }
         }
 
-        result.append("\n\nQuebram o confinamento(").append(brokers.size()).append(")\n\n");
+        result.append("\n\nCalls That Broken Confinement (").append(brokers.size()).append(")\n\n");
         brokers.forEach((call) -> {
             result.append(call.callGraph()).append("\n");
         });
