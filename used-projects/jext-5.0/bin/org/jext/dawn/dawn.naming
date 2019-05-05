@@ -1,8 +1,0 @@
-# dawn.naming package - Naming utilities
-
-org.jext.dawn.naming.CreateFunction
-org.jext.dawn.naming.CreateGlobalFunction
-org.jext.dawn.naming.FromLiteralFunction
-org.jext.dawn.naming.ToLiteralFunction
-
-# End of dawn.naming package

@@ -1,3 +1,0 @@
-<!ELEMENT entities-list (entity+) >
-  <!ELEMENT tag EMPTY >
-    <!ATTLIST tag name  CDATA #REQUIRED >

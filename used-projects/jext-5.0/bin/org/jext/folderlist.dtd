@@ -1,5 +1,0 @@
-<!ELEMENT folderlist (folder)* >
-  <!ELEMENT folder (file)* >
-    <!ATTLIST folder name CDATA #REQUIRED >
-    <!ELEMENT file EMPTY >
-      <!ATTLIST file path CDATA #REQUIRED >
