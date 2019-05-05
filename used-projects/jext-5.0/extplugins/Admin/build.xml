@@ -1,0 +1,271 @@
+<project name="plugins" default="installdebug" basedir=".">
+<!--Ant must be invoked from <jext>/extplugins folder, not from Admin one, so
+the basedir is the extplugins folder.-->
+
+  <description>
+    Builds the specified Jext plugin.
+  </description>
+
+  <property name="debug" value="off" />
+  <property name="optimize" value="on" />
+
+  <target name="propertyinit">
+    <property name="jext.home" value=".." />
+    <property name="plugs.dir" value="${jext.home}/bin/plugins" />
+    <property name="lib.dir" value="${plugs.dir}" />
+    <property name="pack.out.dir" value="packs" />
+    <property name="importeds.out.dir" value="importeds" />
+    <property name="subBuildName" value="subBuild.xml" />
+    <property file="Admin/build.properties" />
+  </target>
+
+  <!-- Verify a plugin was specified and it is a directory; if so set properties. -->
+  <target name="checkPlugName" depends="propertyinit" unless="completeInit.done">
+    <fail message="A plugin name must be specified." unless="plugin" />
+    <basename file="${plugin}" property="plugin.stripped"/>
+
+    <!--<property name="${plugin}.version" value="ersion" id="ciao"/>
+    <property name="thisPlug.version" refid="ciao"/>
+    <echo message="${thisPlug.version}"/>-->
+  </target>
+
+  <!--Moved here since for checkout we don't need the directory already exists.-->
+  <target name="completeInit" depends="checkPlugName" unless="completeInit.done">
+    <available property="jextfound" file="../lib/jext.jar" />
+    <fail message="Unable to locate JEXT_HOME." unless="jextfound" />
+    <available property="antfileexists" file="${plugin}/${subBuildName}" />
+    <!-- This way if a project needs its own build.xml, it can be left there -->
+
+    <available property="pluginfound" file="${plugin.stripped}" type="dir" />
+    <fail message="Unable to locate plugin directory '${plugin.stripped}'." unless="pluginfound" />
+    <property name="completeInit.done" value="true" />
+  </target>
+
+  <target name="jardebug">
+    <antcall target="jar">
+      <param name="debug" value="on" />
+      <param name="optimize" value="off" />
+    </antcall>
+  </target>
+  
+  <target name="initnoantfile" unless="antfileexists">
+    <property name="build.dir" value="${plugin.stripped}/build" />
+    <available property="srcDirPresent" file="${plugin.stripped}/src" type="dir" />
+    <available property="classesDirPresent" file="${plugin.stripped}/classes" type="dir" />
+    <condition property="bothDirPresent">
+      <and>
+        <istrue value="${srcDirPresent}"/>
+        <istrue value="${classesDirPresent}"/>
+      </and>
+    </condition>
+
+    <path id="build.classpath">
+      <fileset dir="${jext.home}/lib" includes="*.jar" />
+      <fileset dir="${plugin.stripped}" includes="*.jar" excludes="${plugin.stripped}.jar" />
+      <pathelement location="${plugin.stripped}/classes" />
+      <fileset dir="${lib.dir}" includes="*.jar" />
+    </path>
+  </target>
+  
+  <target name="compilewithsrcdir" if="srcDirPresent">
+    <mkdir dir="${build.dir}" />
+    <javac srcdir="${plugin.stripped}/src" destdir="${build.dir}"
+           classpathref="build.classpath"
+           debug="${debug}" deprecation="off" optimize="${optimize}"/>
+  </target>
+  
+  <!-- Compile without a separate build file and without a separate src/ dir-->
+  <target name="compilenosrcdir" unless="srcDirPresent">
+  <!--It should depend also on antfileexists, but it seems Ant doesn't handle well multiple unless.-->
+    <mkdir dir="${build.dir}" />
+    <javac srcdir="${plugin.stripped}" destdir="${build.dir}" excludes="etc/**"
+           classpathref="build.classpath"
+           debug="${debug}" deprecation="off" optimize="${optimize}"/>
+  </target>
+
+  <!-- Compile with a separate build file -->
+  <target name="compilewithantfile" if="antfileexists">
+    <ant dir="${plugin.stripped}" target="compile" antfile="${subBuildName}" />
+  </target>
+
+  <target name="compilenoantfile" depends="initnoantfile,compilenosrcdir,compilewithsrcdir" unless="antfileexists"/>
+
+  <target name="compile" depends="completeInit,compilenoantfile,compilewithantfile" />
+  
+  <target name="compiledebug">
+    <antcall target="compile">
+      <param name="debug" value="on"/>
+      <param name="optimize" value="off"/>
+    </antcall>
+  </target>
+
+  <!-- Jar without a separate build file -->
+
+  <target name="pathDefine">
+    <fileset id="buildJarPath" dir="${build.dir}" />
+    <fileset id="baseJarPath" dir="${plugin.stripped}" includes="${wildCardList}" excludes="etc/**,src/**,classes/**,build.xml"/>
+    <fileset id="srcJarPath" dir="${plugin.stripped}/src" includes="${wildCardList}" excludes="build.xml"/>
+    <fileset id="classesJarPath" dir="${plugin.stripped}/classes"/>
+  </target>
+
+  <target name="jarNoSpecDirs">
+    <jar destfile="${plugin.stripped}/${plugin.stripped}.jar"
+         filesonly="true">
+      <fileset refid="buildJarPath"/>
+      <fileset refid="baseJarPath"/>
+      <!--<fileset dir="${plugin.stripped}" excludes="**/*.java,build/**,**/*.jar,**/*.txt,etc/**,bindist.list" />
+      In the etc directory you can put everything you don't want to be included in the jar(readme, jars for libraries you use and so on-->
+    </jar>
+  </target>
+
+  <!-- Since jar fails if a fileset specifies a missing dir, we use this to make 
+  this fileset item conditional. Ant Sucks A Lot-->
+  <target name="jarWithSrcDir" if="srcDirPresent">
+    <jar destfile="${plugin.stripped}/${plugin.stripped}.jar"
+         filesonly="true">
+      <fileset refid="buildJarPath"/>
+      <fileset refid="baseJarPath"/>
+      <fileset refid="srcJarPath"/>
+    </jar>
+  </target>
+
+  <target name="jarWithClassesDir" if="classesDirPresent">
+    <jar destfile="${plugin.stripped}/${plugin.stripped}.jar"
+         filesonly="true">
+      <fileset refid="buildJarPath"/>
+      <fileset refid="baseJarPath"/>
+      <fileset refid="classesJarPath"/>
+    </jar>
+  </target>
+
+  <target name="jarWithBothDir" if="bothDirPresent">
+    <jar destfile="${plugin.stripped}/${plugin.stripped}.jar"
+         filesonly="true">
+      <fileset refid="buildJarPath"/>
+      <fileset refid="baseJarPath"/>
+      <fileset refid="srcJarPath"/>
+      <fileset refid="classesJarPath"/>
+    </jar>
+  </target>
+
+  <target name="jarnoantfile" depends="compilenoantfile,pathDefine,jarWithBothDir,jarWithClassesDir,
+      jarWithSrcDir,jarNoSpecDirs"
+      unless="antfileexists" />
+  
+  <!-- Jar with a separate build file -->
+  <target name="jarwithantfile" depends="compilewithantfile" if="antfileexists">
+    <ant dir="${plugin.stripped}" target="jar" antfile="${subBuildName}" />
+  </target>
+
+  <target name="jar" depends="completeInit,jarnoantfile,jarwithantfile" />
+
+  <target name="install" depends="jar">
+    <copy file="${plugin.stripped}/${plugin.stripped}.jar" todir="${plugs.dir}"/>
+  </target>
+
+  <target name="installdebug" depends="jardebug,completeInit"><!--completeInit is needed, because with antcall we don't inherit any properties.-->
+    <copy file="${plugin.stripped}/${plugin.stripped}.jar" todir="${plugs.dir}"/>
+  </target>
+  
+  <target name="distnoantfile" depends="jarnoantfile" unless="antfileexists">
+    <!--<property name="dist.dir" value="${build.dir}/${plugin.stripped}" />
+    <mkdir dir="${dist.dir}" />-->
+    <!-- create tar.gz -->
+    <!--
+    <tar longfile="gnu" tarfile="${build.dir}/${plugin.stripped}-src.tar">
+      <tarfileset dir=".">
+	<include name="${plugin.stripped}/**" />
+	<exclude name="${plugin.stripped}/build/**" />
+	<exclude name="${plugin.stripped}/${plugin.stripped}.jar" />
+      </tarfileset>
+    </tar>
+    
+    <gzip zipfile="${pack.out.dir}/${plugin.stripped}-src.tar.gz"
+	  src="${build.dir}/${plugin.stripped}-src.tar" />
+    <delete file="${build.dir}/${plugin.stripped}-src.tar" />
+    -->
+    <mkdir dir="${pack.out.dir}" />
+    
+    <!-- create a zip file -->
+    <zip zipfile="${pack.out.dir}/${plugin.stripped}-src.zip" >
+      <zipfileset dir=".">
+	<include name="${plugin.stripped}/**" />
+	<exclude name="${plugin.stripped}/build/**" />
+	<exclude name="${plugin.stripped}/${plugin.stripped}.jar" />
+      </zipfileset>
+    </zip>
+  </target>
+  
+  <target name="distwithantfile" depends="jarwithantfile" if="antfileexists">
+    <ant dir="${plugin.stripped}" target="dist" antfile="${subBuildName}" />
+  </target>
+  
+  <target name="dist" depends="completeInit,distnoantfile,distwithantfile" />
+
+  <target name="bindist" depends="jar">
+    <echo message="It will pack in a zip file the jar pack + readme, dependencies and so 
+      on(but only things required for the user! So, no sources)" />
+    <echo message="It will read a list of files to pack from bindist.list(one Ant pattern for line, that is normal wildcards)." />
+    <available file="${plugin.stripped}/bindist.list" property="listed_files"/>
+
+    <mkdir dir="${pack.out.dir}" />
+
+    <zip zipfile="${pack.out.dir}/${plugin.stripped}.zip" >
+      <!--<zipfileset dir="." >
+	<include name="${plugin.stripped}" />
+	<exclude name="${plugin.stripped}/${plugin.stripped}.jar" />
+	<exclude name="${plugin.stripped}/build/**" />
+      </zipfileset>-->
+      <zipfileset dir="${plugin.stripped}" >
+	<includesfile name="${plugin.stripped}/bindist.list" if="listed_files" />
+        <include name="*.jar" />
+        <include name="*.txt" />
+        <include name="**/*.so" />
+        <include name="**/*.dll" />
+      </zipfileset>
+    </zip>
+    
+  </target>
+
+  <!-- Clean without a separate build file -->
+  <target name="cleannoantfile" depends="initnoantfile" unless="antfileexists">
+    <delete dir="${build.dir}"/>
+    <delete file="${plugin.stripped}/${plugin.stripped}.jar" />
+  </target>
+
+  <!-- Clean with a separate build file -->
+  <target name="cleanwithantfile" if="antfileexists">
+    <ant dir="${plugin.stripped}" target="clean" antfile="${subBuildName}" />
+  </target>
+
+  <target name="clean" depends="completeInit,cleannoantfile,cleanwithantfile" />
+
+  <target name="cvsimport" depends="completeInit">
+
+    <echo file="${plugin.stripped}/.cvsignore">build ${plugin.stripped}.jar
+</echo>
+
+    <mkdir dir="${importeds.out.dir}" />
+
+    <cvs cvsRoot="${CvsRoot}" compressionlevel="9" command="import -m 'Plugin ${plugin.stripped}' ${plugin.stripped} jext-plugins start" dest="${plugin.stripped}"/>
+
+    <move todir="${importeds.out.dir}/${plugin.stripped}.imported">
+      <fileset dir="${plugin.stripped}" defaultexcludes="no"/>
+    </move>
+
+    <delete dir="${plugin.stripped}" />
+  </target>
+
+  <target name="checkout" depends="checkPlugName">
+    <cvs cvsRoot="${CvsRoot}" compressionlevel="9" package="${plugin.stripped}"/>
+  </target>
+
+  <target name="update" depends="completeInit">
+    <cvs compressionlevel="9" dest="${plugin.stripped}" cvsRsh="ssh" command="-f update -P -d" />
+  </target>
+
+  <target name="updateall" depends="propertyinit">
+    <cvs compressionlevel="9" cvsRoot="${CvsRoot}" cvsRsh="ssh" dest="." command="-f update -P -d" />
+  </target>
+
+</project>

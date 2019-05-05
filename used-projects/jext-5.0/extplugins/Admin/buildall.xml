@@ -1,0 +1,91 @@
+<project name="allplugins" default="install" basedir=".">
+  <description>
+    Calls a target for every installed plugin(that is you can't checkout every available module 
+    with this). Uses ant-contrib:  http://ant-contrib.sourceforge.net
+  </description>
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  
+  <target name="compile">
+    <antcall target="each">
+      <param name="target" value="compile" />
+    </antcall>
+  </target>
+  
+  <target name="compiledebug">
+    <antcall target="each">
+      <param name="target" value="compiledebug" />
+    </antcall>
+  </target>
+  
+  <target name="jar">
+    <antcall target="each">
+      <param name="target" value="jar" />
+    </antcall>
+  </target>
+  
+  <target name="jardebug">
+    <antcall target="each">
+      <param name="target" value="jardebug" />
+    </antcall>
+  </target>
+
+  <target name="install">
+    <antcall target="each">
+      <param name="target" value="install" />
+    </antcall>
+  </target>
+  
+  <target name="dist">
+    <antcall target="each">
+      <param name="target" value="dist" />
+    </antcall>
+  </target>
+  
+  <target name="bindist">
+    <antcall target="each">
+      <param name="target" value="bindist" />
+    </antcall>
+  </target>
+  
+  <target name="clean">
+    <antcall target="each">
+      <param name="target" value="clean" />
+    </antcall>
+  </target>
+  
+  <!-- Pass each file found in the base directory to the uncle task -->
+  <target name="each">
+    <foreach target="uncle" param="plugin" inheritall="false">
+      <fileset dir="${basedir}" includes="*" excludes="packs,importeds,downloaded"/>
+      <param name="target" value="${target}" />
+      <param name="alsoAdmin" value="${alsoAdmin}" />
+    </foreach>
+  </target>
+  
+  <!-- Verify that the plugin property represents a directory and it either is not the Admin one or
+  the property alsoAdmin has been set to true, so that even the Admin folder is included(see "update"
+  target)-->
+  <target name="checkdir">
+    <basename file="${plugin}" property="plugin.pathstripped"/>
+    <condition property="plugin.toinclude">
+      <and>
+        <isset property="plugin" />
+        <available file="${plugin}" type="dir" />
+	<or>
+	  <not><equals arg1="${plugin.pathstripped}" arg2="Admin" casesensitive="false"/></not>
+	  <istrue value="${alsoAdmin}" />
+	</or>
+      </and>
+    </condition>
+  </target>
+  
+  <!-- Uncle invokes Ant! -->
+  <target name="uncle" depends="checkdir" if="plugin.toinclude">
+    <echo message="Invoking target ${target} for ${plugin.pathstripped} plugin..." />
+    <ant dir="${basedir}" target="${target}">
+      <property name="plugin" value="${plugin.pathstripped}" />
+    </ant>
+  </target>
+  
+</project>

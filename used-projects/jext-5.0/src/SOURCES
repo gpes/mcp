@@ -1,0 +1,56 @@
+=======================================================================
+Jext - v@VERSION@ - Sources Readme File 1.7 - 21:30 07/07/2004
+=======================================================================
+
+(C)1999-2004 Romain Guy
+Released under GPL-2 license (see LICENSE)
+romain.guy@jext.org
+www.jext.org
+
+CONTRIBUTORS
+=======================================================================
+  See distribution README file please.
+
+UPDATES
+=======================================================================
+  Jext is very often updated. The updates are simple bug fixes as well
+as brand new releases including new features. Check the web site from
+time to time to stay informed about the updates:
+  http://www.jext.org
+
+  Or join the mailing list to receive latest informations, patches or
+development status reports:
+  http://lists.sourceforge.net/mailman/listinfo/jext-devel
+
+CONTENTS
+=======================================================================
+  This archive contains the sources of the Jext software. The sources
+of the core are placed in the src/ directory.
+
+  Here are the contents of the src/ directory:
+- docs : contains the files needed to build the documentation. The
+         soft used for generation is missing but can be freely
+         downloaded (see docs/bin/bin.txt)
+
+- lib : contains the sources of Jext itself
+
+- plugins: contains the sources of the default plugins
+
+  The file jext.manifest is used to produce the binary jar file and
+the file jext.version is used for update warnings in Jext (this file
+is uploaded on a FTP server).
+
+COMPILING SOURCES
+=======================================================================
+  In order to compile Jext you need to download the tool called ANT
+from the following URL: http://jakarta.apache.org/ant
+
+  Beware of the fact that only ANT 1.2 or higher will compile Jext !
+
+  Then, simply open a terminal console in the directory where you
+unpacked both the sources and the binaries (you need to download TWO
+archives from the Jext web site) and run ANT in the src\ directory.
+Several targets are available. Most used are: compile, jar, javadocs,
+dist, dist-tgz
+
+=======================================================================

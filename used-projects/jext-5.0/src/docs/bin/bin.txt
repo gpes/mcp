@@ -1,0 +1,6 @@
+Gaïa binaries - 03/05/2002 - 18:56:49
+=====================================
+
+  To use Gaïa to compile Jext documentation, please download:
+http://jext.free.fr/gaia.zip
+  Then, copy gaia.jar from Gaïa's archive into this directory.
