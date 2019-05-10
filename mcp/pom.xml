@@ -20,6 +20,7 @@
         <module>mcp-graph</module>
         <module>mcp-samples</module>
         <module>mcp-client</module>
+        <module>mcp-jcf</module>
     </modules>
 
     <properties>

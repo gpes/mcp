@@ -4,6 +4,7 @@ package br.edu.ifpb.gpes;
 import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
 import ifpb.gpes.graph.io.BrokeExportManager;
+import ifpb.gpes.jcf.io.CategoryExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
 import picocli.CommandLine;
@@ -32,6 +33,7 @@ public class CommandClient implements Callable<Void> {
     private String outputDir;
 
     public static void main(String[] args) {
+        args = new String[]{"-r", "/home/shotaro/quartz-1.8.3/quartz/", "-s", "src/main/java/", "-p", "src/main/java/", "-o", "."};
         CommandLine.call(new CommandClient(), args);
     }
 
@@ -44,7 +46,8 @@ public class CommandClient implements Callable<Void> {
                 .filter(".java");
         Study.of(project)
                 .with(Parse.with(ParseStrategies.JDT))
-                .analysis(new BrokeExportManager(outputDir))
+//                .analysis(new BrokeExportManager(outputDir))
+                .analysis(new CategoryExportManager(outputDir))
                 .execute();
         return null;
     }

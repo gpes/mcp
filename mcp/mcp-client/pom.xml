@@ -15,6 +15,11 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>br.edu.ifpb.gpes.mcp</groupId>
+            <artifactId>mcp-jcf</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>4.0.0-alpha-1</version>
