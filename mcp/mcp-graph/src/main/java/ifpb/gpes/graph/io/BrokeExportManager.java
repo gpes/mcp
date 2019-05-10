@@ -136,8 +136,4 @@ public class BrokeExportManager implements ExportManager {
         }
         return true;
     }
-
-    public String handleOutputFilePath(String dir, String filename) {
-        return dir.endsWith("/") ? dir + filename: dir + '/' + filename;
-    }
 }

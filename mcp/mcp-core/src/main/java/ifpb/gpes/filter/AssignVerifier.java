@@ -8,21 +8,16 @@ import java.util.HashMap;
  */
 public class AssignVerifier {
 
-    private final HashMap primitiveMap;
-    private final String baseClass;
+    private HashMap primitiveMap;
+    private String baseClass;
+
+    public AssignVerifier() {
+        populatePrimitives();
+    }
 
     public AssignVerifier(String baseClass) {
         this.baseClass = baseClass;
-        //
-        primitiveMap = new HashMap<String, Object>();
-        primitiveMap.put("int", int.class);
-        primitiveMap.put("long", long.class);
-        primitiveMap.put("double", double.class);
-        primitiveMap.put("char", char.class);
-        primitiveMap.put("short", short.class);
-        primitiveMap.put("byte", byte.class);
-        primitiveMap.put("boolean", boolean.class);
-        primitiveMap.put("void", void.class);
+        populatePrimitives();
     }
 
     public boolean isAssignable(String nomeDaClasse) {
@@ -40,5 +35,21 @@ public class AssignVerifier {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    private void populatePrimitives() {
+        primitiveMap = new HashMap<String, Object>();
+        primitiveMap.put("int", int.class);
+        primitiveMap.put("long", long.class);
+        primitiveMap.put("double", double.class);
+        primitiveMap.put("char", char.class);
+        primitiveMap.put("short", short.class);
+        primitiveMap.put("byte", byte.class);
+        primitiveMap.put("boolean", boolean.class);
+        primitiveMap.put("void", void.class);
+    }
+
+    public void setBaseClass(String baseClass) {
+        this.baseClass = baseClass;
     }
 }

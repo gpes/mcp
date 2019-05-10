@@ -10,4 +10,8 @@ import java.util.List;
 public interface ExportManager {
 
     public void export(List<Call> elements);
+
+    public default String handleOutputFilePath(String dir, String filename) {
+        return dir.endsWith("/") ? dir + filename: dir + '/' + filename;
+    }
 }

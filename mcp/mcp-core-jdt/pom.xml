@@ -7,10 +7,7 @@
         <version>0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
     <artifactId>mcp-core-jdt</artifactId>
-    <packaging>jar</packaging>
-
     <dependencies>
         <dependency>
             <groupId>br.edu.ifpb.gpes.mcp</groupId>
@@ -39,5 +36,4 @@
             <version>3.7.100</version>
         </dependency>
     </dependencies>
-
 </project>
