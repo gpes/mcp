@@ -1,38 +1,31 @@
 package ifpb.gpes.graph.io;
 
 import ifpb.gpes.Call;
-import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.FilterByMethod;
 import ifpb.gpes.filter.FilterClassType;
 import ifpb.gpes.graph.*;
 import ifpb.gpes.io.FileExportManager;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  *
  * @author juan
  */
-public class BrokeExportManager implements ExportManager {
+public class BrokeExportManager extends FileExportManager {
 
     private final String MATRIX_FILE_NAME = "matrix.csv";
     private final String METRICS_FILE_NAME = "metrics.txt";
     private final String BROKEN_FILE_NAME = "file.txt";
-    private String outputDir;
 
     public BrokeExportManager(String outputDir) {
-        this.outputDir = outputDir;
+        super(outputDir);
     }
 
     @Override
@@ -111,14 +104,6 @@ public class BrokeExportManager implements ExportManager {
             buffer.append("\n");
         }
         write(buffer.toString(), Paths.get(handleOutputFilePath(outputDir, METRICS_FILE_NAME)));
-    }
-
-    private void write(String text, Path path) {
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            writer.write(text);
-        } catch (IOException ex) {
-            Logger.getLogger(FileExportManager.class.getName()).log(Level.SEVERE, "Problem writing a file in " + path.getFileName().toString() + " path.");
-        }
     }
 
     public boolean nodeFromCall(Call call, Node node) {

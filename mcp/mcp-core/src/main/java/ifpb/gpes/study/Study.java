@@ -47,10 +47,6 @@ public class Study {
         return new Study(strategy, this.parse, this.project);
     }
 
-    public Study toFile(String fileName) {
-        return new Study(FileExportManager.name(fileName + ".txt"), this.parse, this.project);
-    }
-
     private static class DefaultStrategy implements ParseStrategy {
 
         @Override

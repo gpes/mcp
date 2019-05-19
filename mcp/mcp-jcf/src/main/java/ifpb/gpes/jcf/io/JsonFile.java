@@ -1,10 +1,11 @@
 package ifpb.gpes.jcf.io;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.*;
-import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class JsonFile {
 
@@ -14,10 +15,12 @@ public class JsonFile {
         this.inputStream = inputStream;
     }
 
-    public JsonObject toJsonObject() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String jsonOfFile = reader.lines().collect(Collectors.joining());
-        JsonReader jsonReader = Json.createReader(new StringReader(jsonOfFile));
-        return jsonReader.readObject();
+    public JsonNode toJsonObject() {
+        try {
+            JsonNode node = new ObjectMapper().readTree(inputStream);
+            return node;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
