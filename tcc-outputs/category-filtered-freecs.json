@@ -1,0 +1,22 @@
+{
+  "java.util.List" : {
+    "insertion" : 82,
+    "other" : 183,
+    "search" : 79,
+    "deletion" : 43,
+    "access" : 15
+  },
+  "java.util.Map" : {
+    "other" : 44,
+    "access" : 74,
+    "insertion" : 69,
+    "deletion" : 44,
+    "search" : 24
+  },
+  "java.util.Set" : {
+    "other" : 32,
+    "insertion" : 155,
+    "search" : 8,
+    "deletion" : 1
+  }
+}

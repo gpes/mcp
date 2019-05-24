@@ -7,7 +7,6 @@ import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
 import picocli.CommandLine;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(description = "Parse a project.", name = "client", version = {"1.0"})
@@ -31,14 +30,14 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
-    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects.")
-    private String strategy;
+//    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects.")
+//    private String strategy;
 
-    @CommandLine.Option(names = {"-st", "--statistic"}, required = true, description = "Make the tool generate an output that can used in statistical studies.")
-    private String statistic;
+//    @CommandLine.Option(names = {"-st", "--statistic"}, required = true, description = "Make the tool generate an output that can used in statistical studies.")
+//    private String statistic;
 
     public static void main(String[] args) {
-        args = new String[]{"-r", "/home/shotaro/quartz-1.8.3/quartz/", "-s", "src/main/java/", "-p", "src/main/java/", "-o", "."};
+        args = new String[]{"-r", "/home/shotaro/trash-projects/quickserver-1.4.7/", "-src", "src/main/", "-p", "src/main/", "-o", "."};
         CommandLine.call(new CommandClient(), args);
     }
 
