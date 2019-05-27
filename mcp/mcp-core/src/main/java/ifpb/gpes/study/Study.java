@@ -1,6 +1,5 @@
 package ifpb.gpes.study;
 
-import ifpb.gpes.io.FileExportManager;
 import ifpb.gpes.io.PrintOutManager;
 import ifpb.gpes.Call;
 import ifpb.gpes.ExportManager;

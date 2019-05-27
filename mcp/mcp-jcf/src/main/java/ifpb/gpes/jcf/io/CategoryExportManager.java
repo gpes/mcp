@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import ifpb.gpes.Call;
-import ifpb.gpes.io.FileExportManager;
+import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.AssignVerifier;
 import ifpb.gpes.filter.FilterClassType;
 
@@ -16,14 +16,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class CategoryExportManager extends FileExportManager {
+public class CategoryExportManager extends ExportManager {
 
     private final String CATEGORY_FILE = "category-filtered.json";
     private final String CATEGORIES_JSON = "categories.json";
-
-    public CategoryExportManager(String outputDir) {
-        super(outputDir);
-    }
 
     @Override
     public void export(List<Call> elements) {
@@ -31,6 +27,7 @@ public class CategoryExportManager extends FileExportManager {
         AssignVerifier verifier = new AssignVerifier();
 
         File file = Paths.get(handleOutputFilePath(outputDir, "")).toFile();
+
         if(!file.exists()) {
             file.mkdirs();
         }

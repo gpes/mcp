@@ -30,11 +30,8 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
-//    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects.")
-//    private String strategy;
-
-//    @CommandLine.Option(names = {"-st", "--statistic"}, required = true, description = "Make the tool generate an output that can used in statistical studies.")
-//    private String statistic;
+    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects.")
+    private String strategy;
 
     public static void main(String[] args) {
         args = new String[]{"-r", "/home/shotaro/trash-projects/quickserver-1.4.7/", "-src", "src/main/", "-p", "src/main/", "-o", "."};

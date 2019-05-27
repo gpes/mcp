@@ -1,10 +1,10 @@
 package ifpb.gpes.graph.io;
 
 import ifpb.gpes.Call;
+import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.FilterByMethod;
 import ifpb.gpes.filter.FilterClassType;
 import ifpb.gpes.graph.*;
-import ifpb.gpes.io.FileExportManager;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,20 +18,17 @@ import java.util.stream.Collectors;
  *
  * @author juan
  */
-public class BrokeExportManager extends FileExportManager {
+public class BrokeExportManager extends ExportManager {
 
     private final String MATRIX_FILE_NAME = "matrix.csv";
     private final String METRICS_FILE_NAME = "metrics.txt";
     private final String BROKEN_FILE_NAME = "file.txt";
 
-    public BrokeExportManager(String outputDir) {
-        super(outputDir);
-    }
-
     @Override
     public void export(List<Call> elements) {
 
         File file = Paths.get(handleOutputFilePath(outputDir, "")).toFile();
+
         if(!file.exists()) {
             file.mkdirs();
         }
