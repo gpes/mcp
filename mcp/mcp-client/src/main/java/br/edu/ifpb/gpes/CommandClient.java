@@ -1,5 +1,6 @@
 package br.edu.ifpb.gpes;
 
+import br.edu.ifpb.gpes.export.ExportStrategy;
 import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
 import ifpb.gpes.jcf.io.CategoryExportManager;
@@ -30,11 +31,13 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
-    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects.")
+    @CommandLine.Option(names = {"-s", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects." +
+            "\nThe following strategies are available:\n\tBROKE (Find confinement brokens)" +
+            "\n\tJCF (Categorize the methods used in the collections)" +
+            "\n\tPRINT (Print in the console all method calls)")
     private String strategy;
 
     public static void main(String[] args) {
-        args = new String[]{"-r", "/home/shotaro/trash-projects/quickserver-1.4.7/", "-src", "src/main/", "-p", "src/main/", "-o", "."};
         CommandLine.call(new CommandClient(), args);
     }
 
@@ -45,10 +48,15 @@ public class CommandClient implements Callable<Void> {
                 .path(path)
                 .sources(source)
                 .filter(".java");
-        Study.of(project)
-                .with(Parse.with(ParseStrategies.JDT))
-                .analysis(new CategoryExportManager(outputDir))
-                .execute();
+        try {
+            Study.of(project)
+                    .with(Parse.with(ParseStrategies.JDT))
+                    .analysis(ExportStrategy.valueOf(strategy).exportFactory(outputDir))
+                    .execute();
+
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Something goes wrong. Please review your strategy option.");
+        }
         return null;
     }
 }

@@ -21,6 +21,10 @@ public class CategoryExportManager extends ExportManager {
     private final String CATEGORY_FILE = "category-filtered.json";
     private final String CATEGORIES_JSON = "categories.json";
 
+    public CategoryExportManager(String outputDir) {
+        super(outputDir);
+    }
+
     @Override
     public void export(List<Call> elements) {
         List<String> interfaces = Arrays.asList("java.util.List", "java.util.Map", "java.util.Set");

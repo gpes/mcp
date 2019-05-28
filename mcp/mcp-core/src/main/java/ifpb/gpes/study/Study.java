@@ -21,7 +21,7 @@ public class Study {
     private final Project project;
 
     public Study(Project project) {
-        this(new PrintOutManager(), Parse.with(new DefaultStrategy()), project);
+        this(new PrintOutManager(null), Parse.with(new DefaultStrategy()), project);
     }
 
     private Study(ExportManager strategy, Parse parse, Project project) {

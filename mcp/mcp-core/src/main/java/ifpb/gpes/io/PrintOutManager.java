@@ -9,7 +9,11 @@ import java.util.List;
  * @mail ricardo.job@ifpb.edu.br
  * @since 07/07/2017, 16:09:20
  */
-public class PrintOutManager  implements ExportManager {
+public class PrintOutManager  extends ExportManager {
+
+    public PrintOutManager(String outputDir) {
+        super(outputDir);
+    }
 
     @Override
     public void export(List<Call> elements) {

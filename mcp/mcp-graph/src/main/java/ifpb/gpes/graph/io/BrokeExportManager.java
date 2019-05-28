@@ -24,6 +24,10 @@ public class BrokeExportManager extends ExportManager {
     private final String METRICS_FILE_NAME = "metrics.txt";
     private final String BROKEN_FILE_NAME = "file.txt";
 
+    public BrokeExportManager(String outputDir) {
+        super(outputDir);
+    }
+
     @Override
     public void export(List<Call> elements) {
 

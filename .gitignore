@@ -2,6 +2,7 @@
 
 # Java
 *.class
+*.jar
 
 # Maven
 **/target

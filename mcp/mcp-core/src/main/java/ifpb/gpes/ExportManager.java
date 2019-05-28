@@ -17,6 +17,10 @@ public abstract class ExportManager {
 
     protected String outputDir;
 
+    public ExportManager(String outputDir) {
+        this.outputDir = outputDir;
+    }
+
     public abstract void export(List<Call> elements);
 
     public String handleOutputFilePath(String dir, String filename) {
