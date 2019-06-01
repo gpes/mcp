@@ -3,7 +3,8 @@ package br.edu.ifpb.gpes.export;
 import ifpb.gpes.ExportManager;
 import ifpb.gpes.graph.io.BrokeExportManager;
 import ifpb.gpes.io.PrintOutManager;
-import ifpb.gpes.jcf.io.CategoryExportManager;
+import ifpb.gpes.jcf.io.CategoryInterfaceExportManager;
+import ifpb.gpes.jcf.io.CategoryMethodExportManager;
 
 public enum ExportStrategy {
 
@@ -13,10 +14,16 @@ public enum ExportStrategy {
             return new BrokeExportManager(outputDir);
         }
     },
-    JCF {
+    CATEGORYINTERFACE {
         @Override
         public ExportManager exportFactory(String outputDir) {
-            return new CategoryExportManager(outputDir);
+            return new CategoryInterfaceExportManager(outputDir);
+        }
+    },
+    CATEGORYMETHOD {
+        @Override
+        public ExportManager exportFactory(String outputDir) {
+            return new CategoryMethodExportManager(outputDir);
         }
     },
     PRINT {

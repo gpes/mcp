@@ -3,7 +3,7 @@ package br.edu.ifpb.gpes;
 import br.edu.ifpb.gpes.export.ExportStrategy;
 import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
-import ifpb.gpes.jcf.io.CategoryExportManager;
+import ifpb.gpes.jcf.io.CategoryMethodExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
 import picocli.CommandLine;
@@ -34,6 +34,8 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-t", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects." +
             "\nThe following strategies are available:\n\t*BROKE (Find confinement brokens)" +
             "\n\t*JCF (Categorize the methods used in the collections)" +
+            "\n\t*CATEGORYMETHOD (...)" +
+            "\n\t*CATEGORYINTERFACE (...)" +
             "\n\t*PRINT (Print in the console all method calls)\r")
     private String strategy;
 

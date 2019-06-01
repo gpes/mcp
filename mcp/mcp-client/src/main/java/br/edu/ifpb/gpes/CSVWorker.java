@@ -1,9 +1,6 @@
 package br.edu.ifpb.gpes;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +11,7 @@ public class CSVWorker {
 
     public static void main(String[] args) {
         String extension = ".csv";
-        String dir = "/home/shotaro/myProjects/pp-mcp/tcc-outputs/statistic/";
+        String dir = "/home/shotaro/myProjects/mcp/tcc-outputs/statistic/";
         List<String> projects = Arrays.asList("collections", "freecs", "jedit", "jext", "jfreechart", "jgrapht", "marauroa", "pmd", "quartz", "quickserver");
         List<String> categories = Arrays.asList("other", "search", "insertion", "deletion", "access");
         List<String> classes = Arrays.asList("List", "Map", "Set");

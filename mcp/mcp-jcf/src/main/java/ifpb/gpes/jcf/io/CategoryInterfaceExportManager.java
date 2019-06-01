@@ -16,12 +16,12 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class CategoryExportManager extends ExportManager {
+public class CategoryInterfaceExportManager extends ExportManager {
 
-    private final String CATEGORY_FILE = "category-filtered.json";
+    private final String CATEGORY_FILE = "category-interface.json";
     private final String CATEGORIES_JSON = "categories.json";
 
-    public CategoryExportManager(String outputDir) {
+    public CategoryInterfaceExportManager(String outputDir) {
         super(outputDir);
     }
 

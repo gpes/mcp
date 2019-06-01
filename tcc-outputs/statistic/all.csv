@@ -1,0 +1,16 @@
+category,quantity,interface
+other,1840,List
+search,222,List
+insertion,1235,List
+deletion,493,List
+access,901,List
+other,542,Map
+search,194,Map
+insertion,997,Map
+deletion,255,Map
+access,680,Map
+other,416,Set
+search,183,Set
+insertion,406,Set
+deletion,98,Set
+access,0,Set
