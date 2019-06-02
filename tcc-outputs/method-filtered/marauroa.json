@@ -1,0 +1,65 @@
+{
+  "java.util.List" : {
+    "deletion" : {
+      "clear" : 24,
+      "remove" : 13
+    },
+    "insertion" : {
+      "add" : 87,
+      "addAll" : 2,
+      "set" : 1
+    },
+    "other" : {
+      "iterator" : 22,
+      "isEmpty" : 9,
+      "size" : 21,
+      "toArray" : 1,
+      "equals" : 4
+    },
+    "search" : {
+      "contains" : 4
+    },
+    "access" : {
+      "get" : 3
+    }
+  },
+  "java.util.Map" : {
+    "other" : {
+      "values" : 28,
+      "entrySet" : 14,
+      "size" : 9,
+      "keySet" : 9,
+      "isEmpty" : 7,
+      "equals" : 6
+    },
+    "deletion" : {
+      "clear" : 12,
+      "remove" : 18
+    },
+    "insertion" : {
+      "put" : 134,
+      "putAll" : 8
+    },
+    "access" : {
+      "get" : 56
+    },
+    "search" : {
+      "containsKey" : 23
+    }
+  },
+  "java.util.Set" : {
+    "deletion" : {
+      "remove" : 3,
+      "clear" : 2
+    },
+    "insertion" : {
+      "add" : 3
+    },
+    "other" : {
+      "isEmpty" : 1,
+      "iterator" : 4,
+      "size" : 1,
+      "toArray" : 1
+    }
+  }
+}

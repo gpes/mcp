@@ -6,8 +6,17 @@ import ifpb.gpes.Project;
 import ifpb.gpes.jcf.io.CategoryMethodExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import picocli.CommandLine;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(description = "Parse a project.", name = "client", version = {"1.0"})
@@ -31,11 +40,10 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
-    @CommandLine.Option(names = {"-t", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects." +
+    @CommandLine.Option(names = {"-t", "--strategy"}, required = true, description = "Select the strategy used to process the list of call objects" +
             "\nThe following strategies are available:\n\t*BROKE (Find confinement brokens)" +
-            "\n\t*JCF (Categorize the methods used in the collections)" +
-            "\n\t*CATEGORYMETHOD (...)" +
-            "\n\t*CATEGORYINTERFACE (...)" +
+            "\n\t*CATEGORYMETHOD (Categorize the methods used in the collections, grouped by method)" +
+            "\n\t*CATEGORYINTERFACE (Categorize the methods used in the collections, grouped by category)" +
             "\n\t*PRINT (Print in the console all method calls)\r")
     private String strategy;
 
@@ -55,8 +63,8 @@ public class CommandClient implements Callable<Void> {
                     .with(Parse.with(ParseStrategies.JDT))
                     .analysis(ExportStrategy.valueOf(strategy).exportFactory(outputDir))
                     .execute();
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Something goes wrong. Please review your strategy option.");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
         return null;
     }

@@ -9,9 +9,14 @@ import ifpb.gpes.Call;
 import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.AssignVerifier;
 import ifpb.gpes.filter.FilterClassType;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
@@ -86,11 +91,39 @@ public class CategoryMethodExportManager extends ExportManager {
                 });
             });
         });
+
         try {
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resultMap);
             write(json, Paths.get(handleOutputFilePath(outputDir, CATEGORY_FILE)));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
+        }
+
+        String[] header = new String[]{"interface", "category", "method", "count"};
+        try (
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(handleOutputFilePath(outputDir, CATEGORY_FILE.split("\\.")[0] + ".csv")));
+            CSVPrinter csvPrinter = new CSVPrinter(
+                    writer,
+                    CSVFormat.DEFAULT.withHeader(header).withDelimiter(';')
+            );
+        ) {
+            // interfaces
+            resultMap.forEach((intf, vintf) -> {
+                // categorias
+                vintf.fields().forEachRemaining(categoryEntry -> {
+                    // methods
+                    categoryEntry.getValue().fields().forEachRemaining(methodEntry -> {
+                        try {
+                            csvPrinter.printRecord(intf, categoryEntry.getKey(), methodEntry.getKey(), methodEntry.getValue().asInt());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                });
+            });
+            csvPrinter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
