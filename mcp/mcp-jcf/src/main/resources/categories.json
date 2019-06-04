@@ -2,6 +2,7 @@
   "search": [
     "contains",
     "containsAll",
+    "subList",
     "first",
     "headSet",
     "last",
