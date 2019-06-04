@@ -2,7 +2,6 @@
   "search": [
     "contains",
     "containsAll",
-    "subList",
     "first",
     "headSet",
     "last",
@@ -30,6 +29,7 @@
   ],
   "access": [
     "get",
+    "subList",
     "element",
     "peek",
     "getFirst",
