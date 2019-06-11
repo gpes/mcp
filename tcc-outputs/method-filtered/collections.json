@@ -26,7 +26,8 @@
       "removeAll" : 4
     },
     "access" : {
-      "get" : 37
+      "get" : 37,
+      "subList": 9
     }
   },
   "java.util.Map" : {

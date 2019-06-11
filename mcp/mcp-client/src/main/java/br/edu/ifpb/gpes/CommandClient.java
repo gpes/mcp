@@ -3,20 +3,9 @@ package br.edu.ifpb.gpes;
 import br.edu.ifpb.gpes.export.ExportStrategy;
 import ifpb.gpes.Parse;
 import ifpb.gpes.Project;
-import ifpb.gpes.jcf.io.CategoryMethodExportManager;
 import ifpb.gpes.jdt.ParseStrategies;
 import ifpb.gpes.study.Study;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import picocli.CommandLine;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(description = "Parse a project.", name = "client", version = {"1.0"})

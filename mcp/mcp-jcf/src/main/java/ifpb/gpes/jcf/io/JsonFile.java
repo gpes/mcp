@@ -10,6 +10,7 @@ import java.io.InputStream;
 public class JsonFile {
 
     private InputStream inputStream;
+    private JsonNode node;
 
     public JsonFile(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -17,7 +18,8 @@ public class JsonFile {
 
     public JsonNode toJsonObject() {
         try {
-            JsonNode node = new ObjectMapper().readTree(inputStream);
+            if(node == null)
+                node = new ObjectMapper().readTree(inputStream);
             return node;
         } catch (IOException e) {
             return null;

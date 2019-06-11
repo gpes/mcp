@@ -21,7 +21,8 @@
     },
     "access" : {
       "get" : 318,
-      "peek" : 1
+      "peek" : 1,
+      "subList": 2
     },
     "search" : {
       "indexOf" : 21,
