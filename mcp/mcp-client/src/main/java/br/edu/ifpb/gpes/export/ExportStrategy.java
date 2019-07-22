@@ -5,6 +5,7 @@ import ifpb.gpes.graph.io.BrokeExportManager;
 import ifpb.gpes.io.PrintOutManager;
 import ifpb.gpes.jcf.io.CategoryInterfaceExportManager;
 import ifpb.gpes.jcf.io.CategoryMethodExportManager;
+import ifpb.gpes.jcf.io.ChangeDifficultExportManager;
 
 public enum ExportStrategy {
 
@@ -30,6 +31,12 @@ public enum ExportStrategy {
         @Override
         public ExportManager exportFactory(String outputDir) {
             return new PrintOutManager(null);
+        }
+    },
+    CHANGEFACTOR {
+        @Override
+        public ExportManager exportFactory(String outputDir) {
+            return new ChangeDifficultExportManager(outputDir);
         }
     };
 

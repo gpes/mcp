@@ -1,0 +1,227 @@
+[
+  {
+    "interfaces": [
+      "List",
+      "Map"
+    ],
+    "union": {
+      "other": [
+        "spliterator",
+        "entrySet",
+        "forEach",
+        "hashcode",
+        "values",
+        "isEmpty",
+        "sort",
+        "iterator",
+        "size",
+        "stream",
+        "equals",
+        "toArray",
+        "listIterator",
+        "parallelStream",
+        "keySet"
+      ],
+      "access": [
+        "subList",
+        "getOrDefault",
+        "get",
+        "listIterator"
+      ],
+      "insertion": [
+        "add",
+        "set",
+        "computeIfAbsent",
+        "replace",
+        "replaceAll",
+        "put",
+        "compute",
+        "computeIfPresent",
+        "addAll",
+        "putAll",
+        "merge",
+        "putIfAbsent"
+      ],
+      "deletion": [
+        "clear",
+        "remove",
+        "removeIf",
+        "removeAll",
+        "retainAll"
+      ],
+      "search": [
+        "containsKey",
+        "containsAll",
+        "containsValue",
+        "lastIndexOf",
+        "contains",
+        "indexOf"
+      ]
+    },
+    "intersection": {
+      "other": [
+        "forEach",
+        "hashcode",
+        "isEmpty",
+        "size",
+        "equals"
+      ],
+      "access": [
+        "get"
+      ],
+      "insertion": [
+        "replaceAll"
+      ],
+      "deletion": [
+        "clear",
+        "remove"
+      ],
+      "search": []
+    }
+  },
+  {
+    "interfaces": [
+      "List",
+      "Set"
+    ],
+    "union": {
+      "other": [
+        "iterator",
+        "size",
+        "stream",
+        "spliterator",
+        "forEach",
+        "equals",
+        "hashcode",
+        "isEmpty",
+        "toArray",
+        "listIterator",
+        "parallelStream",
+        "sort"
+      ],
+      "access": [
+        "subList",
+        "get",
+        "listIterator"
+      ],
+      "insertion": [
+        "add",
+        "set",
+        "addAll",
+        "replaceAll"
+      ],
+      "deletion": [
+        "removeAll",
+        "clear",
+        "remove",
+        "retainAll",
+        "removeIf"
+      ],
+      "search": [
+        "lastIndexOf",
+        "contains",
+        "containsAll",
+        "indexOf"
+      ]
+    },
+    "intersection": {
+      "other": [
+        "iterator",
+        "size",
+        "stream",
+        "spliterator",
+        "forEach",
+        "equals",
+        "hashcode",
+        "isEmpty",
+        "toArray",
+        "parallelStream"
+      ],
+      "access": [],
+      "insertion": [
+        "add",
+        "addAll"
+      ],
+      "deletion": [
+        "removeAll",
+        "clear",
+        "remove",
+        "retainAll",
+        "removeIf"
+      ],
+      "search": [
+        "contains",
+        "containsAll"
+      ]
+    }
+  },
+  {
+    "interfaces": [
+      "Set",
+      "Map"
+    ],
+    "union": {
+      "other": [
+        "spliterator",
+        "entrySet",
+        "forEach",
+        "hashcode",
+        "values",
+        "isEmpty",
+        "iterator",
+        "size",
+        "stream",
+        "equals",
+        "toArray",
+        "parallelStream",
+        "keySet"
+      ],
+      "access": [
+        "getOrDefault",
+        "get"
+      ],
+      "insertion": [
+        "add",
+        "computeIfAbsent",
+        "replace",
+        "replaceAll",
+        "put",
+        "compute",
+        "computeIfPresent",
+        "addAll",
+        "putAll",
+        "merge",
+        "putIfAbsent"
+      ],
+      "deletion": [
+        "clear",
+        "remove",
+        "removeIf",
+        "removeAll",
+        "retainAll"
+      ],
+      "search": [
+        "containsKey",
+        "containsAll",
+        "containsValue",
+        "contains"
+      ]
+    },
+    "intersection": {
+      "other": [
+        "forEach",
+        "hashcode",
+        "isEmpty",
+        "size",
+        "equals"
+      ],
+      "access": [],
+      "insertion": [],
+      "deletion": [
+        "clear",
+        "remove"
+      ],
+      "search": []
+    }
+  }
+]

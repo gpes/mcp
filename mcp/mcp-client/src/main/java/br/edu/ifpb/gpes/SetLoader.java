@@ -1,17 +1,14 @@
 package br.edu.ifpb.gpes;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import ifpb.gpes.jcf.io.JsonFile;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -21,23 +18,22 @@ public class SetLoader {
 
     private static JsonFile json;
     private static CSVPrinter printer;
-
+    private static ArrayNode array;
 
     public static void main(String[] args) throws IOException {
         json = new JsonFile(SetLoader.class.getClassLoader().getResourceAsStream("sets.json"));
-        BufferedWriter writer = Files.newBufferedWriter(
-                Paths.get("default_factors.csv"),
-                StandardOpenOption.APPEND,
-                StandardOpenOption.CREATE);
-        printer = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter(';').withHeader("set_1", "set_2", "category", "factor"));
-        calcularFator("List", "Map");
-        calcularFator("List", "Set");
-        calcularFator("Set", "Map");
-        printer.flush();
+        array = new ObjectMapper().createArrayNode();
+        calcularUniao("List", "Map");
+        calcularUniao("List", "Set");
+        calcularUniao("Set", "Map");
+        try {
+            new ObjectMapper().writeValue(new File("union-intersection.json"), array);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void calcularFator(String set1, String set2) {
-//        System.out.println(set1 + " - " + set2);
+    public static void calcularUniao(String set1, String set2) {
         List<String> list = Arrays.asList("other", "access", "insertion", "deletion", "search");
         JsonNode jsonSet1 = json.toJsonObject().get(set1);
         JsonNode jsonSet2 = json.toJsonObject().get(set2);
@@ -45,32 +41,34 @@ public class SetLoader {
         Set<String> strSet1 = new HashSet<>();
         Set<String> strSet2 = new HashSet<>();
         Set<String> temp = new HashSet<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode categoryUnion = mapper.createObjectNode();
+        ObjectNode categoryIntersection = mapper.createObjectNode();
+        ObjectNode node = mapper.createObjectNode();
+
+        node.set("interfaces", mapper.convertValue(Arrays.asList(set1, set2), ArrayNode.class));
+
         list.forEach(c -> {
-//            System.out.println("category -> " + c);
             jsonSet1.get(c).forEach(e -> strSet1.add(e.asText()));
             jsonSet2.get(c).forEach(e -> strSet2.add(e.asText()));
-            temp.addAll((HashSet<String>) strSet1);
+            temp.addAll(strSet1);
             temp.addAll(strSet2);
-            // union
-//            System.out.println("union -> " + temp);
-            int unionSize = temp.size();
-            // intersecction
+
+            categoryUnion.set(c, mapper.convertValue(Arrays.asList(temp.toArray()), ArrayNode.class));
             // clear
             temp.clear();
             temp.addAll(strSet1);
             temp.retainAll(strSet2);
-//            System.out.println("intersection -> " + temp);
-            int intersectionSize = temp.size();
+
+            categoryIntersection.set(c, mapper.convertValue(Arrays.asList(temp.toArray()), ArrayNode.class));
             // clear
             strSet1.clear();
             strSet2.clear();
             temp.clear();
-            BigDecimal factor = new BigDecimal((double) intersectionSize / unionSize).setScale(2, RoundingMode.HALF_UP);
-            try {
-                printer.printRecord(set1, set2, c, factor.doubleValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
+        node.set("union", categoryUnion);
+        node.set("intersection", categoryIntersection);
+        array.add(node);
     }
 }

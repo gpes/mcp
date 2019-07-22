@@ -1,13 +1,13 @@
 {
   "Set": {
-    "other": ["stream", "parallelStream", "foreach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray"],
+    "other": ["stream", "parallelStream", "forEach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray"],
     "insertion": ["add", "addAll"],
     "deletion": ["clear", "remove", "removeAll", "retainAll", "removeIf"],
     "search": ["contains", "containsAll"],
     "access": []
   },
   "List": {
-    "other": ["stream", "parallelStream", "foreach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray", "listIterator", "sort"],
+    "other": ["stream", "parallelStream", "forEach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray", "listIterator", "sort"],
     "insertion": ["add", "addAll", "replaceAll", "set"],
     "deletion": ["clear", "remove", "removeAll", "retainAll", "removeIf"],
     "search": ["contains", "containsAll", "indexOf", "lastIndexOf"],
@@ -21,21 +21,21 @@
     "access": ["get", "getOrDefault"]
   },
   "Set-List": {
-    "other": ["stream", "parallelStream", "foreach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray"],
+    "other": ["stream", "parallelStream", "forEach", "iterator", "spliterator", "equals", "hashcode", "isEmpty", "size", "toArray"],
     "insertion": ["add", "addAll"],
     "deletion": ["clear", "remove", "removeAll", "retainAll", "removeIf"],
     "search": ["contains", "containsAll"],
     "access": []
   },
   "Set-Map": {
-    "other": ["equals", "hashcode", "isEmpty", "size"],
+    "other": ["equals", "hashcode", "isEmpty", "size", "forEach"],
     "insertion": [],
     "deletion": ["clear", "remove"],
     "search": [],
     "access": []
   },
   "List-Map": {
-    "other": ["equals", "hashcode", "isEmpty", "size"],
+    "other": ["equals", "hashcode", "isEmpty", "size", "forEach"],
     "insertion": ["replaceAll"],
     "deletion": ["clear", "remove"],
     "search": [],
