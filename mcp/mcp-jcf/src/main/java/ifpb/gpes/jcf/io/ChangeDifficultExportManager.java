@@ -20,6 +20,7 @@ public class ChangeDifficultExportManager extends ExportManager {
 
     @Override
     public void export(List<Call> elements) {
+        // load the json categorization used to indentify the category of an method
         JsonNode categoriesNode = new JsonFile(getClass().getClassLoader().getResourceAsStream("categories.json")).toJsonObject();
         //
         Arrays.asList("java.util.List", "java.util.Map", "java.util.Set").forEach(interfaceFullName -> {
@@ -39,8 +40,6 @@ public class ChangeDifficultExportManager extends ExportManager {
 
     public Map<String, Set<String>> classifyCallsByCategories(List<Call> calls, JsonNode categoriesNode) {
         Map<String, Set<String>> categoriesMethodsMap = new HashMap<>();
-        // load the json categorization used to indentify the category of an method
-        //
         categoriesNode.fields().forEachRemaining(entry -> {
             // send to a set all the methods that match with the given category
             Set<String> methodsByCategory = calls.stream()
@@ -97,8 +96,7 @@ public class ChangeDifficultExportManager extends ExportManager {
                     if the quantity of intersection methods found are equal to the quantity of categorie methods
                     are no dificult to change between the interfaces for this category
                      */
-                    double factor = intersection/union;
-                    double metric = intersection == categoriesMethodsMap.get(category).size() ? 0 : 1/(1 + factor);
+                    double metric = 1 - intersection/union;
                     // mounting result category object
                     ObjectNode resultNode = mapper.createObjectNode();
                     resultNode.set("interfaces", mapper.valueToTree(Arrays.asList(interfaceSimpleName, otherInterface)));
