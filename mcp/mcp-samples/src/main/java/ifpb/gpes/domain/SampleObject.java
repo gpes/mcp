@@ -9,6 +9,7 @@ public class SampleObject {
     private HasJCFObject a = new HasJCFObject();
     public void teste() {
         a.getElements().add(new HasJCFObject());
+        a.getElements().remove(0);
         a.getElements().set(0, null);
     }
 

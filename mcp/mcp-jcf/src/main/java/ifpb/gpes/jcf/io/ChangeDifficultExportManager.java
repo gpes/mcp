@@ -1,5 +1,6 @@
 package ifpb.gpes.jcf.io;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -8,11 +9,14 @@ import ifpb.gpes.Call;
 import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.FilterClassType;
 
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ChangeDifficultExportManager extends ExportManager {
+
+    private String FILENAME = "metrics.json";
 
     public ChangeDifficultExportManager(String outputDir) {
         super(outputDir);
@@ -21,6 +25,8 @@ public class ChangeDifficultExportManager extends ExportManager {
     @Override
     public void export(List<Call> elements) {
         JsonNode categoriesNode = new JsonFile(getClass().getClassLoader().getResourceAsStream("categories.json")).toJsonObject();
+        //
+        ObjectNode result = new ObjectMapper().createObjectNode();
         //
         Arrays.asList("java.util.List", "java.util.Map", "java.util.Set").forEach(interfaceFullName -> {
             Predicate<Call> predicate = new FilterClassType(interfaceFullName);
@@ -32,9 +38,14 @@ public class ChangeDifficultExportManager extends ExportManager {
             //
             ArrayNode nodes = calculateChangeMetricByCategoriesAndInterface(categoriesMethodsMap, categoriesNode, interfaceSimpleName);
             //
-            System.out.println(nodes);
-            System.out.println("-------");
+            result.set(interfaceFullName, nodes);
         });
+        try {
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result);
+            write(json, Paths.get(handleOutputFilePath(".", outputDir+"-"+FILENAME)));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Map<String, Set<String>> classifyCallsByCategories(List<Call> calls, JsonNode categoriesNode) {
@@ -89,16 +100,16 @@ public class ChangeDifficultExportManager extends ExportManager {
                         continue;
                     //
                     List<String> intersectionList = mapper.convertValue(intersectionCategories.get(category), List.class);
+                    List<String> unionList = mapper.convertValue(unionCategories.get(category), List.class);
                     // verify if the methods in the category are present in intersection set
                     double intersection = categoriesMethodsMap.get(category).stream().filter(intersectionList::contains).count();
                     // get union quantity of methods for the metric calculation
-                    double union = unionCategories.get(category).size();
+                    double union = categoriesMethodsMap.get(category).stream().filter(unionList::contains).count();
                     /*
                     if the quantity of intersection methods found are equal to the quantity of categorie methods
                     are no dificult to change between the interfaces for this category
                      */
-                    double factor = intersection/union;
-                    double metric = intersection == categoriesMethodsMap.get(category).size() ? 0 : 1/(1 + factor);
+                    double metric = 1 - intersection/union;
                     // mounting result category object
                     ObjectNode resultNode = mapper.createObjectNode();
                     resultNode.set("interfaces", mapper.valueToTree(Arrays.asList(interfaceSimpleName, otherInterface)));

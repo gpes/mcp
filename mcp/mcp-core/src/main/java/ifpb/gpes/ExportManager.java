@@ -31,6 +31,7 @@ public abstract class ExportManager {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(text);
         } catch (IOException ex) {
+            ex.printStackTrace();
             Logger.getLogger(ExportManager.class.getName()).log(Level.SEVERE, "Problem writing a file in " + path.getFileName().toString() + " path.");
         }
     }
