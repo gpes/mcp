@@ -24,6 +24,7 @@ public class ChangeDifficultExportManager extends ExportManager {
 
     @Override
     public void export(List<Call> elements) {
+        // load the json categorization used to indentify the category of an method
         JsonNode categoriesNode = new JsonFile(getClass().getClassLoader().getResourceAsStream("categories.json")).toJsonObject();
         //
         ObjectNode result = new ObjectMapper().createObjectNode();
@@ -50,8 +51,6 @@ public class ChangeDifficultExportManager extends ExportManager {
 
     public Map<String, Set<String>> classifyCallsByCategories(List<Call> calls, JsonNode categoriesNode) {
         Map<String, Set<String>> categoriesMethodsMap = new HashMap<>();
-        // load the json categorization used to indentify the category of an method
-        //
         categoriesNode.fields().forEachRemaining(entry -> {
             // send to a set all the methods that match with the given category
             Set<String> methodsByCategory = calls.stream()
