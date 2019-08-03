@@ -1,6 +1,5 @@
 package ifpb.gpes.jcf.io;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -9,6 +8,8 @@ import ifpb.gpes.Call;
 import ifpb.gpes.ExportManager;
 import ifpb.gpes.filter.FilterClassType;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class ChangeDifficultExportManager extends ExportManager {
 
-    private String FILENAME = "metrics.json";
+    private String FILENAME = "metrics.csv";
 
     public ChangeDifficultExportManager(String outputDir) {
         super(outputDir);
@@ -24,29 +25,37 @@ public class ChangeDifficultExportManager extends ExportManager {
 
     @Override
     public void export(List<Call> elements) {
+        StringBuffer csv = new StringBuffer();
+        csv.append("\"project\";\"class\";\"from\";\"to\";\"category\";\"metric\"\n");
+        // get all classes full name
+        Set<String> classNames = elements.stream().map(Call::getCalledInClass).collect(Collectors.toSet());
         // load the json categorization used to indentify the category of an method
         JsonNode categoriesNode = new JsonFile(getClass().getClassLoader().getResourceAsStream("categories.json")).toJsonObject();
         //
-        ObjectNode result = new ObjectMapper().createObjectNode();
+//        ObjectNode result = new ObjectMapper().createObjectNode();
         //
-        Arrays.asList("java.util.List", "java.util.Map", "java.util.Set").forEach(interfaceFullName -> {
-            Predicate<Call> predicate = new FilterClassType(interfaceFullName);
-            List<Call> calls = elements.stream().filter(predicate).collect(Collectors.toList());
-            Map<String, Set<String>> categoriesMethodsMap = classifyCallsByCategories(calls, categoriesNode);
-            // get interface simple name
-            String[] split = interfaceFullName.split("\\.");
-            String interfaceSimpleName = split[split.length-1];
-            //
-            ArrayNode nodes = calculateChangeMetricByCategoriesAndInterface(categoriesMethodsMap, categoriesNode, interfaceSimpleName);
-            //
-            result.set(interfaceFullName, nodes);
+        classNames.forEach(className -> {
+            Arrays.asList("java.util.List", "java.util.Map", "java.util.Set").forEach(interfaceFullName -> {
+                Predicate<Call> predicate = new FilterClassType(interfaceFullName).and(call -> call.getCalledInClass().equals(className));
+                List<Call> calls = elements.stream().filter(predicate).collect(Collectors.toList());
+                Map<String, Set<String>> categoriesMethodsMap = classifyCallsByCategories(calls, categoriesNode);
+                // get interface simple name
+                String[] split = interfaceFullName.split("\\.");
+                String interfaceSimpleName = split[split.length-1];
+                //
+                ArrayNode nodes = calculateChangeMetricByCategoriesAndInterface(categoriesMethodsMap, categoriesNode, interfaceSimpleName);
+                //
+//                result.set(interfaceFullName, nodes);
+                nodes.forEach(node -> {
+                    String from = node.get("interfaces").get(0).asText();
+                    String to = node.get("interfaces").get(1).asText();
+                    String line = String.format("\"%s\";\"%s\";\"%s\";\"%s\";%s;%s", outputDir, className, from, to, node.get("category"), node.get("metric"));
+                    csv.append(line);
+                    csv.append("\n");
+                });
+            });
         });
-        try {
-            String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result);
-            write(json, Paths.get(handleOutputFilePath(".", outputDir+"-"+FILENAME)));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        write(csv.toString(), Paths.get(handleOutputFilePath(".", outputDir+"-"+FILENAME)));
     }
 
     public Map<String, Set<String>> classifyCallsByCategories(List<Call> calls, JsonNode categoriesNode) {
@@ -99,11 +108,9 @@ public class ChangeDifficultExportManager extends ExportManager {
                         continue;
                     //
                     List<String> intersectionList = mapper.convertValue(intersectionCategories.get(category), List.class);
-                    List<String> unionList = mapper.convertValue(unionCategories.get(category), List.class);
                     // verify if the methods in the category are present in intersection set
                     double intersection = categoriesMethodsMap.get(category).stream().filter(intersectionList::contains).count();
-                    // get union quantity of methods for the metric calculation
-                    double union = categoriesMethodsMap.get(category).stream().filter(unionList::contains).count();
+                    double union = unionCategories.get(category).size();
                     /*
                     if the quantity of intersection methods found are equal to the quantity of categorie methods
                     are no dificult to change between the interfaces for this category
@@ -113,7 +120,7 @@ public class ChangeDifficultExportManager extends ExportManager {
                     ObjectNode resultNode = mapper.createObjectNode();
                     resultNode.set("interfaces", mapper.valueToTree(Arrays.asList(interfaceSimpleName, otherInterface)));
                     resultNode.put("category", category);
-                    resultNode.put("metric", metric);
+                    resultNode.put("metric", new BigDecimal(metric).setScale(2, RoundingMode.HALF_DOWN).doubleValue());
                     //
                     resultArray.add(resultNode);
                 }

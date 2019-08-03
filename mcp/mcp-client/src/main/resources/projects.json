@@ -2,51 +2,51 @@
   {
     "root": "/home/shotaro/trash-projects/collections-3.2.1/",
     "source": "src/java/",
-    "path": "collection"
+    "path": "Collection"
   },
   {
     "root": "/home/shotaro/trash-projects/freecs-1.3/",
     "source": "src/",
-    "path": "freecs"
+    "path": "Freecs"
   },
   {
     "root": "/home/shotaro/trash-projects/jedit-4.3.2/",
     "source": "jEdit/",
-    "path": "jedit"
+    "path": "Jedit"
   },
   {
     "root": "/home/shotaro/trash-projects/jext-5.0/",
     "source": "src/lib/",
-    "path": "jext"
+    "path": "Jext"
   },
   {
     "root": "/home/shotaro/trash-projects/jfreechart-1.0.13/",
     "source": "source/",
-    "path": "jfreechart"
+    "path": "JFreechart"
   },
   {
     "root": "/home/shotaro/trash-projects/jgrapht-0.8.1/",
     "source": "src/",
-    "path": "jgrapht"
+    "path": "JGrapht"
   },
   {
     "root": "/home/shotaro/trash-projects/marauroa-3.8.1/",
     "source": "src/",
-    "path": "marauroa"
+    "path": "Marauroa"
   },
   {
     "root": "/home/shotaro/trash-projects/pmd-4.2.5/",
     "source": "src/",
-    "path": "pmd"
+    "path": "PMD"
   },
   {
     "root": "/home/shotaro/trash-projects/quartz-1.8.3/quartz/",
     "source": "src/main/java/",
-    "path": "quartz"
+    "path": "Quartz"
   },
   {
     "root": "/home/shotaro/trash-projects/quickserver-1.4.7/",
     "source": "src/main/",
-    "path": "quickserver"
+    "path": "Quickserver"
   }
 ]
