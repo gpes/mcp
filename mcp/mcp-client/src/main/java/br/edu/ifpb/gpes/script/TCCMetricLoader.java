@@ -1,4 +1,4 @@
-package br.edu.ifpb.gpes;
+package br.edu.ifpb.gpes.script;
 
 import br.edu.ifpb.gpes.export.ExportStrategy;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,10 +10,10 @@ import ifpb.gpes.study.Study;
 
 import java.io.InputStream;
 
-public class TCCLoader {
+public class TCCMetricLoader {
 
     public static void main(String[] args) {
-        InputStream stream = TCCLoader.class.getClassLoader().getResourceAsStream("projects.json");
+        InputStream stream = TCCMetricLoader.class.getClassLoader().getResourceAsStream("projects.json");
         JsonFile file = new JsonFile(stream);
         JsonNode projects = file.toJsonObject();
         projects.forEach(node -> {
