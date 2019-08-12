@@ -6,7 +6,9 @@ package ifpb.gpes.domain;
  * @since 26/05/2017, 21:32:40
  */
 public class SampleObject {
+
     private HasJCFObject a = new HasJCFObject();
+
     public void teste() {
         a.getElements().add(new HasJCFObject());
     }

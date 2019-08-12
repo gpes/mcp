@@ -1,0 +1,5 @@
+interfaces;metric
+List-Map;0.91
+List-Set;0.84
+Set-List;0.83
+Set-Map;0.97

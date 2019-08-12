@@ -1,6 +1,7 @@
 package br.edu.ifpb.gpes.script;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ifpb.gpes.jcf.io.JsonFile;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;

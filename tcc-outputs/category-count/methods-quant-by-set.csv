@@ -1,0 +1,9 @@
+project;interface;category;value
+Collection;java.util.Set;deletion;11.0
+Collection;java.util.Set;insertion;6.0
+Collection;java.util.Set;other;102.0
+Collection;java.util.Set;search;34.0
+Quickserver;java.util.Set;deletion;7.0
+Quickserver;java.util.Set;insertion;5.0
+Quickserver;java.util.Set;other;13.0
+Quickserver;java.util.Set;search;1.0

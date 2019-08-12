@@ -1,0 +1,11 @@
+project;interface;category;value
+Collection;java.util.List;access;46.0
+Collection;java.util.List;deletion;45.0
+Collection;java.util.List;insertion;100.0
+Collection;java.util.List;other;149.0
+Collection;java.util.List;search;33.0
+Quickserver;java.util.List;access;10.0
+Quickserver;java.util.List;deletion;16.0
+Quickserver;java.util.List;insertion;28.0
+Quickserver;java.util.List;other;54.0
+Quickserver;java.util.List;search;1.0

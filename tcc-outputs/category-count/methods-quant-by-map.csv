@@ -1,0 +1,10 @@
+project;interface;category;value
+Collection;java.util.Map;access;103.0
+Collection;java.util.Map;deletion;54.0
+Collection;java.util.Map;insertion;80.0
+Collection;java.util.Map;other;192.0
+Collection;java.util.Map;search;89.0
+Quickserver;java.util.Map;access;10.0
+Quickserver;java.util.Map;deletion;1.0
+Quickserver;java.util.Map;insertion;9.0
+Quickserver;java.util.Map;other;4.0

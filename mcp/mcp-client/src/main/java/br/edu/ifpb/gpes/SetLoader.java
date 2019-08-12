@@ -9,6 +9,8 @@ import org.apache.commons.csv.CSVPrinter;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,9 +25,9 @@ public class SetLoader {
     public static void main(String[] args) throws IOException {
         json = new JsonFile(SetLoader.class.getClassLoader().getResourceAsStream("sets.json"));
         array = new ObjectMapper().createArrayNode();
-        calcularUniao("List", "Map");
-        calcularUniao("List", "Set");
-        calcularUniao("Set", "Map");
+        calculateUnionAndIntersection("List", "Map");
+        calculateUnionAndIntersection("List", "Set");
+        calculateUnionAndIntersection("Set", "Map");
         try {
             new ObjectMapper().writeValue(new File("union-intersection.json"), array);
         } catch (IOException e) {
@@ -33,7 +35,7 @@ public class SetLoader {
         }
     }
 
-    public static void calcularUniao(String set1, String set2) {
+    public static void calculateUnionAndIntersection(String set1, String set2) {
         List<String> list = Arrays.asList("other", "access", "insertion", "deletion", "search");
         JsonNode jsonSet1 = json.toJsonObject().get(set1);
         JsonNode jsonSet2 = json.toJsonObject().get(set2);
@@ -46,6 +48,7 @@ public class SetLoader {
         ObjectNode categoryUnion = mapper.createObjectNode();
         ObjectNode categoryIntersection = mapper.createObjectNode();
         ObjectNode node = mapper.createObjectNode();
+        ObjectNode factors = mapper.createObjectNode();
 
         node.set("interfaces", mapper.convertValue(Arrays.asList(set1, set2), ArrayNode.class));
 
@@ -55,20 +58,28 @@ public class SetLoader {
             temp.addAll(strSet1);
             temp.addAll(strSet2);
 
+            double union = temp.size();
+
             categoryUnion.set(c, mapper.convertValue(Arrays.asList(temp.toArray()), ArrayNode.class));
             // clear
             temp.clear();
             temp.addAll(strSet1);
             temp.retainAll(strSet2);
 
+            double intersection = temp.size();
+
             categoryIntersection.set(c, mapper.convertValue(Arrays.asList(temp.toArray()), ArrayNode.class));
             // clear
             strSet1.clear();
             strSet2.clear();
             temp.clear();
+            // adapting factor to cost
+            double factor = new BigDecimal(1 - (intersection/union)).setScale(2, RoundingMode.HALF_DOWN).doubleValue();
+            factors.put(c, factor);
         });
         node.set("union", categoryUnion);
         node.set("intersection", categoryIntersection);
+        node.set("factors", factors);
         array.add(node);
     }
 }

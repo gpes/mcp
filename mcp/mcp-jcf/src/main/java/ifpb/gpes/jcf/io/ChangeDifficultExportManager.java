@@ -115,7 +115,10 @@ public class ChangeDifficultExportManager extends ExportManager {
                     if the quantity of intersection methods found are equal to the quantity of categorie methods
                     are no dificult to change between the interfaces for this category
                      */
-                    double metric = 1 - intersection/union;
+                    double metric = 0;
+                    if (intersection != categoriesMethodsMap.get(category).size()) {
+                        metric = 1 - intersection / union;
+                    }
                     // mounting result category object
                     ObjectNode resultNode = mapper.createObjectNode();
                     resultNode.set("interfaces", mapper.valueToTree(Arrays.asList(interfaceSimpleName, otherInterface)));

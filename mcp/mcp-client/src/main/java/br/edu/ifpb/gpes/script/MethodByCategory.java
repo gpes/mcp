@@ -23,7 +23,7 @@ public class MethodByCategory {
         InputStream stream = TCCMetricLoader.class.getClassLoader().getResourceAsStream("projects.json");
         JsonFile file = new JsonFile(stream);
         JsonNode projects = file.toJsonObject();
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get("../tcc-outputs/methods-quant-by-set.csv"));
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get("../tcc-outputs/methods-quant.csv"));
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                 .withHeader("project", "interface", "category", "value").withDelimiter(';'));
         for (JsonNode p : projects) {
