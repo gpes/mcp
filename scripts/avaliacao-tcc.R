@@ -1,4 +1,5 @@
 library(ggplot2)
+
 setwd("/home/shotaro/myProjects/mcp/tcc-outputs/cost/per-project/")
 
 interfacesData <- read.csv("AIO-per-interface-metrics.csv", header = T, sep = ";")
@@ -14,7 +15,11 @@ ggplot(interfacesData) +
 
 ggsave("plot-interfaces.png", width = 6.9375, height = 3.7916666667, unit = "in")
 
-#
+#######
+
+library(ggplot2)
+
+setwd("/home/shotaro/myProjects/mcp/tcc-outputs/cost/per-project/")
 
 categoriesData <- read.csv("AIO-per-category-metrics.csv", header = T, sep = ";")
 
@@ -33,7 +38,7 @@ for (ctgr in categories) {
   ggsave(paste("plot-",ctgr,".png",sep = ""), width = 6.9375, height = 3.7916666667, unit = "in")
 }
 
-#
+#######
 
 setwd("/home/shotaro/myProjects/mcp/tcc-outputs/cost/")
 
@@ -51,7 +56,19 @@ print(matrixIntf)
 
 for (row in 1:nrow(matrixIntf)) {
   for (ctgr in categories) {
-    subdata <- subset(metricsData, category==ctgr && from==matrixIntf[row, 1] && to==matrixIntf[row, 2])
-    print(subdata)
+    data <- subset(metricsData, category==ctgr & from==matrixIntf[row, 1] & to==matrixIntf[row, 2], select = metric)
+    if(length(data$metric) < 3 || length(data$metric) >= 5000) {
+      print("out of bounds")
+      print(paste(ctgr, matrixIntf[row, 1], matrixIntf[row, 2], sep = "-"))
+      next
+    }
+    if(length(unique(data$metric))==1) {
+      print(paste("unique -> ",unique(data$metric), sep = ""))
+      print(paste(ctgr, matrixIntf[row, 1], matrixIntf[row, 2], sep = "-"))
+      next      
+    }
+    print("ok")
+    print(paste(ctgr, matrixIntf[row, 1], matrixIntf[row, 2], sep = "-"))
+    print(shapiro.test(data$metric))
   }
 }
