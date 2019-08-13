@@ -39,17 +39,19 @@ setwd("/home/shotaro/myProjects/mcp/tcc-outputs/cost/")
 
 metricsData <- read.csv("AIO-metrics.csv", header = T, sep = ";")
 
-interfacePairs <- matrix(c("List", "Set", "List", "Map", "Map", "List", "Map", "Set", "Set", "List", "Set", "Map"),
+matrixIntf <- matrix(c("List", "Set", "List", "Map", "Map", "List", "Map", "Set", "Set", "List", "Set", "Map"),
   nrow=6,
-  ncol=2
+  ncol=2,
+  byrow = TRUE
 )
-
-print(interfacePairs)
 
 categories <- c("insertion", "deletion", "search", "access", "other")
 
-for (ctgr in categories) {
-  for (row in 1:nrow(interfacePairs)) {
-    subdata <- subset(metricsData)
+print(matrixIntf)
+
+for (row in 1:nrow(matrixIntf)) {
+  for (ctgr in categories) {
+    subdata <- subset(metricsData, category==ctgr && from==matrixIntf[row, 1] && to==matrixIntf[row, 2])
+    print(subdata)
   }
 }
