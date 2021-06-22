@@ -1,12 +1,13 @@
-# parse-review
+# MCP
 
-# O que é?
-Parse-review é uma ferramenta desenvolvida na linguagem java com o propósito de analisar projetos desenvolvidos nesta mesma linguagem.
-O principal objetivo da da análise é extrair informações do projeto buscando quebras de confinamento em classes que utilizam o framework JCF 
-(Java Collection Framework). Posteriormente, será exibido ao usuário quais métodos causam a quebra do confinamento e alteram o estado do objeto.
+# What it is?
+Method Call Parser(MCP) is a tool developed in the Java language with the purpose of analyzing projects developed in this same language.
+The main objective of the tool is extract information from the project looking for breaks in confinement in classes that use the JCF framework
+(Java Collection Framework). Later, the user will be shown which methods cause the containment to break and change the object's state. The tool is quite
+extensible, it allow you to use your own classes for processing the method calls or even new Visitor to parse only the information of the class files you want.
 
-# Um exemplo
-Iremos tomar estas duas classes como exemplo :
+# An example
+We will take these two classes as an example:
 
 ```
 // Target Class
@@ -25,36 +26,36 @@ class C{
 }
 ```
 
-`A` é a classe que possui o método que retorna um objeto pertencente ao framework JCF, o método `getElements()`, `C` é a classe que possui uma instância de `A` e realiza a chamada ao método `getElements`, permitindo que `C` tenha total acesso ao atributo de `A` e possa alterar o seu estado, o que é feito na chamada `a.getElements().add(new A())`, está nítido aqui que ocorreu a quebra do confinamento; e são estes os casos que nossa ferramenta procura identificar e detalhar, segue-se o resultado da análise do exemplo realizada pela ferramenta:
+`A` is the class that has the method that returns an object belonging to the JCF framework, the `getElements()` method, `C` is the class that has an instance of `A` and performs the call to the `getElements` method , allowing `C` to have full access to the attribute of `A` and be able to change its state, which is done in the call `a.getElements().add(new A())`, it is clear here that the break in confinement; and these are the cases that our tool seeks to identify and detail, the following is the result of the analysis of the example carried out by the tool:
 
 `<java.util.List, add[A], boolean, C, m[], void, null>`
 
-# Como utilizar a ferramenta
-1. Antes de tudo é preciso que você tenha instalado o maven, após instalado vá até a pasta deste projeto e abra o terminal, digite `mvn clean install` Isso instalará as dependências necessárias para que a ferramenta funcione.
+# How to use the tool
+1. First of all you need to have maven installed, after it's installed go to this project folder and open the terminal, type `mvn clean install` This will install the necessary dependencies for the tool to work.
 
-2. Agora é necessário que você baixe ou clone um projeto do github na sua máquina, para clonar um projeto execute o seguinte comando dentro da pasta desejada: `git clone https://github.com/<perfil>/<repositorio>`.
+2. Now you need to download or clone a github project on your machine, to clone a project run the following command inside the desired folder: `git clone https://github.com/<profile>/<repository>` .
 
-3. Copie o caminho da raiz do projeto e passe como valor do argumento ```-d``` ou ```-dir``` no seguinte comando:
+3. Copy the project root path and pass it as the value of the ```-d``` or ```-dir``` argument in the following command:
 ```
 java -jar mcp --dir <caminho do projeto>
 
 ```
-4. Após executar a classe, um arquivo `.txt` será gerado, e estará localizado no diretório desta ferramenta, com a seguinte saída:
+4. After running the class, a `.txt` file will be generated, which will be located in this tool's directory, with the following output:
 ```
 <A,m(),java.util.List,C, m1(), void, mi()>
 <...>
 <...>
 ```
-`A` - classe que possui o método `m()`;
+`A` - class that has the `m()` method;
 
-`m()` - o método que possui como retorno algum dos tipos definidos no JCF, o retorno utlizado na formulação é meramente ilustrativo;
+`m()` - the method that has as a return one of the types defined in the JCF, the return used in the formulation is merely illustrative;
 
-`java.util.List` - o tipo do retorno totalmente qualificado do método `m()`;
+`java.util.List` - the fully qualified return type of the `m()` method;
 
-`C` - classe que possui o método `m1()`;
+`C` - class that has the `m1()` method;
 
-`m1()` - método que possui alguma invocação do método `m()`;
+`m1()` - method that has some `m()` method invocation;
 
-`void` - o tipo de retorno do método m1();
+`void` - the return type of the `m1()` method;
 
-`mi` - o método invocado que causa a quebra do confinamento.
+`mi` -  the invoked method that causes the confinement to be broken.
