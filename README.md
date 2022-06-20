@@ -40,27 +40,28 @@ This is the raw text result produced by the tool, after the analysis, we use ano
 
 ![img](https://i.imgur.com/uUmuRm4.png)
 
-4. Copy the path of the Java project that you want to analyze, and pass it to the option ```-d``` ou ```-dir``` on the following command:
+4. Copy the path of the Java project that you want to analyze, in the options showed on the image, eg.:
 ```
-java -jar mcp --dir <project_path>
+java -jar mcp.jar -o=/home/kaneda/call-parser/output -r=/home/kaneda/projects/ -p=tomcat-7.0.2/ -s=tomcat-7.0.2/java/
 
 ```
-5. Após executar a classe, um arquivo `.txt` será gerado, e estará localizado no diretório desta ferramenta, com a seguinte saída:
+5. After execute the tool, a text file will be generated, and will be located in the directory path you provided, with the following outputs:
 ```
 <A,m(),java.util.List,C, m1(), void, mi()>
 <...>
 <...>
 ```
-`A` - classe que possui o método `m()`;
+`A` - Class that own the `m()` method;
 
-`m()` - o método que possui como retorno algum dos tipos definidos no JCF, o retorno utlizado na formulação é meramente ilustrativo;
+`m()` - the method that returns one of the types defined in the JCF, the return used in the formulation is merely illustrative;
 
-`java.util.List` - o tipo do retorno totalmente qualificado do método `m()`;
+`java.util.List` - the fully qualified return type of the `m()` method;
 
-`C` - classe que possui o método `m1()`;
+`C` - class that has the `m1()` method;
 
-`m1()` - método que possui alguma invocação do método `m()`;
+`m1()` - method that has some invocation of the `m()` method;
 
-`void` - o tipo de retorno do método m1();
+`void` - the return type of the m1() method;
 
-`mi` - o método invocado que causa a quebra do confinamento.
+`mi` - the method invoked that causes the confinement to break.
+

@@ -19,7 +19,7 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-v", "--version"}, versionHelp = true, description = "Display version number.")
     private boolean versionHelp;
 
-    @CommandLine.Option(names = {"-r", "--root"}, required = true, description = "The rooth path of the project that will be parsed.")
+    @CommandLine.Option(names = {"-r", "--root"}, required = true, description = "The root path of the project that will be parsed.")
     private String root;
 
     @CommandLine.Option(names = {"-s", "--source"}, required = true, description = "The java source path of the project e.g.: 'src/main/java'.")
