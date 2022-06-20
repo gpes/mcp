@@ -1,12 +1,11 @@
-# parse-review
+# method-call-parser(MCP)
 
-# O que é?
-Parse-review é uma ferramenta desenvolvida na linguagem java com o propósito de analisar projetos desenvolvidos nesta mesma linguagem.
-O principal objetivo da da análise é extrair informações do projeto buscando quebras de confinamento em classes que utilizam o framework JCF 
-(Java Collection Framework). Posteriormente, será exibido ao usuário quais métodos causam a quebra do confinamento e alteram o estado do objeto.
+# What is it?
+MCP is a tool developed in the java language with the purpose of analyzing projects developed in this same language.
+The main objective of the analysis is to extract information from the project by searching for confinement breaks in classes that use the JCF(Java Collection Framework). Afterwards, the user will be shown which methods cause the confinement to break and change the object's state.
 
-# Um exemplo
-Iremos tomar estas duas classes como exemplo :
+# An example
+We will take this two classes as a sample:
 
 ```
 // Target Class
@@ -25,21 +24,28 @@ class C{
 }
 ```
 
-`A` é a classe que possui o método que retorna um objeto pertencente ao framework JCF, o método `getElements()`, `C` é a classe que possui uma instância de `A` e realiza a chamada ao método `getElements`, permitindo que `C` tenha total acesso ao atributo de `A` e possa alterar o seu estado, o que é feito na chamada `a.getElements().add(new A())`, está nítido aqui que ocorreu a quebra do confinamento; e são estes os casos que nossa ferramenta procura identificar e detalhar, segue-se o resultado da análise do exemplo realizada pela ferramenta:
+`A` is the class that has the method that returns an object belonging to the JCF framework, the `getElements()` method, `C` is the class that has an instance of `A` and calls the `getElements` method , allowing `C` to have full access to the attribute of `A` and to change its state, which is done in the call `a.getElements().add(new A())`, it is clear here that the breaking of confinement; and these are the cases that our tool seeks to identify and detail, here is the result of the analysis of the example carried out by the tool:
 
 `<java.util.List, add[A], boolean, C, m[], void, null>`
 
-# Como utilizar a ferramenta
-1. Antes de tudo é preciso que você tenha instalado o maven, após instalado vá até a pasta deste projeto e abra o terminal, digite `mvn clean install` Isso instalará as dependências necessárias para que a ferramenta funcione.
+This is the raw text result produced by the tool, after the analysis, we use another module to produce a more interactive result to the user.
 
-2. Agora é necessário que você baixe ou clone um projeto do github na sua máquina, para clonar um projeto execute o seguinte comando dentro da pasta desejada: `git clone https://github.com/<perfil>/<repositorio>`.
+# How use the tool
 
-3. Copie o caminho da raiz do projeto e passe como valor do argumento ```-d``` ou ```-dir``` no seguinte comando:
+1. First of all, you need to download or clone a project from github on your machine, to clone a project run the following command inside the desired folder: `git clone https://github.com/<profile>/<repository>`.
+
+2. Now you need to have Java version 8 installed, and maven, after installed go to this project folder and open the terminal, type `mvn clean install` This will install the necessary dependencies for the tool to work.
+
+3. You can see a brief explanations of the options using this command ```java -jar mcp --help```.
+
+![img](https://i.imgur.com/uUmuRm4.png)
+
+4. Copy the path of the Java project that you want to analyze, and pass it to the option ```-d``` ou ```-dir``` on the following command:
 ```
-java -jar mcp --dir <caminho do projeto>
+java -jar mcp --dir <project_path>
 
 ```
-4. Após executar a classe, um arquivo `.txt` será gerado, e estará localizado no diretório desta ferramenta, com a seguinte saída:
+5. Após executar a classe, um arquivo `.txt` será gerado, e estará localizado no diretório desta ferramenta, com a seguinte saída:
 ```
 <A,m(),java.util.List,C, m1(), void, mi()>
 <...>
