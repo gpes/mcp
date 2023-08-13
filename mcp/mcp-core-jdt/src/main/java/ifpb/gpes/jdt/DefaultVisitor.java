@@ -7,15 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ExpressionMethodReference;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.LambdaExpression;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.*;
 
 //"Nem todos aqueles vagueiam estao perdidos" - Gandalf
 public class DefaultVisitor extends ASTVisitor {
@@ -117,17 +109,30 @@ public class DefaultVisitor extends ASTVisitor {
         String methodName = fillMethodName(mi.getName().toString(), bindings);
         no.setMethodName(methodName);
 
-        ITypeBinding callClass = currentMethodDeclaration.resolveBinding().getDeclaringClass();
-        String calledInClass = callClassToString(callClass);
+        ITypeBinding callClass = inferCalledInClass(currentMethodDeclaration, currentMethodDeclaration.resolveBinding());
+
+        String calledInClass;
+
+        if (callClass != null) {
+            calledInClass = callClassToString(callClass);
+        } else {
+            TypeDeclaration parent = (TypeDeclaration) currentMethodDeclaration.getParent();
+            calledInClass = ((CompilationUnit) parent.getParent()).getPackage().getName() + "." + parent.getName().getFullyQualifiedName();
+        }
 
         no.setCalledInClass(calledInClass);
 
-        bindings = currentMethodDeclaration.resolveBinding().getParameterTypes();
+        bindings = inferMethodDeclarationParamenters(currentMethodDeclaration, currentMethodDeclaration.resolveBinding());
 
         String calledInMethod = fillMethodName(currentMethodDeclaration.getName().getIdentifier(), bindings);
         no.setCalledInMethod(calledInMethod);
 
-        no.setCalledInMethodReturnType(currentMethodDeclaration.resolveBinding().getReturnType().getQualifiedName());
+        if (currentMethodDeclaration.resolveBinding() != null) {
+            no.setCalledInMethodReturnType(currentMethodDeclaration.resolveBinding().getReturnType().getQualifiedName());
+        } else {
+            Type returnType2 = currentMethodDeclaration.getReturnType2();
+            no.setCalledInMethodReturnType(retrieveCalledInMethodReturnTypeValue(returnType2, currentMethodDeclaration));
+        }
 
         if (currentExpression != null) { //lambda
             no.setCalledInClass(currentExpression
@@ -196,11 +201,38 @@ public class DefaultVisitor extends ASTVisitor {
     private String fillMethodName(String methodName, ITypeBinding[] bindings) {
         String prefix = methodName + "[";
         String sufix = "]";
-        return Arrays
-                .asList(bindings)
-                .stream()
-                .map(b -> b.getQualifiedName())
+        return Arrays.stream(bindings)
+                .map(ITypeBinding::getQualifiedName)
                 .collect(Collectors.joining(", ", prefix, sufix));
+    }
+
+    private ITypeBinding inferCalledInClass(MethodDeclaration md, IMethodBinding binding) {
+        return binding != null ? binding.getDeclaringClass() : ((TypeDeclaration) md.getParent()).resolveBinding();
+    }
+
+    private ITypeBinding[] inferMethodDeclarationParamenters(MethodDeclaration md, IMethodBinding binding) {
+        if (binding != null) {
+            return md.resolveBinding().getParameterTypes();
+        }
+        List<ITypeBinding> types = (List<ITypeBinding>) md.parameters().stream().map(p -> ((SingleVariableDeclaration) p).resolveBinding().getType()).collect(Collectors.toList());
+        return types.toArray(new ITypeBinding[types.size()]);
+    }
+
+    // since an unresolved binding can return an ArrayType, it hasn't a Name to get, we need to get the final string here.
+    private String retrieveCalledInMethodReturnTypeValue(Type type, MethodDeclaration md) {
+        if (!md.isConstructor()) {
+            if (type.resolveBinding() == null) {
+                if (type instanceof SimpleType sp) {
+                    return sp.getName().getFullyQualifiedName();
+                } else {
+                    return type.toString();
+                }
+            } else {
+                return type.resolveBinding().getQualifiedName();
+            }
+        } else {
+            return PrimitiveType.VOID.toString();
+        }
     }
 
     public List<Call> methodsCall() {
