@@ -10,4 +10,8 @@ public interface ProjectType {
     public void addSources(String source);
 
     public String sources();
+
+    void addClasspath(String[] classpath);
+
+    public String[] classpath();
 }

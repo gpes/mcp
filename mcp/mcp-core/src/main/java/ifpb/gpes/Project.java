@@ -3,7 +3,9 @@ package ifpb.gpes;
 import ifpb.gpes.io.SmartFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -47,12 +49,24 @@ public class Project {
         return this;
     }
 
+    public Project classpath(String[] classpath) {
+        List<String> correctedCp = Stream.of(classpath)
+            .map(p -> Paths.get(smart.path().toAbsolutePath().toString(), p).toAbsolutePath().toString())
+            .collect(Collectors.toList());
+        this.type.addClasspath(correctedCp.toArray(new String[classpath.length]));
+        return this;
+    }
+
     public Stream<Path> files() {
         return this.smart.extension(extensions);
     }
 
     public String sources() {
         return this.root + this.type.sources();
+    }
+
+    public String[] classpath() {
+        return this.type.classpath();
     }
 
     public String name() {
@@ -67,6 +81,7 @@ public class Project {
     private static class DefaultProjectType implements ProjectType {
 
         private String sources;
+        private String[] classpath;
 
         @Override
         public void addSources(String source) {
@@ -77,5 +92,12 @@ public class Project {
         public String sources() {
             return this.sources;
         }
+
+        @Override
+        public void addClasspath(String[] classpath) {
+            this.classpath = classpath;
+        }
+
+        public String[] classpath() {return this.classpath;}
     }
 }

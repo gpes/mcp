@@ -64,6 +64,10 @@ public class SmartFile {
                 .endsWith(extension);
     }
 
+    public Path path() {
+        return path;
+    }
+
     class FileTypesFilter implements FileFilter {
 
         String[] types;
