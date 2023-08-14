@@ -50,10 +50,11 @@ public class Project {
     }
 
     public Project classpath(String[] classpath) {
-        List<String> correctedCp = Stream.of(classpath)
+        String[] correctedCp = Stream.ofNullable(classpath)
             .map(p -> Paths.get(smart.path().toAbsolutePath().toString(), p).toAbsolutePath().toString())
-            .collect(Collectors.toList());
-        this.type.addClasspath(correctedCp.toArray(new String[classpath.length]));
+            .toList()
+            .toArray(String[]::new);
+        this.type.addClasspath(correctedCp);
         return this;
     }
 

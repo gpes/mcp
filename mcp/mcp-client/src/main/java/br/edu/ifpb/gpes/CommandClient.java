@@ -32,7 +32,7 @@ public class CommandClient implements Callable<Void> {
     private String outputDir;
 
     //create a new option for passing classpath entries based on -r (root)
-    @CommandLine.Option(names = {"-cp", "--classpath"}, split = " ", description = "List of classpath to be added. The tool only work on code from the project, but adding the classpath from libs you added locally may prevent the tool breaking the analysis. The paths are based starting from the project directory.")
+    @CommandLine.Option(names = {"-cp", "--classpath"}, split = " ", description = "List of classpath to be added. The tool only work on code from the project, please use only if the tool break the analysis. The paths are based starting from the project directory.")
     private String[] classpath;
 
     public static void main(String[] args) {

@@ -109,7 +109,7 @@ public class DefaultVisitor extends ASTVisitor {
         String methodName = fillMethodName(mi.getName().toString(), bindings);
         no.setMethodName(methodName);
 
-        ITypeBinding callClass = inferCalledInClass(currentMethodDeclaration, currentMethodDeclaration.resolveBinding());
+        ITypeBinding callClass = inferCalledInClass(mi, currentMethodDeclaration);
 
         String calledInClass;
 
@@ -117,21 +117,23 @@ public class DefaultVisitor extends ASTVisitor {
             calledInClass = callClassToString(callClass);
         } else {
             TypeDeclaration parent = (TypeDeclaration) currentMethodDeclaration.getParent();
-            calledInClass = ((CompilationUnit) parent.getParent()).getPackage().getName() + "." + parent.getName().getFullyQualifiedName();
+            calledInClass = parent.getName().getFullyQualifiedName();
         }
 
         no.setCalledInClass(calledInClass);
 
-        bindings = inferMethodDeclarationParamenters(currentMethodDeclaration, currentMethodDeclaration.resolveBinding());
+        bindings = inferMethodDeclarationParamenters(currentMethodDeclaration);
 
-        String calledInMethod = fillMethodName(currentMethodDeclaration.getName().getIdentifier(), bindings);
-        no.setCalledInMethod(calledInMethod);
+        if (currentMethodDeclaration != null) {
+            String calledInMethod = fillMethodName(currentMethodDeclaration.getName().getIdentifier(), bindings);
+            no.setCalledInMethod(calledInMethod);
 
-        if (currentMethodDeclaration.resolveBinding() != null) {
-            no.setCalledInMethodReturnType(currentMethodDeclaration.resolveBinding().getReturnType().getQualifiedName());
-        } else {
-            Type returnType2 = currentMethodDeclaration.getReturnType2();
-            no.setCalledInMethodReturnType(retrieveCalledInMethodReturnTypeValue(returnType2, currentMethodDeclaration));
+            if (currentMethodDeclaration.resolveBinding() != null) {
+                no.setCalledInMethodReturnType(currentMethodDeclaration.resolveBinding().getReturnType().getQualifiedName());
+            } else {
+                Type returnType2 = currentMethodDeclaration.getReturnType2();
+                no.setCalledInMethodReturnType(inferCalledInMethodReturnTypeValue(returnType2, currentMethodDeclaration).getQualifiedName());
+            }
         }
 
         if (currentExpression != null) { //lambda
@@ -206,32 +208,46 @@ public class DefaultVisitor extends ASTVisitor {
                 .collect(Collectors.joining(", ", prefix, sufix));
     }
 
-    private ITypeBinding inferCalledInClass(MethodDeclaration md, IMethodBinding binding) {
+    private ITypeBinding inferCalledInClass(MethodInvocation mi, MethodDeclaration md) {
+        if (md == null) {
+            ASTNode parent = mi.getParent();
+            // if the code gets here is because the call is from the class fields definitions part of the source
+            while (!(parent instanceof TypeDeclaration)) {
+                parent = parent.getParent();
+            }
+            return ((TypeDeclaration) parent).resolveBinding();
+        }
+        IMethodBinding binding = md.resolveBinding();
         return binding != null ? binding.getDeclaringClass() : ((TypeDeclaration) md.getParent()).resolveBinding();
     }
 
-    private ITypeBinding[] inferMethodDeclarationParamenters(MethodDeclaration md, IMethodBinding binding) {
+    private ITypeBinding[] inferMethodDeclarationParamenters(MethodDeclaration md) {
+        if (md == null) {
+            return new ITypeBinding[0];
+        }
+        IMethodBinding binding = md.resolveBinding();
         if (binding != null) {
             return md.resolveBinding().getParameterTypes();
         }
-        List<ITypeBinding> types = (List<ITypeBinding>) md.parameters().stream().map(p -> ((SingleVariableDeclaration) p).resolveBinding().getType()).collect(Collectors.toList());
-        return types.toArray(new ITypeBinding[types.size()]);
+        return (ITypeBinding[]) md.parameters()
+            .stream()
+            .map(p -> {
+                IVariableBinding bnd = ((SingleVariableDeclaration) p).resolveBinding();
+                return bnd != null ? bnd.getType() : new DummyTypeBinding(((SingleVariableDeclaration) p).getType());
+            })
+            .toArray(ITypeBinding[]::new);
     }
 
-    // since an unresolved binding can return an ArrayType, it hasn't a Name to get, we need to get the final string here.
-    private String retrieveCalledInMethodReturnTypeValue(Type type, MethodDeclaration md) {
+    private ITypeBinding inferCalledInMethodReturnTypeValue(Type type, MethodDeclaration md) {
         if (!md.isConstructor()) {
-            if (type.resolveBinding() == null) {
-                if (type instanceof SimpleType sp) {
-                    return sp.getName().getFullyQualifiedName();
-                } else {
-                    return type.toString();
-                }
-            } else {
-                return type.resolveBinding().getQualifiedName();
-            }
+            return type.resolveBinding() == null ? new DummyTypeBinding(type) : type.resolveBinding();
         } else {
-            return PrimitiveType.VOID.toString();
+            return new DummyTypeBinding() {
+                @Override
+                public String getQualifiedName() {
+                    return PrimitiveType.VOID.toString();
+                }
+            };
         }
     }
 
@@ -241,8 +257,8 @@ public class DefaultVisitor extends ASTVisitor {
 
     public List<Call> methodsCallFilter() {
         return Collections
-                .unmodifiableList(calls.stream()
-                        .filter(t -> t.getCallMethod() != null || "null".equalsIgnoreCase(t.getCallMethod()))
-                        .collect(Collectors.toList()));
+            .unmodifiableList(calls.stream()
+                .filter(t -> t.getCallMethod() != null || "null".equalsIgnoreCase(t.getCallMethod()))
+                .collect(Collectors.toList()));
     }
 }
