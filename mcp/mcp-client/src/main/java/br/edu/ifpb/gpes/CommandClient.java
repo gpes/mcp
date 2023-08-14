@@ -31,8 +31,7 @@ public class CommandClient implements Callable<Void> {
     @CommandLine.Option(names = {"-o", "--output"}, required = true, description = "The path where the generated outputs will be created. If not exist or found, it will be created.")
     private String outputDir;
 
-    //create a new option for passing classpath entries based on -r (root)
-    @CommandLine.Option(names = {"-cp", "--classpath"}, split = " ", description = "List of classpath to be added. The tool only work on code from the project, please use only if the tool break the analysis. The paths are based starting from the project directory.")
+    @CommandLine.Option(names = {"-c", "--classpath"}, split = " ", description = "List of classpath to be added. The tool only work on code from the project, please use only if the tool break the analysis. The paths are based starting from the project directory.")
     private String[] classpath;
 
     public static void main(String[] args) {

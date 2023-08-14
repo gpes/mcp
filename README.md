@@ -38,11 +38,12 @@ This is the raw text result produced by the tool, after the analysis, we use ano
 
 3. You can see a brief explanations of the options using this command ```java -jar mcp --help```.
 
-![img](https://i.imgur.com/uUmuRm4.png)
+![img](https://i.imgur.com/4TX5doe.png)
 
+_PS.: classpath file paths are based on the value on -p option._
 4. Copy the path of the Java project that you want to analyze, in the options showed on the image, eg.:
 ```
-java -jar mcp.jar -o=/home/kaneda/call-parser/output -r=/home/kaneda/projects/ -p=tomcat-7.0.2/ -s=tomcat-7.0.2/java/
+java -jar mcp.jar -o=/home/kaneda/call-parser/output -r=/home/kaneda/projects/ -p=tomcat-7.0.2/ -s=tomcat-7.0.2/java/ -cp="lib/ lib2/"
 
 ```
 5. After execute the tool, a text file will be generated, and will be located in the directory path you provided, with the following outputs:
