@@ -56,10 +56,9 @@ public class DefaultDirectGraph implements Graph<Node,Double> {
 
     @Override
     public List<Call> getCandidates() {
-        List<Node> sources = graph.vertexSet().stream().filter((n) -> graph.incomingEdgesOf(n).isEmpty()).collect(Collectors.toList());
-        List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
+        List<Node> sources = graph.vertexSet().stream().filter((n) -> graph.incomingEdgesOf(n).isEmpty() && !graph.outgoingEdgesOf(n).isEmpty()).collect(Collectors.toList());
+        List<Node> leafs = graph.vertexSet().stream().filter((n) -> graph.outgoingEdgesOf(n).isEmpty() && !graph.incomingEdgesOf(n).isEmpty()).collect(Collectors.toList());
         List<Call> mountedCalls = new ArrayList<>();
-        //
         sources.parallelStream().forEach(s -> {
             leafs.parallelStream().forEach(l -> {
                 DijkstraShortestPath dijk = new DijkstraShortestPath(graph);
